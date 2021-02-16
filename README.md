@@ -25,12 +25,16 @@ player.play()
 ...
 ```
 
-## Tutorial 
-The scheme 'app-example-iosUITests' contains some test classes. 'UseAudioPlayerTests shows how to use the SDK and covers the basic use cases.
+## Tests 
+Scheme 'app-example-iosUITests' contains some test classes. Select the scheme, change to the 'Test navigator' tab and run one of the tests.
 
-Change to the 'Test navigator' tab and run 'UseAudioPlayerTests'. 
+- 'UseYbridPlayerTests' is a tutorial. It explains how to use YbridPlayerSDK.
+- 'YbridPlayerTests' covers the basic use cases. Run it to make sure everything works fine.
+- 'PlayerToggleStressTests' takes about 7 Minutes. It toggles play and stop in decreasing time intervalls. It's purpose is to demonstrate robustness and watch memory usage.
 
-**Sorry**, there is an issue with simulators using ios < 14 on macOS Big Sur (see #known issues).
+You can run tests on simulator or connected devices.
+
+**Sorry**, there is an issue with simulators using ios < 14 on macOS Big Sur (see [Known issues](https://github.com/ybrid/app-example-ios#known-issues) below).
 
 
 ## Update the player-sdk

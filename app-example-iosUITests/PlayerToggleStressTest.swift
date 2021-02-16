@@ -23,6 +23,23 @@
 // SOFTWARE.
 //
 
+//
+// This test toggles play and stop in random, decreasing time intervalls.
+//
+// Purpose of this test to demonstrate robustness of YbridPlayerSDK and
+// to watch memory usage.
+//
+// One test passes 10 steps of 10 seconds, separated by 5 seconds of rest.
+// During the first step each intervall takes a random time between 1 and 3
+// seconds. In the coming steps the intervalls of toggling have shorter limits.
+// Afterwards the 10th step it takes a rest of 1 minute. You should see memory
+// usage recovering from stress.
+//
+// Same procedure with mp3 and opus streams. Each of both tests takes over
+// 3 minutes.
+//
+
+
 import XCTest
 import YbridPlayerSDK
 

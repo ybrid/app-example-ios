@@ -16,7 +16,7 @@
 		17587CCA25027DCC00951211 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 17587CC925027DCC00951211 /* Assets.xcassets */; };
 		1760460F25B0B38600C79BF8 /* UITestsHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1760460E25B0B38600C79BF8 /* UITestsHelper.swift */; };
 		176BDE84258CAD940038EE95 /* PlayerToggleStressTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 176BDE83258CAD940038EE95 /* PlayerToggleStressTest.swift */; };
-		176BDE95258CB1240038EE95 /* UseAudioPlayerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 176BDE94258CB1240038EE95 /* UseAudioPlayerTests.swift */; };
+		176BDE95258CB1240038EE95 /* UseYbridPlayerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 176BDE94258CB1240038EE95 /* UseYbridPlayerTests.swift */; };
 		178347EF25C2DB7600A5F23B /* YbridPlayerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 178347EE25C2DB7600A5F23B /* YbridPlayerTests.swift */; };
 		17B6CF9E25D9EC7100D25A25 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 17B6CF9D25D9EC7100D25A25 /* Images.xcassets */; };
 		199A4C324BA02F0EE67B7D17 /* Pods_app_example_ios_app_example_iosUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6DB9471D77C5E8EEF6063B7A /* Pods_app_example_ios_app_example_iosUITests.framework */; };
@@ -45,7 +45,7 @@
 		17587CCE25027DCC00951211 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1760460E25B0B38600C79BF8 /* UITestsHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UITestsHelper.swift; sourceTree = "<group>"; };
 		176BDE83258CAD940038EE95 /* PlayerToggleStressTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerToggleStressTest.swift; sourceTree = "<group>"; };
-		176BDE94258CB1240038EE95 /* UseAudioPlayerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UseAudioPlayerTests.swift; sourceTree = "<group>"; };
+		176BDE94258CB1240038EE95 /* UseYbridPlayerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UseYbridPlayerTests.swift; sourceTree = "<group>"; };
 		176EE867257002A300AC49DD /* app-example-iosUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "app-example-iosUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		176EE86B257002A300AC49DD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		178347EE25C2DB7600A5F23B /* YbridPlayerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YbridPlayerTests.swift; sourceTree = "<group>"; };
@@ -121,7 +121,7 @@
 			children = (
 				178347EE25C2DB7600A5F23B /* YbridPlayerTests.swift */,
 				1760460E25B0B38600C79BF8 /* UITestsHelper.swift */,
-				176BDE94258CB1240038EE95 /* UseAudioPlayerTests.swift */,
+				176BDE94258CB1240038EE95 /* UseYbridPlayerTests.swift */,
 				176BDE83258CAD940038EE95 /* PlayerToggleStressTest.swift */,
 				176EE86B257002A300AC49DD /* Info.plist */,
 			);
@@ -343,7 +343,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				176BDE84258CAD940038EE95 /* PlayerToggleStressTest.swift in Sources */,
-				176BDE95258CB1240038EE95 /* UseAudioPlayerTests.swift in Sources */,
+				176BDE95258CB1240038EE95 /* UseYbridPlayerTests.swift in Sources */,
 				1760460F25B0B38600C79BF8 /* UITestsHelper.swift in Sources */,
 				178347EF25C2DB7600A5F23B /* YbridPlayerTests.swift in Sources */,
 			);
@@ -439,6 +439,7 @@
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2,6";
 			};
 			name = Debug;
@@ -504,6 +505,7 @@
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2,6";
 				VALIDATE_PRODUCT = YES;
 			};
@@ -519,7 +521,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_TEAM = J327NUG776;
 				"ENABLE_HARDENED_RUNTIME[sdk=macosx*]" = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -566,7 +568,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_TEAM = J327NUG776;
 				"ENABLE_HARDENED_RUNTIME[sdk=macosx*]" = NO;
 				FRAMEWORK_SEARCH_PATHS = (

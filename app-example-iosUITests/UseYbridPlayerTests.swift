@@ -1,6 +1,6 @@
 //
-// UseAudioPlayerTests.swift
-// player-sdk-swiftUITests
+// UseYbridPlayerTests.swift
+// app-example-sdk-swiftUITests
 //
 // Copyright (c) 2020 nacamar GmbH - Ybrid®, a Hybrid Dynamic Live Audio Technology
 //
@@ -23,10 +23,14 @@
 // SOFTWARE.
 //
 
+//
+// This test class explains how to use YbridPlayerSDK.
+//
+
 import XCTest
 import YbridPlayerSDK
 
-class UseAudioPlayerTests: XCTestCase {
+class UseYbridPlayerTests: XCTestCase {
 
     override func setUpWithError() throws {
         Logger.verbose = true
@@ -46,7 +50,7 @@ class UseAudioPlayerTests: XCTestCase {
     func test01_PlaySomeSeconds() {
         let player = AudioPlayer(mediaUrl: url, listener: nil)
         player.play()
-        sleep(5)
+        sleep(6)
         player.stop()
         sleep(1) // If the process is killed too early you may hear crackling.
     }
@@ -106,7 +110,7 @@ class UseAudioPlayerTests: XCTestCase {
         let opusUrl = URL.init(string: "https://dradio-dlf-live.cast.addradio.de/dradio/dlf/live/opus/high/stream.opus")!
         let player = AudioPlayer(mediaUrl: opusUrl, listener: playerListener)
         player.play()
-        sleep(5)
+        sleep(6)
         player.stop()
         sleep(1)
     }

@@ -23,91 +23,57 @@
 // SOFTWARE.
 //
 
+//
+// This test class covers the basic use cases of YbridPlayerSDK.
+//
+
+
 import XCTest
 import YbridPlayerSDK
 
-extension UIDevice {
-    static var isSimulator: Bool = {
-        #if targetEnvironment(simulator)
-        return true
-        #else
-        return false
-        #endif
-    }()
-}
-
 struct Platform {
-
     static var isSimulator: Bool {
         return TARGET_OS_SIMULATOR != 0
     }
-
 }
 
 class YbridPlayerTests: XCTestCase {
 
     let url = URL.init(string: "https://swr-swr3.cast.ybrid.io/swr/swr3/ybrid")!
     let opus = URL.init(string:  "https://dradio-dlf-live.cast.addradio.de/dradio/dlf/live/opus/high/stream.opus")!
-    
  
-
     override func setUpWithError() throws {
         if Platform.isSimulator {
             Logger.testing.notice("-- running on simulator")
         } else {
             Logger.testing.notice("-- running on real device")
         }
-        /*
-        if #available(iOS 10, macOS 10.12, *) {
-             let app = XCUIApplication(bundleIdentifier: "io.ybrid.app-example-ios")
-//            let app = XCUIApplication(bundleIdentifier: "app-example-iosUITests")
-            let state = describeApplicationState(app.state)
-            Logger.testing.notice("-- state of \(app.description) is \(state)")
-            app.activate()
-            Logger.testing.notice("-- state is \(describeApplicationState(app.state))")
-            }
-        */
     }
     
-    @available(iOS 10, macOS 10.12, *)
-    func describeApplicationState( _ state: XCUIApplication.State ) -> String {
-        let result:String
-        switch (state.rawValue) {
-        case 0: result = "unknown"
-        case 1: result = "notRunning"
-        case 2: result = "runningBackgroundSuspended"
-        case 3: result = "runningBackground"
-        case 4: result = "runningForeground"
-        default:  result = "(undefined)"
-        }
-        return result
-    }
     
-
-    
-    func test00_VersionString() {
+    func test01_VersionString() {
         Logger.verbose = true
         let version = AudioPlayer.versionString
         Logger.testing.notice("-- \(version)")
         XCTAssert(version.contains("YbridPlayerSDK"), "shoud contain YbridPlayerSDK")
     }
     
-    func test01_Mp3() {
+    func test02_Mp3() {
         Logger.verbose = true
         let player = AudioPlayer(mediaUrl: url, listener: nil)
         player.play()
-        sleep(5)
+        sleep(6)
         player.stop()
         sleep(1)
     }
 
-    func test02_Opus() {
+    func test03_Opus() {
         Logger.verbose = false
-        let player = AudioPlayer(mediaUrl: opus, listener: nil)
+        let playerListener = TestAudioPlayerListener()
+        let player = AudioPlayer(mediaUrl: opus, listener: playerListener)
         player.play()
-        sleep(5)
+        sleep(6)
         player.stop()
         sleep(1)
     }
-
 }
