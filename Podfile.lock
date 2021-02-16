@@ -1,0 +1,25 @@
+PODS:
+  - YbridOgg (0.7.2)
+  - YbridOpus (0.7.0)
+  - YbridPlayerSDK (0.6.0):
+    - YbridOgg
+    - YbridOpus
+
+DEPENDENCIES:
+  - YbridPlayerSDK
+
+SPEC REPOS:
+  "git@github.com:ybrid/Private-Cocoapods.git":
+    - YbridPlayerSDK
+  https://github.com/CocoaPods/Specs.git:
+    - YbridOgg
+    - YbridOpus
+
+SPEC CHECKSUMS:
+  YbridOgg: 7269d379ae601fcdc5b1ceba3e2cbf46b6c4b629
+  YbridOpus: 617534d0c4252633801a60c629acd3a28df7cd07
+  YbridPlayerSDK: 70c2d7c7238114f6c0591b6b54264f26c19eebd0
+
+PODFILE CHECKSUM: f3e39893ee0bbe6741fccca254da9b69d87e2a40
+
+COCOAPODS: 1.10.0
