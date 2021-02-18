@@ -46,15 +46,13 @@ on a terminal in the project's directory.
 
 
 # Known issues
-Since the update on macOS BigSur (and still in Version 11.2.1) there is a problem running the player with Simulators on Versions smaller than iOS 14. The problem is already reported on https://developer.apple.com/forums/thread/667921?login=true&page=1#650224022. I hope the issue will be fixed by apple...
+Since the update on macOS BigSur (and still in Version 11.2.1) there is a problem running the player with simulators on versions smaller than iOS 14. The problem is already reported on https://developer.apple.com/forums/thread/667921?login=true&page=1#650224022. I hope the issue will be fixed by apple...
 
 # Further documentation
 See [player-sdk-swift](https://github.com/ybrid/player-sdk-swift)
 
 # Contributing
-As this is an example app for using player-sdk-swift, contributing should happen in that repository [player-sdk-swift](https://github.com/ybrid/player-sdk-swift)
+Because this is an example app for using player-sdk-swift, contributing should happen in that repository [player-sdk-swift](https://github.com/ybrid/player-sdk-swift)
 
 # Licenses
-This project is under MIT license. It uses [player-sdk-swift](https://github.com/ybrid/player-sdk-swift) (also MIT license) which depends on [ogg-swift](https://github.com/ybrid/ogg-swift) and  [opus-swift](https://github.com/ybrid/opus-swift). 
-
-Ogg and Opus carry BSD licenses, see 3rd party section in [LICENSE](https://github.com/ybrid/app-example-ios/blob/master/LICENSE) file.
+This project and [player-sdk-swift](https://github.com/ybrid/player-sdk-swift) are under under MIT license. The player project depends on [ogg-swift](https://github.com/ybrid/ogg-swift) and [opus-swift](https://github.com/ybrid/opus-swift). Ogg and Opus carry BSD licenses, see 3rd party section in [LICENSE](https://github.com/ybrid/app-example-ios/blob/master/LICENSE) file.
