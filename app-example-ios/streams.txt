@@ -1,7 +1,6 @@
-
 radioX=http://stream.radiox.de:8000/live
 #http://www.radiox.de/media/radiox.m3u
-http://www.radiox.de/livestream
+swr3 (icecast)=https://swr-edge-20b9-fra-lg-cdn.cast.addradio.de/swr/swr3/live/mp3/128/stream.mp3
 
 1live (aac, 24kHz)       = https://wdr-1live-live.cast.addradio.de/wdr/1live/live/aac/low
 egoFM (mp3, 48/128kbps, long buffer) = https://egofm-live.cast.addradio.de/egofm/live/mp3/high/stream.mp3
@@ -10,7 +9,6 @@ dlf-live (mp3, 44.1/128kbps) = http://dradio-dlf-live.cast.addradio.de/dradio/dl
 # Tests files
 opus test file (3*10s) = http://dl.nacamar.c.nmdn.net/player/test/440Hz-v1.opus
 local dancefloor = file:///Users/florian/Music/audioTests/dancefloor-end-advert.opus
-
 
 # opus, http (some taken from http://dir.xiph.org/codecs/Opus)
 dlf-live (opus)         = https://dradio-dlf-live.cast.addradio.de/dradio/dlf/live/opus/high/stream.opus
