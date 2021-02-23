@@ -35,7 +35,6 @@ class ViewController: UIViewController, AudioPlayerListener, UIPickerViewDataSou
 
     var urls:[(String,String)] = [
         ("addradio-demo (ybrid)",   "https://stagecast.ybrid.io/adaptive-demo"),
-        ("swr3 (icecast)",  "https://swr-edge-20b9-fra-lg-cdn.cast.addradio.de/swr/swr3/live/mp3/128/stream.mp3"),
         ("swr3 (ybrid)",    "https://swr-swr3.cast.ybrid.io/swr/swr3/ybrid")
     ]
     
@@ -97,6 +96,7 @@ class ViewController: UIViewController, AudioPlayerListener, UIPickerViewDataSou
         Logger.verbose = false
         
         urls.append(contentsOf: loadUrls(resource: "streams"))
+        
         streamUrl = initializeUrlPicker(initialSelectedRow: 1)
         
         displayTitleChanged(nil)
