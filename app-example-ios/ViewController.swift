@@ -93,7 +93,6 @@ class ViewController: UIViewController, AudioPlayerListener, UIPickerViewDataSou
     override func viewDidLoad() {
         super.viewDidLoad()
         Logger.shared.notice("using \(AudioPlayer.versionString)")
-        Logger.verbose = false
         
         urls.append(contentsOf: loadUrls(resource: "streams"))
         
@@ -137,6 +136,9 @@ class ViewController: UIViewController, AudioPlayerListener, UIPickerViewDataSou
         urlPicker.delegate = self
         urlPicker.dataSource = self
         urlPicker.selectRow(initialSelectedRow, inComponent: 0, animated: true)
+        DispatchQueue.main.async {
+            self.urlPicker.reloadAllComponents()
+        }
         return urls[initialSelectedRow].1
     }
     
