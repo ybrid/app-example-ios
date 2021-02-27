@@ -609,7 +609,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 9474D5B47C647F7C3E73F03E /* Pods-app-example-ios-app-example-iosUITests.debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
@@ -649,7 +648,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 866CB0ECBFFFE7A1688A26AA /* Pods-app-example-ios-app-example-iosUITests.release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;

@@ -12,7 +12,7 @@ This audio player offers
   
 ## Integration 
 ### if you use CocoaPods 
-The spec of the player-sdk is currently hosted at [ybrid/Private-Cocoapods](https://github.com/ybrid/Private-Cocoapods). The Cocoa Podfile of your Project should look like
+The spec of the player-sdk is currently hosted at [ybrid/Private-Cocoapods](https://github.com/ybrid/Private-Cocoapods). The Cocoa Podfile of your project should look like
 ```ruby
 platform :ios, '9.0'
 install! 'cocoapods', :disable_input_output_paths => true

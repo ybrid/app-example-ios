@@ -104,6 +104,12 @@ class ViewController: UIViewController, AudioPlayerListener, UIPickerViewDataSou
         durationConnected(nil)
         durationReady(nil)
         durationPlaying(0)
+        
+        // this is usually enough to see white text color in urlPicker - except fpr iOS 12.4
+        // see workaround below (func pickerView(_ pickerView: UIPickerView, attributedTitleForRow row: ...)
+        DispatchQueue.main.async {
+            self.urlPicker.reloadAllComponents()
+        }
     }
     
     func loadUrls(resource:String) -> [(String,String)]{
@@ -164,6 +170,8 @@ class ViewController: UIViewController, AudioPlayerListener, UIPickerViewDataSou
     }
     
 
+    
+    
     // MARK: RadioPlayerDelegate
     
     func stateChanged(_ state: PlaybackState) {
@@ -278,6 +286,19 @@ class ViewController: UIViewController, AudioPlayerListener, UIPickerViewDataSou
         return urls[row].0
     }
  
+    
+    // workaround
+    // this is the only way I found to set the color of the url picker entries on iOS 12.4!
+    func pickerView(_ pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
+        let titleData = urls[row].0
+        let pickerFont = (playedS as UILabel).font!
+//        Logger.shared.info("playingTitle has font \(pickerFont.fontName) with size \(pickerFont.pointSize)")
+        let myTitle = NSAttributedString(string: titleData, attributes: [NSAttributedString.Key.font:UIFont(name: pickerFont.fontName, size: pickerFont.pointSize)!,NSAttributedString.Key.foregroundColor:UIColor.white])
+        return myTitle
+    }
+    
+    
+    
 }
 
 
