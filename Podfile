@@ -7,7 +7,7 @@ target 'app-example-ios' do
   source 'git@github.com:ybrid/Private-Cocoapods.git'
   source 'https://github.com/CocoaPods/Specs.git'
   
-  pod 'YbridPlayerSDK'#, :path => '~/github/player-sdk-swift' #, '0.6.1'
+  pod 'YbridPlayerSDK'#, :path => '~/github/player-sdk-swift' #, '0.6.3'
   
   target 'app-example-iosUITests' do
   end

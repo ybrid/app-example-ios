@@ -42,16 +42,16 @@ let player = AudioPlayer(mediaUrl: url, listener: nil)
 player.play()
 // of course the program must not end here
 ```
-As a developer, you probably want to receive changes of the playback state. Implement AudioPlayerListener and pass it to the AudioPlayer via the listener parameter above. You will also receive metadata, timing information, and hints on possible problems like network stalls. 
+As a developer, you probably want to receive changes of the playback state. Implement AudioPlayerListener and pass it to the AudioPlayer via the listener parameter above. You will also receive changes of metadata, hints on possible problems like network stalls and timing information.
 ```swift
 public protocol AudioPlayerListener : class {
     func stateChanged(_ state: PlaybackState)
     func displayTitleChanged(_ title: String?)
     func currentProblem(_ text: String?)
+    func playingSince(_ seconds: TimeInterval?)
+    func durationReadyToPlay(_ seconds: TimeInterval?)
     func durationConnected(_ seconds: TimeInterval?)
-    func durationReady(_ seconds: TimeInterval?)
-    func durationPlaying(_ seconds: TimeInterval?)
-    func durationBuffer(averagedSeconds: TimeInterval?, currentSeconds: TimeInterval?)
+    func bufferSize(averagedSeconds: TimeInterval?, currentSeconds: TimeInterval?)
 }
 ```
 The PlaybackStates are 
@@ -70,7 +70,7 @@ We use XCode version 12 with swift 4 and CocoaPods 1.10.
 Choose a new version number, let's say ```0.4.2```. In the following steps you have to type that number three times. 
 
 First generate a new 'YbridPlayerSDK.xcframework'.  
-1. Open ```player-sdk-swift.xcworkspace``` with XCode. In the properties editor, on target ```player-sdk-swift``` select ```General``` and change ```Version``` to the new number. Close the workspace.
+1. Open ```Config.xcconfig``` with an editor of you choice and change the value of ```MARKETING_VERSION``` to the new number an save it.
 2. On a terminal, in the project's root directory execute
    ```shell 
    ./build.sh
@@ -98,3 +98,6 @@ Where can I get more help?
 A good start to dive into technical details is [the overview](https://github.com/ybrid/overview) 
 ## contributing
 You are welcome to [contribute](https://github.com/ybrid/player-sdk-swift/CONTRIBUTING.md) in many ways.
+
+# Licenses
+This project uses [ogg-swift](https://github.com/ybrid/ogg-swift) and [opus-swift](https://github.com/ybrid/opus-swift) witch are MIT licensed. Ogg and Opus carry BSD licenses, see 3rd party section in [LICENSE](https://github.com/ybrid/app-example-ios/blob/master/LICENSE) file.

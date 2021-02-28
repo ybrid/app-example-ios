@@ -170,7 +170,7 @@ class PlayerToggleStressTest: XCTestCase, AudioPlayerListener {
     }
     
     
-    // MARK: radio player delegate
+    // MARK: audio player listener
     
     func stateChanged(_ to: PlaybackState) {}
     func displayTitleChanged(_ title: String?) {}
@@ -178,24 +178,22 @@ class PlayerToggleStressTest: XCTestCase, AudioPlayerListener {
     func currentProblem(_ text: String?) {
         Logger.testing.error("-- problem '\(text ?? "(nil)")'")
     }
-    
-    func durationPlaying(_ seconds: TimeInterval?) {
+    func playingSince(_ seconds: TimeInterval?) {
         if let since = seconds {
             Logger.testing.debug("-- + playing since \(since.S)")
         }
     }
-    
     func durationConnected(_ seconds: TimeInterval?) {
         if let connected = seconds {
             Logger.testing.notice("-- + connected after \(connected.S)")
         }
     }
-    func durationReady(_ seconds: TimeInterval?) {
+    func durationReadyToPlay(_ seconds: TimeInterval?) {
         if let ready = seconds {
             Logger.testing.notice("-- + ready after \(ready.S)")
         }
     }
-    func durationBuffer(averagedSeconds: TimeInterval?, currentSeconds: TimeInterval?) {
+    func bufferSize(averagedSeconds: TimeInterval?, currentSeconds: TimeInterval?) {
         if let buffer = currentSeconds {
             Logger.testing.debug("-- + buffer \(buffer.S)")
         }

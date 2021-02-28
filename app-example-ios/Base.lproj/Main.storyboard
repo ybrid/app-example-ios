@@ -182,10 +182,10 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="bufferAveraged" destination="of3-5X-iLa" id="MIi-0b-Hsh"/>
+                        <outlet property="bufferCurrent" destination="Hh0-PX-fsf" id="cVA-cq-2Sx"/>
                         <outlet property="connected" destination="DyK-RF-1Wl" id="9Qn-2Z-CKq"/>
-                        <outlet property="lastBufferS" destination="Hh0-PX-fsf" id="cVA-cq-2Sx"/>
-                        <outlet property="playbackBufferS" destination="of3-5X-iLa" id="MIi-0b-Hsh"/>
-                        <outlet property="playedS" destination="fSV-kl-ZJX" id="t3t-hb-BJ9"/>
+                        <outlet property="playedSince" destination="fSV-kl-ZJX" id="t3t-hb-BJ9"/>
                         <outlet property="playingTitle" destination="BTB-qz-aRk" id="LnT-sD-mM6"/>
                         <outlet property="problem" destination="A7F-yx-e4d" id="Uy5-Lz-1Em"/>
                         <outlet property="ready" destination="7QN-Kw-pvi" id="jA0-4J-ALB"/>

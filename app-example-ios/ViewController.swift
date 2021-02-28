@@ -32,6 +32,7 @@ import AVFoundation
 import YbridPlayerSDK
 
 class ViewController: UIViewController, AudioPlayerListener, UIPickerViewDataSource, UIPickerViewDelegate {
+    
 
     var urls:[(String,String)] = [
         ("addradio-demo (ybrid)",   "https://stagecast.ybrid.io/adaptive-demo"),
@@ -47,13 +48,14 @@ class ViewController: UIViewController, AudioPlayerListener, UIPickerViewDataSou
                 }
                 Logger.shared.debug("url changed to \(streamUrl!)")
                 player = createPlayer(streamUrl!)
-                durationPlaying(0)
+                playingSince(0)
             }
         }
     }
     
     // MARK: ui outlets
     
+    @IBOutlet weak var urlPicker: UIPickerView!
     @IBOutlet weak var playingTitle: UILabel! {
         didSet {
             playingTitle.lineBreakMode = .byWordWrapping
@@ -62,20 +64,14 @@ class ViewController: UIViewController, AudioPlayerListener, UIPickerViewDataSou
     }
     @IBOutlet weak var problem: UILabel!
     @IBOutlet weak var togglePlay: UIButton!
-    @IBOutlet weak var urlPicker: UIPickerView!
-    @IBOutlet weak var playbackBufferS: UILabel! {
+    @IBOutlet weak var playedSince: UILabel! {
         didSet {
-            playbackBufferS.font = playbackBufferS.font.monospacedDigitFont
+            playedSince.font = playedSince.font.monospacedDigitFont
         }
     }
-    @IBOutlet weak var lastBufferS: UILabel! {
+    @IBOutlet weak var ready: UILabel! {
         didSet {
-            lastBufferS.font = lastBufferS.font.monospacedDigitFont
-        }
-    }
-    @IBOutlet weak var playedS: UILabel! {
-        didSet {
-            playedS.font = playedS.font.monospacedDigitFont
+            ready.font = ready.font.monospacedDigitFont
         }
     }
     @IBOutlet weak var connected: UILabel! {
@@ -83,9 +79,14 @@ class ViewController: UIViewController, AudioPlayerListener, UIPickerViewDataSou
             connected.font = connected.font.monospacedDigitFont
         }
     }
-    @IBOutlet weak var ready: UILabel! {
+    @IBOutlet weak var bufferAveraged: UILabel! {
         didSet {
-            ready.font = ready.font.monospacedDigitFont
+            bufferAveraged.font = bufferAveraged.font.monospacedDigitFont
+        }
+    }
+    @IBOutlet weak var bufferCurrent: UILabel! {
+        didSet {
+            bufferCurrent.font = bufferCurrent.font.monospacedDigitFont
         }
     }
     
@@ -100,10 +101,10 @@ class ViewController: UIViewController, AudioPlayerListener, UIPickerViewDataSou
         
         displayTitleChanged(nil)
         currentProblem(nil)
-        durationBuffer(averagedSeconds: nil, currentSeconds: nil)
+        playingSince(0)
+        durationReadyToPlay(nil)
         durationConnected(nil)
-        durationReady(nil)
-        durationPlaying(0)
+        bufferSize(averagedSeconds: nil, currentSeconds: nil)
         
         // this is usually enough to see white text color in urlPicker - except fpr iOS 12.4
         // see workaround below (func pickerView(_ pickerView: UIPickerView, attributedTitleForRow row: ...)
@@ -156,7 +157,7 @@ class ViewController: UIViewController, AudioPlayerListener, UIPickerViewDataSou
         print("toggle called")
         if let state = player?.state, state == .stopped {
             currentProblem(nil)
-            durationPlaying(0)
+            playingSince(0)
             player?.play()
         } else {
             player?.stop()
@@ -172,33 +173,7 @@ class ViewController: UIViewController, AudioPlayerListener, UIPickerViewDataSou
 
     
     
-    // MARK: RadioPlayerDelegate
-    
-    func stateChanged(_ state: PlaybackState) {
-        DispatchQueue.main.async {
-            Logger.shared.debug("state changed to \(state)")
-            switch state {
-            case .buffering: self.buffering()
-            case .stopped: self.stopped()
-            case .playing: self.playing()
-            @unknown default:
-                Logger.shared.error("state changed to unknown \(state)")
-            }
-        }
-    }
-    
-    fileprivate func stopped() {
-        togglePlay.setTitle("play", for: .normal)
-        displayTitleChanged(nil)
-    }
-    fileprivate func buffering() {
-        togglePlay.setTitle("...", for: .normal)
-        durationConnected(nil)
-        durationReady(nil)
-    }
-    fileprivate func playing() {
-        togglePlay.setTitle("stop", for: .normal)
-    }
+    // MARK: AudioPlayerListener
     
     func displayTitleChanged(_ title:String?) {
         DispatchQueue.main.async {
@@ -218,43 +193,55 @@ class ViewController: UIViewController, AudioPlayerListener, UIPickerViewDataSou
             }
         }
     }
-    func durationBuffer(averagedSeconds: TimeInterval?, currentSeconds: TimeInterval?) {
+    func stateChanged(_ state: PlaybackState) {
         DispatchQueue.main.async {
-            if let seconds = averagedSeconds {
-                self.playbackBufferS.text = String(format: "%.1f s", seconds)
-            } else {
-                self.playbackBufferS.text = ""
-            }
-            if let lastS = currentSeconds {
-                self.lastBufferS.text = String(format: "%.2f s", lastS)
-            } else {
-                self.lastBufferS.text = ""
+            Logger.shared.debug("state changed to \(state)")
+            switch state {
+            case .stopped:
+                self.togglePlay.setTitle("play", for: .normal)
+                self.displayTitleChanged(nil)
+            case .buffering:
+                self.togglePlay.setTitle("...", for: .normal)
+                self.durationConnected(nil)
+                self.durationReadyToPlay(nil)
+            case .playing:
+                self.togglePlay.setTitle("stop", for: .normal)
+            @unknown default:
+                Logger.shared.error("state changed to unknown \(state)")
             }
         }
     }
-    func durationPlaying(_ seconds: TimeInterval?) {
+    func playingSince(_ seconds: TimeInterval?) {
         DispatchQueue.main.async {
             guard let playedS = seconds else {
-                self.playedS.text = ""
+                self.playedSince.text = ""
                 return
             }
             
             if playedS.isLess(than: 60) {
-                self.playedS.text = String(format: "%.1f s", playedS)
+                self.playedSince.text = String(format: "%.1f s", playedS)
                 return
             }
             if playedS.isLess(than: 3600) {
                 let min = Int(playedS / 60)
-                self.playedS.text = String(format: "%dm %02ds", min, Int(playedS - Double(min * 60)))
+                self.playedSince.text = String(format: "%dm %02ds", min, Int(playedS - Double(min * 60)))
                 return
             }
             let hour = Int(playedS / 3600)
             let min = Int(playedS / 60) - hour * 60
-            self.playedS.text = String(format: "%dh %02dm", hour, min)
+            self.playedSince.text = String(format: "%dh %02dm", hour, min)
             return
         }
     }
-    
+    func durationReadyToPlay(_ seconds: TimeInterval?) {
+        DispatchQueue.main.async {
+            if let readyS = seconds {
+                self.ready.text = String(format: "%.3f s", readyS)
+            } else {
+                self.ready.text = ""
+            }
+        }
+    }
     func durationConnected(_ seconds: TimeInterval?) {
         DispatchQueue.main.async {
             if let connectS = seconds {
@@ -264,12 +251,17 @@ class ViewController: UIViewController, AudioPlayerListener, UIPickerViewDataSou
             }
         }
     }
-    func durationReady(_ seconds: TimeInterval?) {
+    func bufferSize(averagedSeconds: TimeInterval?, currentSeconds: TimeInterval?) {
         DispatchQueue.main.async {
-            if let readyS = seconds {
-                self.ready.text = String(format: "%.3f s", readyS)
+            if let averaged = averagedSeconds {
+                self.bufferAveraged.text = String(format: "%.1f s", averaged)
             } else {
-                self.ready.text = ""
+                self.bufferAveraged.text = ""
+            }
+            if let current = currentSeconds {
+                self.bufferCurrent.text = String(format: "%.2f s", current)
+            } else {
+                self.bufferCurrent.text = ""
             }
         }
     }
@@ -291,7 +283,7 @@ class ViewController: UIViewController, AudioPlayerListener, UIPickerViewDataSou
     // this is the only way I found to set the color of the url picker entries on iOS 12.4!
     func pickerView(_ pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
         let titleData = urls[row].0
-        let pickerFont = (playedS as UILabel).font!
+        let pickerFont = (playedSince as UILabel).font!
 //        Logger.shared.info("playingTitle has font \(pickerFont.fontName) with size \(pickerFont.pointSize)")
         let myTitle = NSAttributedString(string: titleData, attributes: [NSAttributedString.Key.font:UIFont(name: pickerFont.fontName, size: pickerFont.pointSize)!,NSAttributedString.Key.foregroundColor:UIColor.white])
         return myTitle

@@ -42,10 +42,10 @@ class UseYbridPlayerTests: XCTestCase {
     /*
     Let the player play your radio.
     
-    You should hear sound. Probably stop does not sound nice.
+    You should hear sound.
      
     Player actions (play and stop) operate asynchronously.
-    Stop takes some 100 ms to stop the engine.
+    Stop may take a second to clean up properly.
     */
     func test01_PlaySomeSeconds() {
         let player = AudioPlayer(mediaUrl: url, listener: nil)
@@ -58,8 +58,9 @@ class UseYbridPlayerTests: XCTestCase {
     /*
      Let the player play your radio and ensure expected playback states.
 
-     Connecting and setting up depends on the infrastructure.
-     In this test we assume it takes no longer than 3 seconds.
+     Connecting to the network depends on the infrastructure.
+     Getting the player ready to play is rather quick.
+     In this test we assume it takes less than 3 seconds all together.
      */
     func test02_PlayerStates() {
         let player = AudioPlayer(mediaUrl: url, listener: nil)
@@ -75,7 +76,7 @@ class UseYbridPlayerTests: XCTestCase {
     }
 
     /*
-     Use your own radio player listener to be called back.
+     Use your own audio player listener to be called back.
      Filter console output by '-- ' and watch.
 
      Make sure the listener stays alive because internally its held as a weak reference.
@@ -94,7 +95,7 @@ class UseYbridPlayerTests: XCTestCase {
      Filter the console output by '-- '
      */
     func test04_ErrorWithPlayer() {
-        let badUrl = URL.init(string: "https://swr-swr3.cast.io/bad/url")!
+        let badUrl = URL.init(string: "https://unknown.cast.io/bad/url")!
         let player = AudioPlayer(mediaUrl: badUrl, listener: playerListener)
         player.play()
         XCTAssertEqual(player.state, PlaybackState.buffering)
