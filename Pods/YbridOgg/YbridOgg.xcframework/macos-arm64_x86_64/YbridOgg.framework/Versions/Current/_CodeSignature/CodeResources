@@ -4,48 +4,63 @@
 <dict>
 	<key>files</key>
 	<dict>
+		<key>Resources/COPYING</key>
+		<data>
+		vCUmMYBc8DcEj2T+9WL5jCoL3J4=
+		</data>
 		<key>Resources/Config.xcconfig</key>
 		<data>
-		vDDTFM2gnQTTjFOTA/RhMkvlec0=
+		zSFoFNjmzHsDxlP2cYjJRyLl4Uw=
 		</data>
 		<key>Resources/Info.plist</key>
 		<data>
-		lrRd7Hm5lpo/S1eGH7T/lS7pf/E=
+		IvGIu2nHewCMJB7JBURYKdsRZEk=
 		</data>
 	</dict>
 	<key>files2</key>
 	<dict>
+		<key>Headers/COPYING</key>
+		<dict>
+			<key>hash</key>
+			<data>
+			vCUmMYBc8DcEj2T+9WL5jCoL3J4=
+			</data>
+			<key>hash2</key>
+			<data>
+			0qtXWDNkidphwSzFu3V9pTOcSukAH5uwVitDcCSa+BQ=
+			</data>
+		</dict>
 		<key>Headers/ogg.h</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			AG1fq3KlQ81ZJbt38BCb+d4oVjM=
+			1DLQT5Q0OCr0E8BrPsx717glEeQ=
 			</data>
 			<key>hash2</key>
 			<data>
-			okK4U7bqfTtJ8BxyRg3wzEtLrlNpFrKavDR9ysR9CWM=
+			m3AiU13U+xKsawfLVwMe3UWnTN5I0ZwoDR1ptZWOFJo=
 			</data>
 		</dict>
 		<key>Headers/ogg_swift.h</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			cN4ejKLzqqcFCCLKBeFoARgtoJo=
+			z77l7bGkoOlSiBA54+bQB4CvAfA=
 			</data>
 			<key>hash2</key>
 			<data>
-			REbbKnFjcW1nCjQZpyMgJRo9wnBKuRCOGyYu6T/Ng0g=
+			ey9vL4S8orNHlAFy7Y7m+gd6BHsHa5/rQdCKS090HeE=
 			</data>
 		</dict>
 		<key>Headers/os_types.h</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			9EGEffFfmJRa4igZ5TUyLzeb5Ww=
+			guPlfUOl//pKYBESd++5UNk2OOg=
 			</data>
 			<key>hash2</key>
 			<data>
-			IhiTRLuLcmtqVJ+PSJkSwEcswfPaPJraHcQ3rTWlH/U=
+			dKMrXelD19IgsSpJ9elXDxKBzFzmW90YI4ukeOHKiEU=
 			</data>
 		</dict>
 		<key>Modules/module.modulemap</key>
@@ -59,26 +74,37 @@
 			5XzuITy/Hpe53PuAhpo0CM+njmvD2ojdYaB6R5WeGFY=
 			</data>
 		</dict>
+		<key>Resources/COPYING</key>
+		<dict>
+			<key>hash</key>
+			<data>
+			vCUmMYBc8DcEj2T+9WL5jCoL3J4=
+			</data>
+			<key>hash2</key>
+			<data>
+			0qtXWDNkidphwSzFu3V9pTOcSukAH5uwVitDcCSa+BQ=
+			</data>
+		</dict>
 		<key>Resources/Config.xcconfig</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			vDDTFM2gnQTTjFOTA/RhMkvlec0=
+			zSFoFNjmzHsDxlP2cYjJRyLl4Uw=
 			</data>
 			<key>hash2</key>
 			<data>
-			t0u0RpqoP79RlJMKf09NpLMjl1jTuTTKwusQyqyIt5I=
+			000O5nM0pbPVIibixvA9m5/5uwX6rQSkDYyaVBTZB9U=
 			</data>
 		</dict>
 		<key>Resources/Info.plist</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			lrRd7Hm5lpo/S1eGH7T/lS7pf/E=
+			IvGIu2nHewCMJB7JBURYKdsRZEk=
 			</data>
 			<key>hash2</key>
 			<data>
-			MDx8YYHs5ppu6tmM5IfKqe4qdmpZ/gxBVEYWzDDHLZk=
+			bwvA9UPAQOfutGqSPrc4O9gt5/Vh8+JItOGVwY55SYk=
 			</data>
 		</dict>
 	</dict>

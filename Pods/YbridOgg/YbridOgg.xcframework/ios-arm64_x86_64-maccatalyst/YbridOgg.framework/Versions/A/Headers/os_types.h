@@ -1,3 +1,4 @@
+// this file has been modified by nacamar GmbH
 /********************************************************************
  *                                                                  *
  * THIS FILE IS PART OF THE OggVorbis SOFTWARE CODEC SOURCE CODE.   *
