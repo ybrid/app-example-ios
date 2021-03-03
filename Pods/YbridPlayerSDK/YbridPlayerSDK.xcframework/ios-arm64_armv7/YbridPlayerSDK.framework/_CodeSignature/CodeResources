@@ -6,7 +6,7 @@
 	<dict>
 		<key>Info.plist</key>
 		<data>
-		CrrUaaE6grWFu6muF1p5Yg2DWZY=
+		A+yNxjEZXgfbElBoY4wdZdMRkTM=
 		</data>
 		<key>Modules/YbridPlayerSDK.swiftmodule/arm.swiftdoc</key>
 		<data>
@@ -18,7 +18,7 @@
 		</data>
 		<key>Modules/YbridPlayerSDK.swiftmodule/arm.swiftmodule</key>
 		<data>
-		nmjrVeRv+zR5pioDr596WCNkK/U=
+		ZX5zAm0ksSF0jrSaoeTbd5piCC4=
 		</data>
 		<key>Modules/YbridPlayerSDK.swiftmodule/arm64-apple-ios.swiftdoc</key>
 		<data>
@@ -30,7 +30,7 @@
 		</data>
 		<key>Modules/YbridPlayerSDK.swiftmodule/arm64-apple-ios.swiftmodule</key>
 		<data>
-		5nr/Nmb8tYtcg9ayD1pMaH540mE=
+		X3384nN/TE+1vnmVMbvH95RrHgo=
 		</data>
 		<key>Modules/YbridPlayerSDK.swiftmodule/arm64.swiftdoc</key>
 		<data>
@@ -42,7 +42,7 @@
 		</data>
 		<key>Modules/YbridPlayerSDK.swiftmodule/arm64.swiftmodule</key>
 		<data>
-		5nr/Nmb8tYtcg9ayD1pMaH540mE=
+		X3384nN/TE+1vnmVMbvH95RrHgo=
 		</data>
 		<key>Modules/YbridPlayerSDK.swiftmodule/armv7-apple-ios.swiftdoc</key>
 		<data>
@@ -54,7 +54,7 @@
 		</data>
 		<key>Modules/YbridPlayerSDK.swiftmodule/armv7-apple-ios.swiftmodule</key>
 		<data>
-		nmjrVeRv+zR5pioDr596WCNkK/U=
+		ZX5zAm0ksSF0jrSaoeTbd5piCC4=
 		</data>
 		<key>Modules/YbridPlayerSDK.swiftmodule/armv7.swiftdoc</key>
 		<data>
@@ -66,7 +66,7 @@
 		</data>
 		<key>Modules/YbridPlayerSDK.swiftmodule/armv7.swiftmodule</key>
 		<data>
-		nmjrVeRv+zR5pioDr596WCNkK/U=
+		ZX5zAm0ksSF0jrSaoeTbd5piCC4=
 		</data>
 		<key>Modules/module.modulemap</key>
 		<data>
@@ -101,11 +101,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			nmjrVeRv+zR5pioDr596WCNkK/U=
+			ZX5zAm0ksSF0jrSaoeTbd5piCC4=
 			</data>
 			<key>hash2</key>
 			<data>
-			kYidkoHHFf57n2FHaVENktdw45t/Dors+w6yXAfscfE=
+			gxs8F9L8Wi57CwapfHMXlfSAktwvJdzG+uH5FJw0Vsg=
 			</data>
 		</dict>
 		<key>Modules/YbridPlayerSDK.swiftmodule/arm64-apple-ios.swiftdoc</key>
@@ -134,11 +134,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			5nr/Nmb8tYtcg9ayD1pMaH540mE=
+			X3384nN/TE+1vnmVMbvH95RrHgo=
 			</data>
 			<key>hash2</key>
 			<data>
-			r2Q7M4ACcJdz/44oAoWRo1Wp2rCzpTtEf3wCmM3SxQ0=
+			F83f15E0A64SA6q6HA9ULT0dEwHwLNmXSKT8WLRywpM=
 			</data>
 		</dict>
 		<key>Modules/YbridPlayerSDK.swiftmodule/arm64.swiftdoc</key>
@@ -167,11 +167,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			5nr/Nmb8tYtcg9ayD1pMaH540mE=
+			X3384nN/TE+1vnmVMbvH95RrHgo=
 			</data>
 			<key>hash2</key>
 			<data>
-			r2Q7M4ACcJdz/44oAoWRo1Wp2rCzpTtEf3wCmM3SxQ0=
+			F83f15E0A64SA6q6HA9ULT0dEwHwLNmXSKT8WLRywpM=
 			</data>
 		</dict>
 		<key>Modules/YbridPlayerSDK.swiftmodule/armv7-apple-ios.swiftdoc</key>
@@ -200,11 +200,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			nmjrVeRv+zR5pioDr596WCNkK/U=
+			ZX5zAm0ksSF0jrSaoeTbd5piCC4=
 			</data>
 			<key>hash2</key>
 			<data>
-			kYidkoHHFf57n2FHaVENktdw45t/Dors+w6yXAfscfE=
+			gxs8F9L8Wi57CwapfHMXlfSAktwvJdzG+uH5FJw0Vsg=
 			</data>
 		</dict>
 		<key>Modules/YbridPlayerSDK.swiftmodule/armv7.swiftdoc</key>
@@ -233,11 +233,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			nmjrVeRv+zR5pioDr596WCNkK/U=
+			ZX5zAm0ksSF0jrSaoeTbd5piCC4=
 			</data>
 			<key>hash2</key>
 			<data>
-			kYidkoHHFf57n2FHaVENktdw45t/Dors+w6yXAfscfE=
+			gxs8F9L8Wi57CwapfHMXlfSAktwvJdzG+uH5FJw0Vsg=
 			</data>
 		</dict>
 		<key>Modules/module.modulemap</key>
