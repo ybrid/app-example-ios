@@ -93,6 +93,7 @@ class ViewController: UIViewController, AudioPlayerListener, UIPickerViewDataSou
     // MARK: main
     override func viewDidLoad() {
         super.viewDidLoad()
+        Logger.verbose = true
         Logger.shared.notice("using \(AudioPlayer.versionString)")
         
         urls.append(contentsOf: loadUrls(resource: "streams"))
