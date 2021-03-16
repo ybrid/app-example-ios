@@ -174,9 +174,8 @@ class PlayerToggleStressTest: XCTestCase, AudioPlayerListener {
     
     func stateChanged(_ to: PlaybackState) {}
     func displayTitleChanged(_ title: String?) {}
-    
-    func currentProblem(_ text: String?) {
-        Logger.testing.error("-- problem '\(text ?? "(nil)")'")
+    func error(_ severity: ErrorSeverity, _ error: AudioPlayerError) {
+        Logger.testing.error("-- problem \(severity): \(error.localizedDescription)" )
     }
     func playingSince(_ seconds: TimeInterval?) {
         if let since = seconds {

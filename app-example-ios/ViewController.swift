@@ -37,18 +37,20 @@ class ViewController: UIViewController, AudioPlayerListener, UIPickerViewDataSou
     var urls:[(String,String)] = [
         ("addradio-demo (ybrid)",   "https://stagecast.ybrid.io/adaptive-demo"),
         ("swr3 (ybrid)",    "https://swr-swr3.cast.ybrid.io/swr/swr3/ybrid")
+        // more radios are added from streams.txt
     ]
     
     var player:AudioPlayer?
-    var streamUrl:String? {
+    var mediaUrl:String? {
         didSet {
-            if oldValue != streamUrl {
+            if oldValue != mediaUrl {
                 if player?.state != PlaybackState.stopped {
                     player?.stop()
                 }
-                Logger.shared.debug("url changed to \(streamUrl!)")
-                player = createPlayer(streamUrl!)
+                Logger.shared.debug("url changed to \(mediaUrl!)")
+                player = createPlayer(mediaUrl!)
                 playingSince(0)
+                noError()
             }
         }
     }
@@ -98,10 +100,10 @@ class ViewController: UIViewController, AudioPlayerListener, UIPickerViewDataSou
         
         urls.append(contentsOf: loadUrls(resource: "streams"))
         
-        streamUrl = initializeUrlPicker(initialSelectedRow: 1)
+        mediaUrl = initializeUrlPicker(initialSelectedRow: 1)
         
         displayTitleChanged(nil)
-        currentProblem(nil)
+        noError()
         playingSince(0)
         durationReadyToPlay(nil)
         durationConnected(nil)
@@ -135,7 +137,7 @@ class ViewController: UIViewController, AudioPlayerListener, UIPickerViewDataSou
     
     fileprivate func createPlayer(_ mediaUrl: String) -> AudioPlayer {
         guard let url = URL.init(string: mediaUrl) else {
-            fatalError("cannot create url from \(streamUrl!)")
+            fatalError("cannot create url from \(mediaUrl)")
         }
         return AudioPlayer(mediaUrl: url, listener: self)
     }
@@ -157,7 +159,7 @@ class ViewController: UIViewController, AudioPlayerListener, UIPickerViewDataSou
     @IBAction func toggle(_ sender: Any) {
         print("toggle called")
         if let state = player?.state, state == .stopped {
-            currentProblem(nil)
+            noError()
             playingSince(0)
             player?.play()
         } else {
@@ -167,12 +169,14 @@ class ViewController: UIViewController, AudioPlayerListener, UIPickerViewDataSou
     
     /// select station
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        streamUrl = urls[row].1
         Logger.shared.notice("\(urls[row].0) selected")
+        mediaUrl = urls[row].1
     }
     
 
-    
+    private func noError() {
+        self.problem.text = ""
+    }
     
     // MARK: AudioPlayerListener
     
@@ -185,15 +189,29 @@ class ViewController: UIViewController, AudioPlayerListener, UIPickerViewDataSou
             }
         }
     }
-    func currentProblem(_ text:String?) {
+
+    func error(_ severity: ErrorSeverity, _ exception: AudioPlayerError) {
         DispatchQueue.main.async {
-            if let text = text {
-                self.problem.text = text
-            } else {
-                self.problem.text = ""
+            switch severity {
+            case .fatal: self.problem.textColor = .red
+                self.problem.text = exception.message ?? exception.failureReason
+            case .recoverable: self.problem.textColor = .systemOrange
+                self.problem.text = exception.message
+            case .notice: self.problem.textColor = .systemGreen
+                self.problem.text = exception.message
+                DispatchQueue.global().async {
+                    sleep(5)
+                    DispatchQueue.main.async {
+                        self.noError()
+                    }
+                }
+            @unknown default:
+                Logger.shared.error("unknown error: severity \(severity), \(exception.localizedDescription)")
             }
+
         }
     }
+    
     func stateChanged(_ state: PlaybackState) {
         DispatchQueue.main.async {
             Logger.shared.debug("state changed to \(state)")
@@ -212,6 +230,7 @@ class ViewController: UIViewController, AudioPlayerListener, UIPickerViewDataSou
             }
         }
     }
+
     func playingSince(_ seconds: TimeInterval?) {
         DispatchQueue.main.async {
             guard let playedS = seconds else {

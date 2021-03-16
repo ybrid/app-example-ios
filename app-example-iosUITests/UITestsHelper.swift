@@ -42,18 +42,25 @@ extension TimeInterval {
 }
 
 class TestAudioPlayerListener : AudioPlayerListener {
-
+    
+    var statusCode:Int32 = 0
     func stateChanged(_ state: PlaybackState) {
         Logger.testing.notice("-- player is \(state)")
+    }
+    func error(_ severity: ErrorSeverity, _ error: AudioPlayerError) {
+        Logger.testing.error("-- player \(severity): \(error.localizedDescription)" )
+        if let code = error.osstatus, code != 0 {
+            statusCode = code
+        } else {
+            statusCode = 0
+        }
+        
+
     }
     func displayTitleChanged(_ title: String?) {
         Logger.testing.notice("-- combined display title is \(title ?? "(nil)")")
     }
-
-    func currentProblem(_ text: String?) {
-        Logger.testing.notice("-- problem is \(text ?? "(nil)")")
-    }
-
+    
     func playingSince(_ seconds: TimeInterval?) {
         if let duration = seconds {
             Logger.testing.notice("-- playing for \(duration.S) seconds ")

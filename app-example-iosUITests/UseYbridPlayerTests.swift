@@ -93,14 +93,22 @@ class UseYbridPlayerTests: XCTestCase {
     /*
      You want to see a problem?
      Filter the console output by '-- '
+     
+     You can always query statusCode for detailed information
      */
     func test04_ErrorWithPlayer() {
         let badUrl = URL.init(string: "https://unknown.cast.io/bad/url")!
         let player = AudioPlayer(mediaUrl: badUrl, listener: playerListener)
+        XCTAssertEqual(0, playerListener.statusCode)
         player.play()
+        XCTAssertEqual(0, playerListener.statusCode)
         XCTAssertEqual(player.state, PlaybackState.buffering)
+        XCTAssertEqual(0, playerListener.statusCode)
         sleep(1)
+        XCTAssertNotEqual(0, playerListener.statusCode)
         XCTAssertEqual(player.state, PlaybackState.stopped)
+
+        XCTAssertEqual(-1003, playerListener.statusCode) // see code AudioPipeline.ErrorKind.hostNotFound
     }
 
     
