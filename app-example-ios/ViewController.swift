@@ -31,6 +31,7 @@ import AppKit
 import AVFoundation
 import YbridPlayerSDK
 
+
 class ViewController: UIViewController, AudioPlayerListener, UIPickerViewDataSource, UIPickerViewDelegate {
     
 
@@ -95,7 +96,7 @@ class ViewController: UIViewController, AudioPlayerListener, UIPickerViewDataSou
     // MARK: main
     override func viewDidLoad() {
         super.viewDidLoad()
-        Logger.verbose = true
+//        Logger.verbose = true
         Logger.shared.notice("using \(AudioPlayer.versionString)")
         
         urls.append(contentsOf: loadUrls(resource: "streams"))
@@ -114,6 +115,15 @@ class ViewController: UIViewController, AudioPlayerListener, UIPickerViewDataSou
         DispatchQueue.main.async {
             self.urlPicker.reloadAllComponents()
         }
+    }
+    
+    
+    override func didReceiveMemoryWarning() {
+        Logger.shared.notice()
+        if PlayerContext.handleMemoryLimit() {
+            Logger.shared.notice("player handeled memory limit")
+        }
+        super.didReceiveMemoryWarning()
     }
     
     func loadUrls(resource:String) -> [(String,String)]{
