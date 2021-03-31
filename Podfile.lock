@@ -1,7 +1,7 @@
 PODS:
   - YbridOgg (0.7.3)
-  - YbridOpus (0.7.0)
-  - YbridPlayerSDK (0.7.1):
+  - YbridOpus (0.7.1)
+  - YbridPlayerSDK (0.8.1):
     - YbridOgg
     - YbridOpus
 
@@ -16,9 +16,9 @@ SPEC REPOS:
 
 SPEC CHECKSUMS:
   YbridOgg: e8e652ef1a291175a486ef90d192cfd964261630
-  YbridOpus: 617534d0c4252633801a60c629acd3a28df7cd07
-  YbridPlayerSDK: 86f0b31c5de2696026fd3aaeeb72987bd9fa65e6
+  YbridOpus: 76ef1ad9631b8128810bd894ff73ffd641d67cfb
+  YbridPlayerSDK: 2ea286985efb34f0565d64fbb985bf19bc0bcd31
 
-PODFILE CHECKSUM: f93b35a3eb436129b371178ecc370742d470d377
+PODFILE CHECKSUM: 51136ba41530569540501bd013585db6a9655343
 
 COCOAPODS: 1.10.0

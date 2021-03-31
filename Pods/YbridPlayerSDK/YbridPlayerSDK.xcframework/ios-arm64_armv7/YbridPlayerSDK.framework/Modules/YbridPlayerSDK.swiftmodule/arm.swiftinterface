@@ -10,10 +10,40 @@ import YbridOgg
 import YbridOpus
 import os.log
 import os
+public enum ErrorSeverity {
+  case fatal
+  case recoverable
+  case notice
+  public static func == (a: YbridPlayerSDK.ErrorSeverity, b: YbridPlayerSDK.ErrorSeverity) -> Swift.Bool
+  public var hashValue: Swift.Int {
+    get
+  }
+  public func hash(into hasher: inout Swift.Hasher)
+}
+public typealias ErrorCode = Swift.Int32
+@_hasMissingDesignatedInitializers public class AudioPlayerError : Foundation.LocalizedError {
+  public var code: YbridPlayerSDK.ErrorCode {
+    get
+  }
+  public var message: Swift.String?
+  public var osstatus: Darwin.OSStatus?
+  public var errorDescription: Swift.String? {
+    get
+  }
+  public var failureReason: Swift.String? {
+    get
+  }
+  @objc deinit
+}
+@_hasMissingDesignatedInitializers public class PlayerContext {
+  public static var memoryLimitMB: Swift.Float
+  public static func handleMemoryLimit() -> Swift.Bool
+  @objc deinit
+}
 public protocol AudioPlayerListener : AnyObject {
   func stateChanged(_ state: YbridPlayerSDK.PlaybackState)
   func displayTitleChanged(_ title: Swift.String?)
-  func currentProblem(_ text: Swift.String?)
+  func error(_ severity: YbridPlayerSDK.ErrorSeverity, _ exception: YbridPlayerSDK.AudioPlayerError)
   func playingSince(_ seconds: Foundation.TimeInterval?)
   func durationReadyToPlay(_ seconds: Foundation.TimeInterval?)
   func durationConnected(_ seconds: Foundation.TimeInterval?)
@@ -35,7 +65,6 @@ public class AudioPlayer {
   }
   public var state: YbridPlayerSDK.PlaybackState {
     get
-    set
   }
   public init(mediaUrl: Foundation.URL, listener: YbridPlayerSDK.AudioPlayerListener?)
   @objc deinit
@@ -52,5 +81,7 @@ public class Logger {
   public func error(_ message: Swift.String = "", fullSourcePath: Swift.String = #file, functionWithParameters: Swift.String = #function, line: Swift.Int = #line)
   @objc deinit
 }
+extension YbridPlayerSDK.ErrorSeverity : Swift.Equatable {}
+extension YbridPlayerSDK.ErrorSeverity : Swift.Hashable {}
 extension YbridPlayerSDK.PlaybackState : Swift.Equatable {}
 extension YbridPlayerSDK.PlaybackState : Swift.Hashable {}
