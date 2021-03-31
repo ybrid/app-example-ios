@@ -96,7 +96,7 @@ class ViewController: UIViewController, AudioPlayerListener, UIPickerViewDataSou
     // MARK: main
     override func viewDidLoad() {
         super.viewDidLoad()
-//        Logger.verbose = true
+        Logger.verbose = true
         Logger.shared.notice("using \(AudioPlayer.versionString)")
         
         urls.append(contentsOf: loadUrls(resource: "streams"))
@@ -121,7 +121,7 @@ class ViewController: UIViewController, AudioPlayerListener, UIPickerViewDataSou
     override func didReceiveMemoryWarning() {
         Logger.shared.notice()
         if PlayerContext.handleMemoryLimit() {
-            Logger.shared.notice("player handeled memory limit")
+            Logger.shared.error("player handeled memory limit of \(PlayerContext.memoryLimitMB) MB")
         }
         super.didReceiveMemoryWarning()
     }

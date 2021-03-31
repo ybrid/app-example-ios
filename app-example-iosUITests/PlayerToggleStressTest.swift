@@ -157,6 +157,10 @@ class PlayerToggleStressTest: XCTestCase, AudioPlayerListener {
                 rangeTo = rangeTo * 2 / 3
             }
         }
+        
+        if self.player?.state != .stopped {
+            self.player?.stop()
+        }
     }
     
     private func toggle() -> Bool {
