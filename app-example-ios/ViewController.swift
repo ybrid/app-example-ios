@@ -182,6 +182,7 @@ class ViewController: UIViewController, AudioPlayerListener, UIPickerViewDelegat
             self.playingTitle.numberOfLines = 0
             
             self.togglePlay.setTitleColor(UIColor.gray, for: UIControl.State.disabled)
+            self.togglePlay.setImage(UIImage(named: "play")!.withGrayscale, for: UIControl.State.disabled)
             
             self.playedSince.font = self.playedSince.font.monospacedDigitFont
             self.ready.font = self.ready.font.monospacedDigitFont
@@ -237,19 +238,24 @@ class ViewController: UIViewController, AudioPlayerListener, UIPickerViewDelegat
         }
     }
     
+    let playImage = UIImage(named: "play")!
+    let stopImage = UIImage(named: "stop")!.scale(factor: 0.8)
     func stateChanged(_ state: PlaybackState) {
         DispatchQueue.main.async {
             Logger.shared.debug("state changed to \(state)")
             switch state {
             case .stopped:
-                self.togglePlay.setTitle("play", for: .normal)
+                self.togglePlay.setTitle("", for: .normal)
+                self.togglePlay.setImage(self.playImage, for: UIControl.State.normal)
                 self.displayTitleChanged(nil)
             case .buffering:
-                self.togglePlay.setTitle("...", for: .normal)
+                self.togglePlay.setTitle(". . .", for: .normal)
+                self.togglePlay.setImage(nil, for: UIControl.State.normal)
                 self.durationConnected(nil)
                 self.durationReadyToPlay(nil)
             case .playing:
-                self.togglePlay.setTitle("stop", for: .normal)
+                self.togglePlay.setTitle("", for: .normal)
+                self.togglePlay.setImage(self.stopImage, for: UIControl.State.normal)
             @unknown default:
                 Logger.shared.error("state changed to unknown \(state)")
             }
@@ -374,7 +380,6 @@ class MediaPickerData: NSObject, UIPickerViewDataSource {
 
 fileprivate class UrlField: UITextField {
 
-    
     func enable(placeholder: String) {
         self.isEnabled = true
         self.backgroundColor = UIColor(white: 0.4, alpha: 0.3 )
@@ -421,5 +426,20 @@ fileprivate extension UIFontDescriptor {
         let fontDescriptorAttributes = [UIFontDescriptor.AttributeName.featureSettings: fontDescriptorFeatureSettings]
         let fontDescriptor = self.addingAttributes(fontDescriptorAttributes)
         return fontDescriptor
+    }
+}
+
+extension UIImage {
+    var withGrayscale: UIImage {
+        guard let ciImage = CIImage(image: self, options: nil) else { return self }
+        let paramsColor: [String: AnyObject] = [kCIInputBrightnessKey: NSNumber(value: 0.0), kCIInputContrastKey: NSNumber(value: 1.0), kCIInputSaturationKey: NSNumber(value: 0.0)]
+        let grayscale = ciImage.applyingFilter("CIColorControls", parameters: paramsColor)
+        guard let processedCGImage = CIContext().createCGImage(grayscale, from: grayscale.extent) else { return self }
+        return UIImage(cgImage: processedCGImage, scale: scale, orientation: imageOrientation)
+    }
+
+    func scale(factor: Float) -> UIImage {
+        let scaledImage = UIImage( cgImage: self.cgImage!, scale: self.scale/CGFloat(factor), orientation: self.imageOrientation)
+        return scaledImage
     }
 }
