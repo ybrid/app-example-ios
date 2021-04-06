@@ -15,7 +15,6 @@ TheRadio.CC (opus)  = http://theradio.cc:8000/trcc-stream.opus
 radio13.ru (aac)  = http://play.radio13.ru:8000/96
 1Live (aac-v2, mono)   = https://wdr-1live-live.cast.addradio.de/wdr/1live/live/aac/low
 
-# tests files
+# on demand files
 piano sound (mp3, short)     = https://github.com/ybrid/test-files/blob/main/mpeg-audio/music/piano.mp3?raw=true
-# on demand
-podcast (mp3, 48 min) = http://backtracks.fm/ycombinator/pr/0f685f72-29b1-11e9-9bcf-0ece7a7d2472/111---jake-klamka-and-kevin-hale---y-combinator.mp3?s=1&amp;sd=1&amp;u=1549423185
+podcast (mp3, 5 min) = https://s3.eu-central-1.amazonaws.com/neustadt/craft/audios/1.-Die-Erst%C3%BCrmung-des-Pfarrhauses.mp3
