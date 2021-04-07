@@ -170,7 +170,7 @@ class ViewController: UIViewController, AudioPlayerListener, UIPickerViewDelegat
         
         if urlField.isValidUrl, let url = urlField.url {
             mediaUrl = url
-            pickerData.urls[row].url = url.absoluteString
+            pickerData.urls[row].url = urlField.text ?? ""
         }
     }
     
@@ -393,7 +393,9 @@ fileprivate class UrlField: UITextField {
             return nil
         }
         
-        if let url = URL(string: text.trimmingCharacters(in: CharacterSet.whitespaces)) {
+        let urlString = text.trimmingCharacters(in: CharacterSet.whitespaces)
+                            .addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)
+        if let urlEncoded = urlString, let url = URL(string: urlEncoded) {
             return url
         }
         return nil
