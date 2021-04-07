@@ -37,24 +37,27 @@ class ViewController: UIViewController, AudioPlayerListener, UIPickerViewDelegat
     var player:AudioPlayer?
     var mediaUrl:URL? {
         didSet {
-            guard let url = mediaUrl else {
-                if player?.state != PlaybackState.stopped {
-                    player?.stop()
-                }
-                togglePlay.isEnabled = false
-                return
-            }
-            togglePlay.isEnabled = true
             if oldValue == mediaUrl {
                 return
             }
             
-            Logger.shared.debug("url changed to \(url)")
+            Logger.shared.debug("url changed to \(mediaUrl?.absoluteString ?? "(nil)")")
+
             if player?.state != PlaybackState.stopped {
                 player?.stop()
             }
+            
             noError()
             playingSince(0)
+            durationReadyToPlay(nil)
+            durationConnected(nil)
+            bufferSize(averagedSeconds: nil, currentSeconds: nil)
+            
+            guard let url = mediaUrl else {
+                togglePlay.isEnabled = false
+                return
+            }
+            togglePlay.isEnabled = true
             player = AudioPlayer(mediaUrl: url, listener: self)
         }
     }
@@ -121,12 +124,20 @@ class ViewController: UIViewController, AudioPlayerListener, UIPickerViewDelegat
     /// toggle play or stop
     @IBAction func toggle(_ sender: Any) {
         print("toggle called")
-        if player?.state == .stopped {
-            noError()
-            playingSince(0)
-            player?.play()
-        } else {
-            player?.stop()
+        guard let player = player else {
+            return
+        }
+        switch player.state  {
+        case .stopped:
+            player.play()
+        case .pausing:
+            player.play()
+        case .playing:
+            player.canPause ? player.pause() : player.stop()
+        case .buffering:
+            player.stop()
+        @unknown default:
+            fatalError("unknown player state \(player.state )")
         }
     }
     
@@ -182,7 +193,7 @@ class ViewController: UIViewController, AudioPlayerListener, UIPickerViewDelegat
             self.playingTitle.numberOfLines = 0
             
             self.togglePlay.setTitleColor(UIColor.gray, for: UIControl.State.disabled)
-            self.togglePlay.setImage(UIImage(named: "play")!.withGrayscale, for: UIControl.State.disabled)
+            self.togglePlay.setImage(self.playImage.withGrayscale, for: UIControl.State.disabled)
             
             self.playedSince.font = self.playedSince.font.monospacedDigitFont
             self.ready.font = self.ready.font.monospacedDigitFont
@@ -239,6 +250,7 @@ class ViewController: UIViewController, AudioPlayerListener, UIPickerViewDelegat
     }
     
     let playImage = UIImage(named: "play")!
+    let pauseImage = UIImage(named: "pause")!.scale(factor: 0.9)
     let stopImage = UIImage(named: "stop")!.scale(factor: 0.8)
     func stateChanged(_ state: PlaybackState) {
         DispatchQueue.main.async {
@@ -247,15 +259,22 @@ class ViewController: UIViewController, AudioPlayerListener, UIPickerViewDelegat
             case .stopped:
                 self.togglePlay.setTitle("", for: .normal)
                 self.togglePlay.setImage(self.playImage, for: UIControl.State.normal)
+                
                 self.displayTitleChanged(nil)
+                
+            case .pausing:
+                self.togglePlay.setTitle("", for: .normal)
+                self.togglePlay.setImage(self.playImage, for: UIControl.State.normal)
             case .buffering:
                 self.togglePlay.setTitle(". . .", for: .normal)
                 self.togglePlay.setImage(nil, for: UIControl.State.normal)
-                self.durationConnected(nil)
-                self.durationReadyToPlay(nil)
             case .playing:
                 self.togglePlay.setTitle("", for: .normal)
-                self.togglePlay.setImage(self.stopImage, for: UIControl.State.normal)
+                if let player = self.player, player.canPause {
+                    self.togglePlay.setImage(self.pauseImage, for: UIControl.State.normal)
+                } else {
+                    self.togglePlay.setImage(self.stopImage, for: UIControl.State.normal)
+                }
             @unknown default:
                 Logger.shared.error("state changed to unknown \(state)")
             }
