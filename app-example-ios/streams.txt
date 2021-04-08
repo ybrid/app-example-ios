@@ -16,5 +16,6 @@ radio13.ru (aac)  = http://play.radio13.ru:8000/96
 1Live (aac-v2, mono)   = https://wdr-1live-live.cast.addradio.de/wdr/1live/live/aac/low
 
 # on demand files
-piano sound (mp3, short)     = https://github.com/ybrid/test-files/blob/main/mpeg-audio/music/piano.mp3?raw=true
-podcast (mp3, 5 min) = https://s3.eu-central-1.amazonaws.com/neustadt/craft/audios/1.-Die-Erst%C3%BCrmung-des-Pfarrhauses.mp3
+organ sound (mp3, short)    = https://github.com/ybrid/test-files/blob/main/mpeg-audio/music/organ.mp3?raw=true
+music (mp3, 6 min) = https://github.com/ybrid/test-files/blob/main/mpeg-audio/music/music.mp3?raw=true
+paper lights (opus, 4 min) = https://opus-codec.org/static/examples/ehren-paper_lights-96.opus
