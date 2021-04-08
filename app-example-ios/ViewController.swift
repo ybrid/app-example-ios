@@ -41,7 +41,7 @@ class ViewController: UIViewController, AudioPlayerListener, UIPickerViewDelegat
                 return
             }
             
-            Logger.shared.debug("url changed to \(mediaUrl?.absoluteString ?? "(nil)")")
+            Logger.shared.debug("mediaUrl changed to \(mediaUrl?.absoluteString ?? "(nil)")")
 
             if player?.state != PlaybackState.stopped {
                 player?.stop()
@@ -128,9 +128,7 @@ class ViewController: UIViewController, AudioPlayerListener, UIPickerViewDelegat
             return
         }
         switch player.state  {
-        case .stopped:
-            player.play()
-        case .pausing:
+        case .stopped, .pausing:
             player.play()
         case .playing:
             player.canPause ? player.pause() : player.stop()
@@ -147,19 +145,20 @@ class ViewController: UIViewController, AudioPlayerListener, UIPickerViewDelegat
         let selected = pickerData.urls[row]
         Logger.shared.notice("\(selected.label) selected")
         
-        self.urlField.text = selected.url
-        if selected.editable {
-            self.urlField.enable(placeholder: "enter URL here")
-        } else {
-            self.urlField.disable()
-        }
-        
-        if self.urlField.isValidUrl {
-            self.mediaUrl = self.urlField.url
-        } else {
-            self.mediaUrl = nil
-        }
-        
+        DispatchQueue.main.async {
+            self.urlField.text = selected.url
+            if selected.editable {
+                self.urlField.enable(placeholder: "enter URL here")
+            } else {
+                self.urlField.disable()
+            }
+            
+            if self.urlField.isValidUrl {
+                self.mediaUrl = self.urlField.url
+            } else {
+                self.mediaUrl = nil
+            }
+        }        
     }
     
     /// edit custom url
