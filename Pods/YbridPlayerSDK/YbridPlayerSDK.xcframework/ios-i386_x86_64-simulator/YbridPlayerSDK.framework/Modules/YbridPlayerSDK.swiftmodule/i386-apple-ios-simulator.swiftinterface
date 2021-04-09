@@ -53,6 +53,7 @@ public enum PlaybackState {
   case buffering
   case playing
   case stopped
+  case pausing
   public static func == (a: YbridPlayerSDK.PlaybackState, b: YbridPlayerSDK.PlaybackState) -> Swift.Bool
   public var hashValue: Swift.Int {
     get
@@ -66,10 +67,12 @@ public class AudioPlayer {
   public var state: YbridPlayerSDK.PlaybackState {
     get
   }
+  public var canPause: Swift.Bool
   public init(mediaUrl: Foundation.URL, listener: YbridPlayerSDK.AudioPlayerListener?)
   @objc deinit
   public func play()
   public func stop()
+  public func pause()
 }
 public class Logger {
   public static var verbose: Swift.Bool
