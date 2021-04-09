@@ -55,7 +55,7 @@ class YbridPlayerTests: XCTestCase {
         Logger.verbose = true
         let version = AudioPlayer.versionString
         Logger.testing.notice("-- \(version)")
-        XCTAssert(version.contains("YbridPlayerSDK"), "shoud contain YbridPlayerSDK")
+        XCTAssert(version.contains("YbridPlayerSDK"), "should contain 'YbridPlayerSDK'")
     }
     
     func test02_Mp3() {

@@ -93,14 +93,22 @@ class UseYbridPlayerTests: XCTestCase {
     /*
      You want to see a problem?
      Filter the console output by '-- '
+     
+     You can always query statusCode for detailed information
      */
     func test04_ErrorWithPlayer() {
         let badUrl = URL.init(string: "https://unknown.cast.io/bad/url")!
         let player = AudioPlayer(mediaUrl: badUrl, listener: playerListener)
+        XCTAssertEqual(0, playerListener.statusCode)
         player.play()
+        XCTAssertEqual(0, playerListener.statusCode)
         XCTAssertEqual(player.state, PlaybackState.buffering)
+        XCTAssertEqual(0, playerListener.statusCode)
         sleep(1)
+        XCTAssertNotEqual(0, playerListener.statusCode)
         XCTAssertEqual(player.state, PlaybackState.stopped)
+
+        XCTAssertEqual(-1003, playerListener.statusCode) // see code AudioPipeline.ErrorKind.hostNotFound
     }
 
     
@@ -114,6 +122,35 @@ class UseYbridPlayerTests: XCTestCase {
         sleep(6)
         player.stop()
         sleep(1)
+    }
+    
+    
+    /*
+     HttpSessions on urls that offer "expected content length != -1"
+     to be identified as on demand files. They can be paused.
+     Because all actions are asynchronous assertions are 1 second later.
+     */
+    func test06_OnDemandPlayPausePlayPauseStop() {
+        let opusUrl = URL.init(string: "https://github.com/ybrid/test-files/blob/main/mpeg-audio/music/organ.mp3?raw=true")!
+        let player = AudioPlayer(mediaUrl: opusUrl, listener: playerListener)
+        XCTAssertFalse(player.canPause)
+        player.play()
+        XCTAssertEqual(player.state, PlaybackState.buffering)
+        sleep(3)
+        XCTAssertTrue(player.canPause)
+        XCTAssertEqual(player.state, PlaybackState.playing)
+        player.pause()
+        sleep(1)
+        XCTAssertEqual(player.state, PlaybackState.pausing)
+        player.play()
+        sleep(1)
+        XCTAssertEqual(player.state, PlaybackState.playing)
+        player.pause()
+        sleep(1)
+        XCTAssertEqual(player.state, PlaybackState.pausing)
+        player.stop()
+        sleep(1)
+        XCTAssertEqual(player.state, PlaybackState.stopped)
     }
 }
 

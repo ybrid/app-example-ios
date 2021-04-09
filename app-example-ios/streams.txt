@@ -1,55 +1,21 @@
-radioX=http://stream.radiox.de:8000/live
-#http://www.radiox.de/media/radiox.m3u
-swr3 (icecast)=https://swr-edge-20b9-fra-lg-cdn.cast.addradio.de/swr/swr3/live/mp3/128/stream.mp3
+# ybrid streams
+addradio-demo (ybrid)   = https://stagecast.ybrid.io/adaptive-demo
+swr3 (ybrid)        = https://swr-swr3.cast.ybrid.io/swr/swr3/ybrid
 
-1live (aac, 24kHz)       = https://wdr-1live-live.cast.addradio.de/wdr/1live/live/aac/low
-egoFM (mp3, 48/128kbps, long buffer) = https://egofm-live.cast.addradio.de/egofm/live/mp3/high/stream.mp3
-dlf-live (mp3, 44.1/128kbps) = http://dradio-dlf-live.cast.addradio.de/dradio/dlf/live/mp3/128/stream.mp3
+# icecast streams
+hr2 (icecast, 48kHz)       =  https://hr-hr2-live.cast.addradio.de/hr/hr2/live/mp3/128/stream.mp3
+egoFM (icecast, 44,1kHz)     = https://egofm-live.cast.addradio.de/egofm/live/mp3/high/stream.mp3
+dlf-live (icecast, mono) = http://dradio-dlf-live.cast.addradio.de/dradio/dlf/live/mp3/64/stream.mp3
 
-# Tests files
-opus test file (3*10s) = http://dl.nacamar.c.nmdn.net/player/test/440Hz-v1.opus
-local dancefloor = file:///Users/florian/Music/audioTests/dancefloor-end-advert.opus
+# opus over http and https
+dlf-live (opus)     = https://dradio-dlf-live.cast.addradio.de/dradio/dlf/live/opus/high/stream.opus
+TheRadio.CC (opus)  = http://theradio.cc:8000/trcc-stream.opus
 
-# opus, http (some taken from http://dir.xiph.org/codecs/Opus)
-dlf-live (opus)         = https://dradio-dlf-live.cast.addradio.de/dradio/dlf/live/opus/high/stream.opus
-TheRadio.CC (opus)      = http://theradio.cc:8000/trcc-stream.opus
-RadioSEGA (opus)        = http://content.radiosega.net:8006/rs-opus-low.ogg
-Radio Dancefloor.it (opus) = http://streaming.radiodancefloor.it/live.opus
-radio13.ru (opus, 48k)  = http://play.radio13.ru:8000/96
-Intense Radio (op, large burst) = http://secure.live-streams.nl/opus.opus
-Svobodny vysilac.cs (op, icy) = http://svobodny-vysilac.cz:8000/live.opus
-Svobodny v.cs (op, mono, 16k) = http://svobodny-vysilac.cz:8000/live16k.opus
-KTQA-LP 95.3 FM (icy static) = http://stream.vis.nu:8000/ktqa.opus
-Radio Pluz              = http://www.pluz.com.ar:8020/live.opus
-313.fm (huge burst, smt. n/a)  = http://icecast.313.fm:8000/burst.opus
-RaBe.ch 95.6  (op)  = http://stream.rabe.ch:8000/livestream/rabe-high.opus
-PowerXS Hitradio (op, no burst) = http://vriezenet.xs4all.space:11041/opus
+# AAC
+radio13.ru (aac)  = http://play.radio13.ru:8000/96
+1Live (aac-v2, mono)   = https://wdr-1live-live.cast.addradio.de/wdr/1live/live/aac/low
 
-
-# more german stations
-hr-iNFO         =   https://hr-hrinfo-live.cast.addradio.de/hr/hrinfo/live/mp3/128/stream.mp3
-hr3 (128kbps)   =   https://hr-hr3-live.cast.addradio.de/hr/hr3/live/mp3/128/stream.mp3
-hr3 (48kbps)    =   https://hr-hr3-live.cast.addradio.de/hr/hr3/live/mp3/48/stream.mp3
-hr2             =   https://hr-hr2-live.cast.addradio.de/hr/hr2/live/mp3/128/stream.mp3
-planet-radio    =   https://mp3.planetradio.de/planetradio/hqlivestream.mp3
-planet (aac)    =   https://mp3.planetradio.de/planetradio/hqlivestream.aac
-ffh (http)      =   http://mp3.ffh.de/radioffh/hqlivestream.mp3
-ffh (aacp http) =   http://mp3.ffh.de/radioffh/hqlivestream.aac
-wdr-1live       =   https://wdr-1live-live.cast.addradio.de/wdr/1live/live/mp3/128/stream.mp3
-
-#error
-http-startpage  =   https://www.startpage.com
-RadioSotak (na) =   http://audio.streamsfortheworld.com:443/radiosotak_opus
-440Hz-Radio (err) = http://stream.440hz-radio.de:8080/440hz.opus
-Global German Radio Network = http://ggrn.de:8040/ggrn.opus
-
-# music cannels
-ffh leider geil =   http://mp3.ffh.de/ffhchannels/hqvoting.mp3
-ffh deutsch pur =   http://mp3.ffh.de/ffhchannels/hqdeutsch.mp3
-ffh brandneu    =   http://mp3.ffh.de/ffhchannels/hqbrandneu.mp3
-planet the club =   https://mp3.planetradio.de/plrchannels/hqtheclub.mp3
-
-# files
-mp3-file (82 min) = https://chtbl.com/track/18338/traffic.libsyn.com/secure/acquired/acquired_-_armrev_2.mp3
-podcast (48 min) = http://backtracks.fm/ycombinator/pr/0f685f72-29b1-11e9-9bcf-0ece7a7d2472/111---jake-klamka-and-kevin-hale---y-combinator.mp3?s=1&amp;sd=1&amp;u=1549423185
-opus file = https://opus-codec.org/static/examples/ehren-paper_lights-96.opus
+# on demand files
+organ sound (mp3, short)    = https://github.com/ybrid/test-files/blob/main/mpeg-audio/music/organ.mp3?raw=true
+music (mp3, 6 min) = https://github.com/ybrid/test-files/blob/main/mpeg-audio/music/music.mp3?raw=true
+paper lights (opus, 4 min) = https://opus-codec.org/static/examples/ehren-paper_lights-96.opus

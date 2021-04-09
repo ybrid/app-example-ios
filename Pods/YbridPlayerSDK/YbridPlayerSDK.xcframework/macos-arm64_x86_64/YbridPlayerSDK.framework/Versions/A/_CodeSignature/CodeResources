@@ -6,7 +6,7 @@
 	<dict>
 		<key>Resources/Info.plist</key>
 		<data>
-		gtRcs1Vj91qkOcPzQ40SGd2j7NE=
+		lOhayDwzzaoEU4aP8zWfiEBLqLQ=
 		</data>
 	</dict>
 	<key>files2</key>
@@ -26,22 +26,22 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			npaD1cQFIEJOwrOdRpDkPoZQfTs=
+			/wbStFYn37JQUvNZG1x2++DApFE=
 			</data>
 			<key>hash2</key>
 			<data>
-			a7//XBnefRpW3B01dofpXYw+Lj0aaUo7rcLJ5IsJgUw=
+			qsvqhqvyWzlf9vC7iS753aGcfIIGvJdvD28Z3HVwCc8=
 			</data>
 		</dict>
 		<key>Modules/YbridPlayerSDK.swiftmodule/arm64-apple-macos.swiftmodule</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			DQHaN74AUud3WO8hx8gt4NbwoxU=
+			8tr7Vmw3ymPQtknNV7qTzkKzb2k=
 			</data>
 			<key>hash2</key>
 			<data>
-			mKfqtXXZGf54ZOGEBtlvTFPShhNPpCLu3Ak88K+kJ+w=
+			m6RZhJlAcFgZ3dnIcPDs6sXjPIm8WYmepGZrcl49FaY=
 			</data>
 		</dict>
 		<key>Modules/YbridPlayerSDK.swiftmodule/arm64.swiftdoc</key>
@@ -59,22 +59,22 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			npaD1cQFIEJOwrOdRpDkPoZQfTs=
+			/wbStFYn37JQUvNZG1x2++DApFE=
 			</data>
 			<key>hash2</key>
 			<data>
-			a7//XBnefRpW3B01dofpXYw+Lj0aaUo7rcLJ5IsJgUw=
+			qsvqhqvyWzlf9vC7iS753aGcfIIGvJdvD28Z3HVwCc8=
 			</data>
 		</dict>
 		<key>Modules/YbridPlayerSDK.swiftmodule/arm64.swiftmodule</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			DQHaN74AUud3WO8hx8gt4NbwoxU=
+			8tr7Vmw3ymPQtknNV7qTzkKzb2k=
 			</data>
 			<key>hash2</key>
 			<data>
-			mKfqtXXZGf54ZOGEBtlvTFPShhNPpCLu3Ak88K+kJ+w=
+			m6RZhJlAcFgZ3dnIcPDs6sXjPIm8WYmepGZrcl49FaY=
 			</data>
 		</dict>
 		<key>Modules/YbridPlayerSDK.swiftmodule/x86_64-apple-macos.swiftdoc</key>
@@ -92,22 +92,22 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			sdGSqzVOErNNxbnGYxxwGEaepRk=
+			opPY0a4OhMDIuXmTtStPxiXsfb4=
 			</data>
 			<key>hash2</key>
 			<data>
-			ZUitu5+22/pzSJeS84D5PeeY0+CPvBS2OzAtkDroRYY=
+			EOlXVx0cX+jnbdedA1MD0TKhhFKnrHGSXoKVeJ3sBD4=
 			</data>
 		</dict>
 		<key>Modules/YbridPlayerSDK.swiftmodule/x86_64-apple-macos.swiftmodule</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			UaQ1Xx7vavLIkWtMNYnvSPfzQBQ=
+			xxJ+dwntVKALpz0trILBqUsSEaE=
 			</data>
 			<key>hash2</key>
 			<data>
-			IEwDuGJ2wpHdNrkbcz++A2KdmL2aujS+tmF6+OJSw5w=
+			GsPW4UjxhLzod0zj4hOHggv03L1CpfaPMpD/Hrhq90Q=
 			</data>
 		</dict>
 		<key>Modules/YbridPlayerSDK.swiftmodule/x86_64.swiftdoc</key>
@@ -125,22 +125,22 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			sdGSqzVOErNNxbnGYxxwGEaepRk=
+			opPY0a4OhMDIuXmTtStPxiXsfb4=
 			</data>
 			<key>hash2</key>
 			<data>
-			ZUitu5+22/pzSJeS84D5PeeY0+CPvBS2OzAtkDroRYY=
+			EOlXVx0cX+jnbdedA1MD0TKhhFKnrHGSXoKVeJ3sBD4=
 			</data>
 		</dict>
 		<key>Modules/YbridPlayerSDK.swiftmodule/x86_64.swiftmodule</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			UaQ1Xx7vavLIkWtMNYnvSPfzQBQ=
+			xxJ+dwntVKALpz0trILBqUsSEaE=
 			</data>
 			<key>hash2</key>
 			<data>
-			IEwDuGJ2wpHdNrkbcz++A2KdmL2aujS+tmF6+OJSw5w=
+			GsPW4UjxhLzod0zj4hOHggv03L1CpfaPMpD/Hrhq90Q=
 			</data>
 		</dict>
 		<key>Modules/module.modulemap</key>
@@ -158,11 +158,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			gtRcs1Vj91qkOcPzQ40SGd2j7NE=
+			lOhayDwzzaoEU4aP8zWfiEBLqLQ=
 			</data>
 			<key>hash2</key>
 			<data>
-			xorYkq98r7Sr7x94YgklbA7+SQrJ2s0UM3hlxU2/tm4=
+			HXzYh2Hw7NHF3DbA24B3M0DZjthuKUrnfldPqjZ+2H8=
 			</data>
 		</dict>
 	</dict>
