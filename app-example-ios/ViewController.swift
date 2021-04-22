@@ -59,6 +59,10 @@ class ViewController: UIViewController, AudioPlayerListener, UIPickerViewDelegat
             }
             togglePlay.isEnabled = true
             player = AudioPlayer(mediaUrl: url, listener: self)
+            if let playbackUri = player?.session.playbackUri {
+                urlField.text = playbackUri
+            }
+//            player?.canPause = true
         }
     }
     
@@ -426,6 +430,9 @@ fileprivate class UrlField: UITextField {
     
     var isValidUrl:Bool {
         guard let url = url else { return false }
+        if url.pathComponents[0].hasPrefix("icyx") {
+            return true
+        }
         return UIApplication.shared.canOpenURL(url)
     }
 }
