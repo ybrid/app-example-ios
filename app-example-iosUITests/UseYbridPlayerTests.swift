@@ -50,7 +50,7 @@ class UseYbridPlayerTests: XCTestCase {
     func test01_PlaySomeSeconds() {
         let player = AudioPlayer(mediaUrl: url, listener: nil)
         player.play()
-        sleep(6)
+        sleep(5)
         player.stop()
         sleep(1) // If the process is killed too early you may hear crackling.
     }
@@ -67,7 +67,7 @@ class UseYbridPlayerTests: XCTestCase {
         XCTAssertEqual(player.state, PlaybackState.stopped)
         player.play()
         XCTAssertEqual(player.state, PlaybackState.buffering)
-        sleep(3)
+        sleep(5)
         XCTAssertEqual(player.state, PlaybackState.playing)
         player.stop()
         XCTAssertEqual(player.state, PlaybackState.playing)

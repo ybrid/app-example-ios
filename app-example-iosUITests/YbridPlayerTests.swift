@@ -39,7 +39,7 @@ struct Platform {
 
 class YbridPlayerTests: XCTestCase {
 
-    let url = URL.init(string: "https://swr-swr3.cast.ybrid.io/swr/swr3/ybrid")!
+    let url = URL.init(string: "https://stagecast.ybrid.io/swr3/mp3/mid")!
     let opus = URL.init(string:  "https://dradio-dlf-live.cast.addradio.de/dradio/dlf/live/opus/high/stream.opus")!
  
     override func setUpWithError() throws {

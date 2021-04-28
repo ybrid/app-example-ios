@@ -59,10 +59,10 @@ class ViewController: UIViewController, AudioPlayerListener, UIPickerViewDelegat
             }
             togglePlay.isEnabled = true
             player = AudioPlayer(mediaUrl: url, listener: self)
-            if let playbackUri = player?.session.playbackUri {
-                urlField.text = playbackUri
-            }
 //            player?.canPause = true
+//            if let playbackUri = player?.session.playbackUri {
+//                urlField.text = playbackUri
+//            }
         }
     }
     
@@ -161,6 +161,7 @@ class ViewController: UIViewController, AudioPlayerListener, UIPickerViewDelegat
                 self.mediaUrl = self.urlField.url
             } else {
                 self.mediaUrl = nil
+                
             }
         }        
     }

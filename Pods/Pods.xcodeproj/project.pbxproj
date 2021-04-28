@@ -30,47 +30,47 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		0191A450ABC6F163535D45764516DC33 /* OpusData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489F226A4B3DAD132096679CCD524B23 /* OpusData.swift */; };
 		0D497AF3391FFCE18635EC3589F2CFD9 /* Pods-app-example-ios-app-example-iosUITests-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = A18DFE05F38C1C06587C837BA6500E3F /* Pods-app-example-ios-app-example-iosUITests-dummy.m */; };
-		144E795C890D8874D6B4D4A8D9F6C080 /* AudioPipeline.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275BBB3CD19890EDD3C381C24F0BDC23 /* AudioPipeline.swift */; };
-		1A083169F80F086E4872E3B653322D97 /* OpusData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A58358586E598B7133BE59D0EE63D3F /* OpusData.swift */; };
-		1F5FE08F2338FE17AB0BDD221E79CC63 /* AudioPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCF7157C364722E8A1BD4D1675F0A952 /* AudioPlayer.swift */; };
+		0D4E041D0414585767EF9C41296DE9B9 /* PlayerContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B927A7C77FD60EA34E33A49BBC51D07 /* PlayerContext.swift */; };
+		0DA30DD943FB6D93714DF205C07A62E6 /* ApiError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 383A888A1732BE1B0A0521978E6B12C6 /* ApiError.swift */; };
+		15A6CEB41CA3335DB6277B7DC82DC1A8 /* AudioPipeline.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97981D8A5C872F6DD5A0784A7FFD49A5 /* AudioPipeline.swift */; };
 		230592414E98E073465A12C1C03AA82D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73010CC983E3809BECEE5348DA1BB8C6 /* Foundation.framework */; };
+		2B2A7EA71912B9FFE6D759E0677838B2 /* IcyDriver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24D9773CFE4390D4FD0CFC1730F1C802 /* IcyDriver.swift */; };
 		2CF2FAC93547BAF32F95746238722827 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73010CC983E3809BECEE5348DA1BB8C6 /* Foundation.framework */; };
-		36224BB1582AE57063A3A3C193352A59 /* PlaybackBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 484BC16576EDFAE57C0FF7461A2B9BC0 /* PlaybackBuffer.swift */; };
-		3DC278E3D6687AF1FBF46DEA7C432339 /* Controller.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9B5C216EBC9E0C4A32EB9BB720A42A4 /* Controller.swift */; };
-		4C910354EB6E86C712F2C6372AA47DDE /* PlayerContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F7D738466C72C6F6BE9996A55D9C9F3 /* PlayerContext.swift */; };
-		51A002BDB24B54091057C1F6FEC6535B /* OpusMapping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 234EDE39DC6997A7525824796F855B45 /* OpusMapping.swift */; };
+		3AE93303F3F301815B84DC21B69A12E5 /* MediaSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = B11F12056964420DD4734DBBEB5675FC /* MediaSession.swift */; };
+		3F38CD9E9C2F0555BBF0CBDBDE476BF7 /* MpegDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = C216B5F27E6389084E134C823229CD10 /* MpegDecoder.swift */; };
+		4ECE1A538ED71EBD8376813B82BFA48C /* MediaControlFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7285FFF66496C474D211FD5A9C50FB0 /* MediaControlFactory.swift */; };
+		5043C2E04DD0F0EFFB32334CCCD5FFE0 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC39EFE53983B9B0ACA922B3AE10B1C7 /* Logger.swift */; };
 		58B51DB8FCCD6F7A0C44CFA207469BAB /* Pods-app-example-ios-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = BB54073D66543851CAF0288A30735FBF /* Pods-app-example-ios-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		595D916591BA3C77096D06E9E6D9ADB5 /* LoadingError.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCE5D315DE546633F15495DCCAD4AE5C /* LoadingError.swift */; };
-		5B52A3A5C34479AB152BD40818E6D212 /* PlaybackScheduling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CC6D105DBB872079A69919963E66EE1 /* PlaybackScheduling.swift */; };
-		61454873F4D55C8CB40427D37FCA5BB4 /* MpegData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 189E6102883EB1540130368C68EFB58E /* MpegData.swift */; };
-		64FCBAA0FC8B77EF8B7DB8C2E85F67D9 /* YbridPlayerSDK-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 275F880D8236F61B865AC576850459F8 /* YbridPlayerSDK-dummy.m */; };
-		68590854BD80B5B317DB6BC68A46D332 /* AudioPlayerError.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA123CBB1F564746C3DAE23A2A736C67 /* AudioPlayerError.swift */; };
-		6B1CEA71B60DF1CF47CD0098536B0D5F /* JsonRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD4F9E4FEBC176D4EDC1E117FA0D4480 /* JsonRequest.swift */; };
-		721B879773BF3365D0D39D7028AEFF42 /* MetadataExtractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A04BA8FDAA506DF2442F16BD8B5CC65 /* MetadataExtractor.swift */; };
-		7D48F93313C8FD4321D3BF3522F19C31 /* DataAccumulator.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2E1FD22EFACAEA290F33BF830C87274 /* DataAccumulator.swift */; };
+		5B523BADFBB397151472D65C1D46EA20 /* MetadataExtractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA56CED7A3DA7410D123B5A4330C322E /* MetadataExtractor.swift */; };
+		5FF9DC35A88D2900E66D97155C1FD6F5 /* LoadingError.swift in Sources */ = {isa = PBXBuildFile; fileRef = B939D45C397EB59DA45CB87D9045A150 /* LoadingError.swift */; };
+		6BA17B3CC6610B3A6224160691B21E8E /* FrameSkipper.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA05D4BDF8E32DBC2937C6B13376C3FA /* FrameSkipper.swift */; };
+		736ADFA01C9136C1785E86A6D9E1563C /* PlaybackEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70B8BC9036C5B42CF8CC3BBC94517B0E /* PlaybackEngine.swift */; };
+		7B0F39AC95F96664A68ACABD06EF4EFA /* YbridPlayerSDK-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = D385B3C09AF100790844D410EED79180 /* YbridPlayerSDK-dummy.m */; };
+		7E396B6D34A4CDBF97F8979F31E2E62B /* OpusDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 666C4F8B08FF980629F3DD1523FEE9D6 /* OpusDecoder.swift */; };
 		82C11A2A725C900668426EB6507DF234 /* Pods-app-example-ios-app-example-iosUITests-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 74EB0808CFFEC4AB89E508C67EBF7E99 /* Pods-app-example-ios-app-example-iosUITests-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		89B07A6DD6607F95E6BB121A985EDE38 /* Metadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 786DD6E6B15D45369C261F465E7A60AF /* Metadata.swift */; };
-		8E35C7FAF1E89CAA29224C111175C271 /* ControllerFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBAB1229BBE4B3220141A3A602993720 /* ControllerFactory.swift */; };
-		A23D1B2C1FE1BA8214195963189C2A01 /* OggContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCF4FBFA83335EA895825FA542BCE4D1 /* OggContainer.swift */; };
-		A6F0F9D582CED06F55C9EE85F688F139 /* PlaybackEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E782F32E0EB1F96368C5839EA70172 /* PlaybackEngine.swift */; };
-		B2818F8BAEA9F83941E4EE5DCE89325F /* ApiError.swift in Sources */ = {isa = PBXBuildFile; fileRef = A425271C06D028A182C24355D2640D9A /* ApiError.swift */; };
-		BB20AC38CFF23AA1115D071B87F242BB /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B85457DAFEF77A45FF88D80D06429DA /* Logger.swift */; };
+		841702CDEDB9275A5961BFAC33E797BA /* DataAccumulator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CD3FBA7A901B7812870CD9F14957C0E /* DataAccumulator.swift */; };
+		8A43BB9BB204C69A800C9859727F3715 /* MediaControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7C88E6CD108884C3A4F58DEBDE72DAC /* MediaControl.swift */; };
+		9333CE88F4D2A5E77D7497467DD463A0 /* MediaEndpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37CAE44821CE988360728165478DAAF0 /* MediaEndpoint.swift */; };
+		A0E5EB175334FF9C77C50FF0975DF751 /* PlaybackScheduling.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC901A2DDA7BEB0A1A6CAAC6684F0560 /* PlaybackScheduling.swift */; };
+		A3FFA21C7485076D9D1D2696C852FF92 /* AudioData.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC54FE59729FF8BBF73A54C282747D2C /* AudioData.swift */; };
+		A41AAA07F485D5FA2159E5B03D056190 /* JsonRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21DA8E5CAC943342E3189E0369BE31EE /* JsonRequest.swift */; };
+		AB1296711C950AAC9149C698E7F72EDB /* Ybrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = E23C1368C37313FF03DE0596D693EFD4 /* Ybrid.swift */; };
+		B85849CE39A9DB3ACD552947BC75E915 /* PlaybackBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F3B15DDE82D0AEE6A930E967476C3B1 /* PlaybackBuffer.swift */; };
+		C1A9FDCC831A0EFD3CE168B5C8FC6E95 /* OpusMapping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 446BC83AE0DB0F869056E2C7E5F8CB66 /* OpusMapping.swift */; };
 		C21A1719073DF5EDB265EBFB27FD7C7F /* Pods-app-example-ios-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 038791E438F927DC7EC8427114FF7A54 /* Pods-app-example-ios-dummy.m */; };
-		C2B4FE4B06041D43217D6FAE5DB53477 /* MediaEndpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAB99BDB8F5CCA571834519349407BF6 /* MediaEndpoint.swift */; };
+		C9846DAB2A956007C5DA7296D3293312 /* AudioPlayerError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61B6BA9CE1B7D5C5BF3C57A2070B34FD /* AudioPlayerError.swift */; };
+		CACBADE75D2992AAA7430010C5168522 /* YbridV2Driver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F8CCE15DE5672F62303DBE913B0F19A /* YbridV2Driver.swift */; };
+		CD112DEF7DC9265491EA6985D85DAA8F /* OggContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CBE55FDBC22EFCEDF6D87AAD6A054E9 /* OggContainer.swift */; };
 		CD6E255D93F98EC9AA4B248BAF8857F5 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73010CC983E3809BECEE5348DA1BB8C6 /* Foundation.framework */; };
-		CFA1F7A6E36E5D45D7FCB5DA83A28149 /* AudioDataLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B03F007B90D16B64FD8239483717591 /* AudioDataLoader.swift */; };
-		D4C4073F50F1FC7FB1A06EFD933275EF /* Ybrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 427536C6E124656F30EAB8984E935A2C /* Ybrid.swift */; };
-		D6F8F24623A318407CB42A77830B0C7D /* MpegDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = B65B6F6B95D3417CFA7978F77D6BB923 /* MpegDecoder.swift */; };
-		DCE5CCFEC1AC757B1090926776B55644 /* OpusDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10ED7E5E3C22E94AEE01D9E5A3C965E /* OpusDecoder.swift */; };
-		DDDFCCF9AA93EFA1944C23BA324E7EE4 /* AudioDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D04C91C0BB375AD99171FF2FBE7F283 /* AudioDecoder.swift */; };
-		DF07628E655B6FD0D30A91BBA9E7D4E9 /* FrameSkipper.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEF7501C496735EFFBB77E6BAD025F8F /* FrameSkipper.swift */; };
-		DFF8654A32274774F4204EB36A4D3378 /* YbridSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 476F73BE4EA94426C4F2B80EB008A1E7 /* YbridSession.swift */; };
-		E60FBABDEE07E18854C759C74E6768CE /* AudioData.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAA283EB4FF753829768ADD499F16A29 /* AudioData.swift */; };
-		EC5D4BE6E90D83D52707DCB2669A5709 /* DummyController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABCC0B897CFCC3AF5F915056F44E2D50 /* DummyController.swift */; };
-		F3327E3FFFDF70E99C4BCE4516AB8347 /* YbridV2Controller.swift in Sources */ = {isa = PBXBuildFile; fileRef = C367E3A97DDC5FFC141E4E17E8476D1F /* YbridV2Controller.swift */; };
-		F4FBAC192E4F61C2E4CBCF311077A625 /* DecodingError.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4D98DAEF54BA134C86C629B89CF32D5 /* DecodingError.swift */; };
-		FDF2F5A2759709ED163DCE22E2B839F3 /* YbridPlayerSDK-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 4A527660F87542842116248704FB1D80 /* YbridPlayerSDK-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CF9765A29F3FC6CBA1B72A0C817469A2 /* AudioDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA0CE0786844CC1F9C6EF11501EDC0B7 /* AudioDecoder.swift */; };
+		D0A8A3D7E97F9AB3D1EF5C2C807FACF1 /* MpegData.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5E6FAEDA36C555D0EDF57A5ADD13EE4 /* MpegData.swift */; };
+		D9D71573EFB542CB088DDFF97A0D4452 /* AudioDataLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B88B570FD3B7DF89FDAEEC7029029984 /* AudioDataLoader.swift */; };
+		DDBB5840BED08F3B0CB779C6C4F30896 /* AudioPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FF76B8C1F5F0255F8A949954F936C52 /* AudioPlayer.swift */; };
+		E9600A7A54CDC2C57CDFC0529E4FF1CE /* Metadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5467CC946EBF55AA5B6AA064052251C4 /* Metadata.swift */; };
+		FD4F963D86ECC05856011710BE0EB04A /* DecodingError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8969DFEA8373374909CF0EBF12914FA2 /* DecodingError.swift */; };
+		FDF2F5A2759709ED163DCE22E2B839F3 /* YbridPlayerSDK-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 9559AE604F1CAAE143F0E7E88972AF7D /* YbridPlayerSDK-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -133,79 +133,79 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		037220A664D120147BF006EF7C083A51 /* YbridPlayerSDK.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = YbridPlayerSDK.release.xcconfig; sourceTree = "<group>"; };
 		038791E438F927DC7EC8427114FF7A54 /* Pods-app-example-ios-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-app-example-ios-dummy.m"; sourceTree = "<group>"; };
+		0B2747173DF77542A9819A40A57682F5 /* YbridPlayerSDK-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "YbridPlayerSDK-prefix.pch"; sourceTree = "<group>"; };
 		0E2F072CC0365CBD2CC0BE4E0945F038 /* Pods_app_example_ios.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_app_example_ios.framework; path = "Pods-app-example-ios.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
-		189E6102883EB1540130368C68EFB58E /* MpegData.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MpegData.swift; sourceTree = "<group>"; };
-		1A9C5856222DD67FF11FDEC728A9967D /* YbridPlayerSDK.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = YbridPlayerSDK.debug.xcconfig; sourceTree = "<group>"; };
-		234EDE39DC6997A7525824796F855B45 /* OpusMapping.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = OpusMapping.swift; sourceTree = "<group>"; };
-		275BBB3CD19890EDD3C381C24F0BDC23 /* AudioPipeline.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AudioPipeline.swift; path = "player-sdk-swift/AudioPipeline.swift"; sourceTree = "<group>"; };
-		275F880D8236F61B865AC576850459F8 /* YbridPlayerSDK-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "YbridPlayerSDK-dummy.m"; sourceTree = "<group>"; };
+		13CED8FD60805B4985EFC53AD2D77CCC /* YbridPlayerSDK.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = YbridPlayerSDK.modulemap; sourceTree = "<group>"; };
+		21DA8E5CAC943342E3189E0369BE31EE /* JsonRequest.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = JsonRequest.swift; sourceTree = "<group>"; };
+		24D9773CFE4390D4FD0CFC1730F1C802 /* IcyDriver.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = IcyDriver.swift; sourceTree = "<group>"; };
 		315335BE82EBF4497CE90FBBED0F0256 /* Pods-app-example-ios.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-app-example-ios.modulemap"; sourceTree = "<group>"; };
+		37CAE44821CE988360728165478DAAF0 /* MediaEndpoint.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MediaEndpoint.swift; path = "player-sdk-swift/MediaEndpoint.swift"; sourceTree = "<group>"; };
+		383A888A1732BE1B0A0521978E6B12C6 /* ApiError.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ApiError.swift; sourceTree = "<group>"; };
 		396108B28E9AC997BA635701EEB72B0C /* Pods-app-example-ios-app-example-iosUITests-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-app-example-ios-app-example-iosUITests-acknowledgements.plist"; sourceTree = "<group>"; };
-		427536C6E124656F30EAB8984E935A2C /* Ybrid.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Ybrid.swift; sourceTree = "<group>"; };
-		476F73BE4EA94426C4F2B80EB008A1E7 /* YbridSession.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = YbridSession.swift; path = "player-sdk-swift/YbridSession.swift"; sourceTree = "<group>"; };
-		484BC16576EDFAE57C0FF7461A2B9BC0 /* PlaybackBuffer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PlaybackBuffer.swift; path = "player-sdk-swift/PlaybackBuffer.swift"; sourceTree = "<group>"; };
-		4A04BA8FDAA506DF2442F16BD8B5CC65 /* MetadataExtractor.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MetadataExtractor.swift; path = "player-sdk-swift/MetadataExtractor.swift"; sourceTree = "<group>"; };
-		4A527660F87542842116248704FB1D80 /* YbridPlayerSDK-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "YbridPlayerSDK-umbrella.h"; sourceTree = "<group>"; };
+		3CBE55FDBC22EFCEDF6D87AAD6A054E9 /* OggContainer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = OggContainer.swift; sourceTree = "<group>"; };
+		3F3B15DDE82D0AEE6A930E967476C3B1 /* PlaybackBuffer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PlaybackBuffer.swift; path = "player-sdk-swift/PlaybackBuffer.swift"; sourceTree = "<group>"; };
+		446BC83AE0DB0F869056E2C7E5F8CB66 /* OpusMapping.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = OpusMapping.swift; sourceTree = "<group>"; };
+		489F226A4B3DAD132096679CCD524B23 /* OpusData.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = OpusData.swift; sourceTree = "<group>"; };
+		491D8F717CDA72CF825751C5F629FF62 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; path = README.md; sourceTree = "<group>"; };
 		516EB75196404312209C6D9A4C64F7B4 /* YbridPlayerSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = YbridPlayerSDK.framework; path = YbridPlayerSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		5B03F007B90D16B64FD8239483717591 /* AudioDataLoader.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AudioDataLoader.swift; path = "player-sdk-swift/AudioDataLoader.swift"; sourceTree = "<group>"; };
+		5467CC946EBF55AA5B6AA064052251C4 /* Metadata.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Metadata.swift; path = "player-sdk-swift/Metadata.swift"; sourceTree = "<group>"; };
+		5CD3FBA7A901B7812870CD9F14957C0E /* DataAccumulator.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DataAccumulator.swift; path = "player-sdk-swift/DataAccumulator.swift"; sourceTree = "<group>"; };
 		5CDF7589DD390BC076C56288C8F356F4 /* Pods-app-example-ios.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-app-example-ios.debug.xcconfig"; sourceTree = "<group>"; };
 		5E2C172AA88B524E31023CC07EB391EF /* Pods-app-example-ios.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-app-example-ios.release.xcconfig"; sourceTree = "<group>"; };
-		65D5CF5093FA33CA90CDAC4234A80CFB /* YbridPlayerSDK-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "YbridPlayerSDK-prefix.pch"; sourceTree = "<group>"; };
-		6B85457DAFEF77A45FF88D80D06429DA /* Logger.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Logger.swift; path = "player-sdk-swift/Logger.swift"; sourceTree = "<group>"; };
+		61B6BA9CE1B7D5C5BF3C57A2070B34FD /* AudioPlayerError.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AudioPlayerError.swift; path = "player-sdk-swift/AudioPlayerError.swift"; sourceTree = "<group>"; };
+		666C4F8B08FF980629F3DD1523FEE9D6 /* OpusDecoder.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = OpusDecoder.swift; sourceTree = "<group>"; };
+		6B927A7C77FD60EA34E33A49BBC51D07 /* PlayerContext.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PlayerContext.swift; path = "player-sdk-swift/PlayerContext.swift"; sourceTree = "<group>"; };
+		70B8BC9036C5B42CF8CC3BBC94517B0E /* PlaybackEngine.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PlaybackEngine.swift; path = "player-sdk-swift/PlaybackEngine.swift"; sourceTree = "<group>"; };
 		73010CC983E3809BECEE5348DA1BB8C6 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS14.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		74EB0808CFFEC4AB89E508C67EBF7E99 /* Pods-app-example-ios-app-example-iosUITests-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-app-example-ios-app-example-iosUITests-umbrella.h"; sourceTree = "<group>"; };
-		786DD6E6B15D45369C261F465E7A60AF /* Metadata.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Metadata.swift; path = "player-sdk-swift/Metadata.swift"; sourceTree = "<group>"; };
+		769D7E56AEDA1307315FC566F288CC00 /* YbridPlayerSDK.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = YbridPlayerSDK.release.xcconfig; sourceTree = "<group>"; };
 		792EC9C051E616A1A52547014DA2E19A /* YbridOpus.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = YbridOpus.release.xcconfig; sourceTree = "<group>"; };
-		7BD05AEF59243D703F8ACE33D7E30B79 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; path = LICENSE; sourceTree = "<group>"; };
+		7B370BD0E42E7E28A174BC1C1045B67B /* YbridPlayerSDK.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; path = YbridPlayerSDK.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		7BF1F80B668232F3E6AF12CED42AA338 /* YbridOgg.xcframework */ = {isa = PBXFileReference; includeInIndex = 1; path = YbridOgg.xcframework; sourceTree = "<group>"; };
-		7C890161ACE0F8C9A7F77544A7FDDBED /* YbridPlayerSDK.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = YbridPlayerSDK.modulemap; sourceTree = "<group>"; };
-		7CC6D105DBB872079A69919963E66EE1 /* PlaybackScheduling.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PlaybackScheduling.swift; path = "player-sdk-swift/PlaybackScheduling.swift"; sourceTree = "<group>"; };
-		8F7D738466C72C6F6BE9996A55D9C9F3 /* PlayerContext.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PlayerContext.swift; path = "player-sdk-swift/PlayerContext.swift"; sourceTree = "<group>"; };
+		7FF76B8C1F5F0255F8A949954F936C52 /* AudioPlayer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AudioPlayer.swift; path = "player-sdk-swift/AudioPlayer.swift"; sourceTree = "<group>"; };
+		892AD27F5CFA52C01186FD1C2D703C8E /* YbridPlayerSDK-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "YbridPlayerSDK-Info.plist"; sourceTree = "<group>"; };
+		8969DFEA8373374909CF0EBF12914FA2 /* DecodingError.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DecodingError.swift; path = "player-sdk-swift/DecodingError.swift"; sourceTree = "<group>"; };
 		934DFEE0A6FA6ABA457A5BB57BB9168A /* YbridOpus.xcframework */ = {isa = PBXFileReference; includeInIndex = 1; path = YbridOpus.xcframework; sourceTree = "<group>"; };
-		93E782F32E0EB1F96368C5839EA70172 /* PlaybackEngine.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PlaybackEngine.swift; path = "player-sdk-swift/PlaybackEngine.swift"; sourceTree = "<group>"; };
 		94DF28AEA038E9E2D1DE344DF0EB98EE /* Pods-app-example-ios-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-app-example-ios-acknowledgements.markdown"; sourceTree = "<group>"; };
+		9559AE604F1CAAE143F0E7E88972AF7D /* YbridPlayerSDK-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "YbridPlayerSDK-umbrella.h"; sourceTree = "<group>"; };
 		976E5946B570A6CA2CA9968CDC6483A2 /* YbridOgg.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = YbridOgg.debug.xcconfig; sourceTree = "<group>"; };
-		9A58358586E598B7133BE59D0EE63D3F /* OpusData.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = OpusData.swift; sourceTree = "<group>"; };
+		97981D8A5C872F6DD5A0784A7FFD49A5 /* AudioPipeline.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AudioPipeline.swift; path = "player-sdk-swift/AudioPipeline.swift"; sourceTree = "<group>"; };
 		9BBE4686B6F8684F49DE800DA5E83542 /* Pods-app-example-ios-app-example-iosUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-app-example-ios-app-example-iosUITests.release.xcconfig"; sourceTree = "<group>"; };
-		9D04C91C0BB375AD99171FF2FBE7F283 /* AudioDecoder.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AudioDecoder.swift; path = "player-sdk-swift/AudioDecoder.swift"; sourceTree = "<group>"; };
 		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		9F8CCE15DE5672F62303DBE913B0F19A /* YbridV2Driver.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YbridV2Driver.swift; sourceTree = "<group>"; };
 		A18DFE05F38C1C06587C837BA6500E3F /* Pods-app-example-ios-app-example-iosUITests-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-app-example-ios-app-example-iosUITests-dummy.m"; sourceTree = "<group>"; };
-		A3C4B9FC2A1100C20E9D4BDAB84516AE /* YbridPlayerSDK-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "YbridPlayerSDK-Info.plist"; sourceTree = "<group>"; };
-		A425271C06D028A182C24355D2640D9A /* ApiError.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ApiError.swift; sourceTree = "<group>"; };
-		AAB99BDB8F5CCA571834519349407BF6 /* MediaEndpoint.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MediaEndpoint.swift; path = "player-sdk-swift/MediaEndpoint.swift"; sourceTree = "<group>"; };
-		ABCC0B897CFCC3AF5F915056F44E2D50 /* DummyController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DummyController.swift; sourceTree = "<group>"; };
-		B10ED7E5E3C22E94AEE01D9E5A3C965E /* OpusDecoder.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = OpusDecoder.swift; sourceTree = "<group>"; };
+		A5E6FAEDA36C555D0EDF57A5ADD13EE4 /* MpegData.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MpegData.swift; sourceTree = "<group>"; };
+		AA05D4BDF8E32DBC2937C6B13376C3FA /* FrameSkipper.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FrameSkipper.swift; sourceTree = "<group>"; };
+		AA56CED7A3DA7410D123B5A4330C322E /* MetadataExtractor.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MetadataExtractor.swift; path = "player-sdk-swift/MetadataExtractor.swift"; sourceTree = "<group>"; };
+		AD1964C5A3D1097908CF5AAE54FDD176 /* YbridPlayerSDK.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = YbridPlayerSDK.debug.xcconfig; sourceTree = "<group>"; };
+		B11F12056964420DD4734DBBEB5675FC /* MediaSession.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MediaSession.swift; path = "player-sdk-swift/MediaSession.swift"; sourceTree = "<group>"; };
 		B292A0CB45891B65DBEA3F03EFBE7BFA /* YbridOgg.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = YbridOgg.release.xcconfig; sourceTree = "<group>"; };
 		B5224285FE07EBF5D9335984481565BD /* Pods-app-example-ios-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-app-example-ios-acknowledgements.plist"; sourceTree = "<group>"; };
-		B65B6F6B95D3417CFA7978F77D6BB923 /* MpegDecoder.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MpegDecoder.swift; sourceTree = "<group>"; };
 		B6DA7BBC72E0BD7AA818DF8BE0B13CC0 /* YbridOpus.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = YbridOpus.debug.xcconfig; sourceTree = "<group>"; };
 		B80B7723939F3F88A93643F8833F67BF /* YbridOpus-xcframeworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "YbridOpus-xcframeworks.sh"; sourceTree = "<group>"; };
+		B88B570FD3B7DF89FDAEEC7029029984 /* AudioDataLoader.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AudioDataLoader.swift; path = "player-sdk-swift/AudioDataLoader.swift"; sourceTree = "<group>"; };
+		B939D45C397EB59DA45CB87D9045A150 /* LoadingError.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = LoadingError.swift; path = "player-sdk-swift/LoadingError.swift"; sourceTree = "<group>"; };
 		BB54073D66543851CAF0288A30735FBF /* Pods-app-example-ios-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-app-example-ios-umbrella.h"; sourceTree = "<group>"; };
-		BBAB1229BBE4B3220141A3A602993720 /* ControllerFactory.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ControllerFactory.swift; sourceTree = "<group>"; };
-		BEF7501C496735EFFBB77E6BAD025F8F /* FrameSkipper.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FrameSkipper.swift; sourceTree = "<group>"; };
 		BF7EB2B5C7E9822E2BC76E86DFD435FE /* Pods-app-example-ios-app-example-iosUITests.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-app-example-ios-app-example-iosUITests.modulemap"; sourceTree = "<group>"; };
 		BFBE5CA3E730B96950FB852837F3F7E2 /* Pods-app-example-ios-app-example-iosUITests-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-app-example-ios-app-example-iosUITests-frameworks.sh"; sourceTree = "<group>"; };
-		C1FEB753D33BC8A10B880E0A9BAC8BAE /* YbridPlayerSDK.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; path = YbridPlayerSDK.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
-		C367E3A97DDC5FFC141E4E17E8476D1F /* YbridV2Controller.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YbridV2Controller.swift; sourceTree = "<group>"; };
+		C216B5F27E6389084E134C823229CD10 /* MpegDecoder.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MpegDecoder.swift; sourceTree = "<group>"; };
 		C749130D9F98AB44F01A5A7B40B4C194 /* YbridOgg-xcframeworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "YbridOgg-xcframeworks.sh"; sourceTree = "<group>"; };
-		CCE5D315DE546633F15495DCCAD4AE5C /* LoadingError.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = LoadingError.swift; path = "player-sdk-swift/LoadingError.swift"; sourceTree = "<group>"; };
-		CCF7157C364722E8A1BD4D1675F0A952 /* AudioPlayer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AudioPlayer.swift; path = "player-sdk-swift/AudioPlayer.swift"; sourceTree = "<group>"; };
+		C7C88E6CD108884C3A4F58DEBDE72DAC /* MediaControl.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MediaControl.swift; sourceTree = "<group>"; };
 		CF956B7B50C53A3DC0CC985BC5A34923 /* Pods-app-example-ios-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-app-example-ios-frameworks.sh"; sourceTree = "<group>"; };
 		D180A9AB2EB1DBC1964A3390453E5886 /* Pods-app-example-ios-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-app-example-ios-Info.plist"; sourceTree = "<group>"; };
-		DD4F9E4FEBC176D4EDC1E117FA0D4480 /* JsonRequest.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = JsonRequest.swift; sourceTree = "<group>"; };
+		D385B3C09AF100790844D410EED79180 /* YbridPlayerSDK-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "YbridPlayerSDK-dummy.m"; sourceTree = "<group>"; };
+		D7285FFF66496C474D211FD5A9C50FB0 /* MediaControlFactory.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MediaControlFactory.swift; sourceTree = "<group>"; };
+		DA0CE0786844CC1F9C6EF11501EDC0B7 /* AudioDecoder.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AudioDecoder.swift; path = "player-sdk-swift/AudioDecoder.swift"; sourceTree = "<group>"; };
+		DC39EFE53983B9B0ACA922B3AE10B1C7 /* Logger.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Logger.swift; path = "player-sdk-swift/Logger.swift"; sourceTree = "<group>"; };
+		DC54FE59729FF8BBF73A54C282747D2C /* AudioData.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AudioData.swift; path = "player-sdk-swift/AudioData.swift"; sourceTree = "<group>"; };
 		DDF4BA578A43B1F68DD50BB81AE60C20 /* Pods-app-example-ios-app-example-iosUITests-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-app-example-ios-app-example-iosUITests-Info.plist"; sourceTree = "<group>"; };
-		E2E1FD22EFACAEA290F33BF830C87274 /* DataAccumulator.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DataAccumulator.swift; path = "player-sdk-swift/DataAccumulator.swift"; sourceTree = "<group>"; };
-		EAA283EB4FF753829768ADD499F16A29 /* AudioData.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AudioData.swift; path = "player-sdk-swift/AudioData.swift"; sourceTree = "<group>"; };
+		E23C1368C37313FF03DE0596D693EFD4 /* Ybrid.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Ybrid.swift; sourceTree = "<group>"; };
+		EAADF0C3E7823A7442A7BC9A2B36CAC2 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; path = LICENSE; sourceTree = "<group>"; };
 		ED9AA9B7105598FF2AA2697FC41D73F9 /* Pods-app-example-ios-app-example-iosUITests-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-app-example-ios-app-example-iosUITests-acknowledgements.markdown"; sourceTree = "<group>"; };
 		EE9ED45D3F73C2B31C01C2C37F21A3F9 /* Pods_app_example_ios_app_example_iosUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_app_example_ios_app_example_iosUITests.framework; path = "Pods-app-example-ios-app-example-iosUITests.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
-		F4D98DAEF54BA134C86C629B89CF32D5 /* DecodingError.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DecodingError.swift; path = "player-sdk-swift/DecodingError.swift"; sourceTree = "<group>"; };
 		F8A1297EA31697F24B137491056E2FBE /* Pods-app-example-ios-app-example-iosUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-app-example-ios-app-example-iosUITests.debug.xcconfig"; sourceTree = "<group>"; };
-		F9B5C216EBC9E0C4A32EB9BB720A42A4 /* Controller.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Controller.swift; sourceTree = "<group>"; };
-		FA123CBB1F564746C3DAE23A2A736C67 /* AudioPlayerError.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AudioPlayerError.swift; path = "player-sdk-swift/AudioPlayerError.swift"; sourceTree = "<group>"; };
-		FCF4FBFA83335EA895825FA542BCE4D1 /* OggContainer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = OggContainer.swift; sourceTree = "<group>"; };
-		FCFE017588D923FA39070BA96B5117FC /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; path = README.md; sourceTree = "<group>"; };
+		FC901A2DDA7BEB0A1A6CAAC6684F0560 /* PlaybackScheduling.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PlaybackScheduling.swift; path = "player-sdk-swift/PlaybackScheduling.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -236,17 +236,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		20B0634101DF5EDE77DF1603DF4CDB35 /* opus */ = {
+		1AE88CB1CC095A043A903E9E12644055 /* Support Files */ = {
 			isa = PBXGroup;
 			children = (
-				BEF7501C496735EFFBB77E6BAD025F8F /* FrameSkipper.swift */,
-				FCF4FBFA83335EA895825FA542BCE4D1 /* OggContainer.swift */,
-				9A58358586E598B7133BE59D0EE63D3F /* OpusData.swift */,
-				B10ED7E5E3C22E94AEE01D9E5A3C965E /* OpusDecoder.swift */,
-				234EDE39DC6997A7525824796F855B45 /* OpusMapping.swift */,
+				13CED8FD60805B4985EFC53AD2D77CCC /* YbridPlayerSDK.modulemap */,
+				D385B3C09AF100790844D410EED79180 /* YbridPlayerSDK-dummy.m */,
+				892AD27F5CFA52C01186FD1C2D703C8E /* YbridPlayerSDK-Info.plist */,
+				0B2747173DF77542A9819A40A57682F5 /* YbridPlayerSDK-prefix.pch */,
+				9559AE604F1CAAE143F0E7E88972AF7D /* YbridPlayerSDK-umbrella.h */,
+				AD1964C5A3D1097908CF5AAE54FDD176 /* YbridPlayerSDK.debug.xcconfig */,
+				769D7E56AEDA1307315FC566F288CC00 /* YbridPlayerSDK.release.xcconfig */,
 			);
-			name = opus;
-			path = "player-sdk-swift/opus";
+			name = "Support Files";
+			path = "../app-example-ios/Pods/Target Support Files/YbridPlayerSDK";
 			sourceTree = "<group>";
 		};
 		34D8121A8452F6C39359D5A48DC27428 /* Frameworks */ = {
@@ -277,15 +279,49 @@
 			path = "../Target Support Files/YbridOgg";
 			sourceTree = "<group>";
 		};
-		53E9045867DB62A30D8AF54A274FFA4C /* Pod */ = {
+		4485D461FBB27C8860E7390531992D78 /* opus */ = {
 			isa = PBXGroup;
 			children = (
-				7BD05AEF59243D703F8ACE33D7E30B79 /* LICENSE */,
-				FCFE017588D923FA39070BA96B5117FC /* README.md */,
-				C1FEB753D33BC8A10B880E0A9BAC8BAE /* YbridPlayerSDK.podspec */,
+				AA05D4BDF8E32DBC2937C6B13376C3FA /* FrameSkipper.swift */,
+				3CBE55FDBC22EFCEDF6D87AAD6A054E9 /* OggContainer.swift */,
+				489F226A4B3DAD132096679CCD524B23 /* OpusData.swift */,
+				666C4F8B08FF980629F3DD1523FEE9D6 /* OpusDecoder.swift */,
+				446BC83AE0DB0F869056E2C7E5F8CB66 /* OpusMapping.swift */,
 			);
-			name = Pod;
+			name = opus;
+			path = "player-sdk-swift/opus";
 			sourceTree = "<group>";
+		};
+		5570663DA5432235F837AF713506A9BA /* YbridPlayerSDK */ = {
+			isa = PBXGroup;
+			children = (
+				DC54FE59729FF8BBF73A54C282747D2C /* AudioData.swift */,
+				B88B570FD3B7DF89FDAEEC7029029984 /* AudioDataLoader.swift */,
+				DA0CE0786844CC1F9C6EF11501EDC0B7 /* AudioDecoder.swift */,
+				97981D8A5C872F6DD5A0784A7FFD49A5 /* AudioPipeline.swift */,
+				7FF76B8C1F5F0255F8A949954F936C52 /* AudioPlayer.swift */,
+				61B6BA9CE1B7D5C5BF3C57A2070B34FD /* AudioPlayerError.swift */,
+				5CD3FBA7A901B7812870CD9F14957C0E /* DataAccumulator.swift */,
+				8969DFEA8373374909CF0EBF12914FA2 /* DecodingError.swift */,
+				B939D45C397EB59DA45CB87D9045A150 /* LoadingError.swift */,
+				DC39EFE53983B9B0ACA922B3AE10B1C7 /* Logger.swift */,
+				37CAE44821CE988360728165478DAAF0 /* MediaEndpoint.swift */,
+				B11F12056964420DD4734DBBEB5675FC /* MediaSession.swift */,
+				5467CC946EBF55AA5B6AA064052251C4 /* Metadata.swift */,
+				AA56CED7A3DA7410D123B5A4330C322E /* MetadataExtractor.swift */,
+				3F3B15DDE82D0AEE6A930E967476C3B1 /* PlaybackBuffer.swift */,
+				70B8BC9036C5B42CF8CC3BBC94517B0E /* PlaybackEngine.swift */,
+				FC901A2DDA7BEB0A1A6CAAC6684F0560 /* PlaybackScheduling.swift */,
+				6B927A7C77FD60EA34E33A49BBC51D07 /* PlayerContext.swift */,
+				A26A24E4CB67EF20197FA2B81D4D3272 /* api */,
+				AD852B22DB866D3D922560CFA4EDC397 /* mpeg */,
+				4485D461FBB27C8860E7390531992D78 /* opus */,
+				986DAB760A2E680A07B67C487467B894 /* Pod */,
+				1AE88CB1CC095A043A903E9E12644055 /* Support Files */,
+			);
+			name = YbridPlayerSDK;
+			path = "/Users/florian/github/player-sdk-swift";
+			sourceTree = "<absolute>";
 		};
 		578452D2E740E91742655AC8F1636D1F /* iOS */ = {
 			isa = PBXGroup;
@@ -316,52 +352,6 @@
 			path = YbridOgg;
 			sourceTree = "<group>";
 		};
-		6A43B149256757FD79FA4F5507051888 /* Support Files */ = {
-			isa = PBXGroup;
-			children = (
-				7C890161ACE0F8C9A7F77544A7FDDBED /* YbridPlayerSDK.modulemap */,
-				275F880D8236F61B865AC576850459F8 /* YbridPlayerSDK-dummy.m */,
-				A3C4B9FC2A1100C20E9D4BDAB84516AE /* YbridPlayerSDK-Info.plist */,
-				65D5CF5093FA33CA90CDAC4234A80CFB /* YbridPlayerSDK-prefix.pch */,
-				4A527660F87542842116248704FB1D80 /* YbridPlayerSDK-umbrella.h */,
-				1A9C5856222DD67FF11FDEC728A9967D /* YbridPlayerSDK.debug.xcconfig */,
-				037220A664D120147BF006EF7C083A51 /* YbridPlayerSDK.release.xcconfig */,
-			);
-			name = "Support Files";
-			path = "../app-example-ios/Pods/Target Support Files/YbridPlayerSDK";
-			sourceTree = "<group>";
-		};
-		6C1D909F33D8871EDF6F16940FB54E61 /* YbridPlayerSDK */ = {
-			isa = PBXGroup;
-			children = (
-				EAA283EB4FF753829768ADD499F16A29 /* AudioData.swift */,
-				5B03F007B90D16B64FD8239483717591 /* AudioDataLoader.swift */,
-				9D04C91C0BB375AD99171FF2FBE7F283 /* AudioDecoder.swift */,
-				275BBB3CD19890EDD3C381C24F0BDC23 /* AudioPipeline.swift */,
-				CCF7157C364722E8A1BD4D1675F0A952 /* AudioPlayer.swift */,
-				FA123CBB1F564746C3DAE23A2A736C67 /* AudioPlayerError.swift */,
-				E2E1FD22EFACAEA290F33BF830C87274 /* DataAccumulator.swift */,
-				F4D98DAEF54BA134C86C629B89CF32D5 /* DecodingError.swift */,
-				CCE5D315DE546633F15495DCCAD4AE5C /* LoadingError.swift */,
-				6B85457DAFEF77A45FF88D80D06429DA /* Logger.swift */,
-				AAB99BDB8F5CCA571834519349407BF6 /* MediaEndpoint.swift */,
-				786DD6E6B15D45369C261F465E7A60AF /* Metadata.swift */,
-				4A04BA8FDAA506DF2442F16BD8B5CC65 /* MetadataExtractor.swift */,
-				484BC16576EDFAE57C0FF7461A2B9BC0 /* PlaybackBuffer.swift */,
-				93E782F32E0EB1F96368C5839EA70172 /* PlaybackEngine.swift */,
-				7CC6D105DBB872079A69919963E66EE1 /* PlaybackScheduling.swift */,
-				8F7D738466C72C6F6BE9996A55D9C9F3 /* PlayerContext.swift */,
-				476F73BE4EA94426C4F2B80EB008A1E7 /* YbridSession.swift */,
-				E830307A94C9F0776FCD08C66598850C /* api */,
-				8285CFBC856588FFA59782CB9DC71C29 /* mpeg */,
-				20B0634101DF5EDE77DF1603DF4CDB35 /* opus */,
-				53E9045867DB62A30D8AF54A274FFA4C /* Pod */,
-				6A43B149256757FD79FA4F5507051888 /* Support Files */,
-			);
-			name = YbridPlayerSDK;
-			path = "/Users/florian/github/player-sdk-swift";
-			sourceTree = "<absolute>";
-		};
 		6CDF6C4F61E8B35BD3AFC4809348F0EE /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -370,20 +360,10 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		8285CFBC856588FFA59782CB9DC71C29 /* mpeg */ = {
-			isa = PBXGroup;
-			children = (
-				189E6102883EB1540130368C68EFB58E /* MpegData.swift */,
-				B65B6F6B95D3417CFA7978F77D6BB923 /* MpegDecoder.swift */,
-			);
-			name = mpeg;
-			path = "player-sdk-swift/mpeg";
-			sourceTree = "<group>";
-		};
 		82E30403A8E63A851F5AEA10C0156ED3 /* Development Pods */ = {
 			isa = PBXGroup;
 			children = (
-				6C1D909F33D8871EDF6F16940FB54E61 /* YbridPlayerSDK */,
+				5570663DA5432235F837AF713506A9BA /* YbridPlayerSDK */,
 			);
 			name = "Development Pods";
 			sourceTree = "<group>";
@@ -396,6 +376,16 @@
 			);
 			name = YbridOpus;
 			path = YbridOpus;
+			sourceTree = "<group>";
+		};
+		986DAB760A2E680A07B67C487467B894 /* Pod */ = {
+			isa = PBXGroup;
+			children = (
+				EAADF0C3E7823A7442A7BC9A2B36CAC2 /* LICENSE */,
+				491D8F717CDA72CF825751C5F629FF62 /* README.md */,
+				7B370BD0E42E7E28A174BC1C1045B67B /* YbridPlayerSDK.podspec */,
+			);
+			name = Pod;
 			sourceTree = "<group>";
 		};
 		9E56EE427D3EAD01A02D1FDEBF13174C /* Pods-app-example-ios */ = {
@@ -413,6 +403,31 @@
 			);
 			name = "Pods-app-example-ios";
 			path = "Target Support Files/Pods-app-example-ios";
+			sourceTree = "<group>";
+		};
+		A26A24E4CB67EF20197FA2B81D4D3272 /* api */ = {
+			isa = PBXGroup;
+			children = (
+				383A888A1732BE1B0A0521978E6B12C6 /* ApiError.swift */,
+				24D9773CFE4390D4FD0CFC1730F1C802 /* IcyDriver.swift */,
+				21DA8E5CAC943342E3189E0369BE31EE /* JsonRequest.swift */,
+				C7C88E6CD108884C3A4F58DEBDE72DAC /* MediaControl.swift */,
+				D7285FFF66496C474D211FD5A9C50FB0 /* MediaControlFactory.swift */,
+				E23C1368C37313FF03DE0596D693EFD4 /* Ybrid.swift */,
+				9F8CCE15DE5672F62303DBE913B0F19A /* YbridV2Driver.swift */,
+			);
+			name = api;
+			path = "player-sdk-swift/api";
+			sourceTree = "<group>";
+		};
+		AD852B22DB866D3D922560CFA4EDC397 /* mpeg */ = {
+			isa = PBXGroup;
+			children = (
+				A5E6FAEDA36C555D0EDF57A5ADD13EE4 /* MpegData.swift */,
+				C216B5F27E6389084E134C823229CD10 /* MpegDecoder.swift */,
+			);
+			name = mpeg;
+			path = "player-sdk-swift/mpeg";
 			sourceTree = "<group>";
 		};
 		CF1408CF629C7361332E53B88F7BD30C = {
@@ -460,21 +475,6 @@
 			);
 			name = "Pods-app-example-ios-app-example-iosUITests";
 			path = "Target Support Files/Pods-app-example-ios-app-example-iosUITests";
-			sourceTree = "<group>";
-		};
-		E830307A94C9F0776FCD08C66598850C /* api */ = {
-			isa = PBXGroup;
-			children = (
-				A425271C06D028A182C24355D2640D9A /* ApiError.swift */,
-				F9B5C216EBC9E0C4A32EB9BB720A42A4 /* Controller.swift */,
-				BBAB1229BBE4B3220141A3A602993720 /* ControllerFactory.swift */,
-				ABCC0B897CFCC3AF5F915056F44E2D50 /* DummyController.swift */,
-				DD4F9E4FEBC176D4EDC1E117FA0D4480 /* JsonRequest.swift */,
-				427536C6E124656F30EAB8984E935A2C /* Ybrid.swift */,
-				C367E3A97DDC5FFC141E4E17E8476D1F /* YbridV2Controller.swift */,
-			);
-			name = api;
-			path = "player-sdk-swift/api";
 			sourceTree = "<group>";
 		};
 		EB8B21532A367172F52492E1BCDB93ED /* Targets Support Files */ = {
@@ -542,7 +542,7 @@
 			buildConfigurationList = 3F302E5CFD7997DC513CFBBAAC8AA178 /* Build configuration list for PBXNativeTarget "YbridPlayerSDK" */;
 			buildPhases = (
 				7FFD584B383FF1B2F27998ACF96619F0 /* Headers */,
-				C789ED1F61D1D277A007610892F7E2B0 /* Sources */,
+				B0B8D770BFF546114A0E31ABF8A6B900 /* Sources */,
 				ED55120334143DBE541B8E7CF9761FD2 /* Frameworks */,
 				28DA9110F86439B9037D2CD720271E4F /* Resources */,
 			);
@@ -687,43 +687,43 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		C789ED1F61D1D277A007610892F7E2B0 /* Sources */ = {
+		B0B8D770BFF546114A0E31ABF8A6B900 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B2818F8BAEA9F83941E4EE5DCE89325F /* ApiError.swift in Sources */,
-				E60FBABDEE07E18854C759C74E6768CE /* AudioData.swift in Sources */,
-				CFA1F7A6E36E5D45D7FCB5DA83A28149 /* AudioDataLoader.swift in Sources */,
-				DDDFCCF9AA93EFA1944C23BA324E7EE4 /* AudioDecoder.swift in Sources */,
-				144E795C890D8874D6B4D4A8D9F6C080 /* AudioPipeline.swift in Sources */,
-				1F5FE08F2338FE17AB0BDD221E79CC63 /* AudioPlayer.swift in Sources */,
-				68590854BD80B5B317DB6BC68A46D332 /* AudioPlayerError.swift in Sources */,
-				3DC278E3D6687AF1FBF46DEA7C432339 /* Controller.swift in Sources */,
-				8E35C7FAF1E89CAA29224C111175C271 /* ControllerFactory.swift in Sources */,
-				7D48F93313C8FD4321D3BF3522F19C31 /* DataAccumulator.swift in Sources */,
-				F4FBAC192E4F61C2E4CBCF311077A625 /* DecodingError.swift in Sources */,
-				EC5D4BE6E90D83D52707DCB2669A5709 /* DummyController.swift in Sources */,
-				DF07628E655B6FD0D30A91BBA9E7D4E9 /* FrameSkipper.swift in Sources */,
-				6B1CEA71B60DF1CF47CD0098536B0D5F /* JsonRequest.swift in Sources */,
-				595D916591BA3C77096D06E9E6D9ADB5 /* LoadingError.swift in Sources */,
-				BB20AC38CFF23AA1115D071B87F242BB /* Logger.swift in Sources */,
-				C2B4FE4B06041D43217D6FAE5DB53477 /* MediaEndpoint.swift in Sources */,
-				89B07A6DD6607F95E6BB121A985EDE38 /* Metadata.swift in Sources */,
-				721B879773BF3365D0D39D7028AEFF42 /* MetadataExtractor.swift in Sources */,
-				61454873F4D55C8CB40427D37FCA5BB4 /* MpegData.swift in Sources */,
-				D6F8F24623A318407CB42A77830B0C7D /* MpegDecoder.swift in Sources */,
-				A23D1B2C1FE1BA8214195963189C2A01 /* OggContainer.swift in Sources */,
-				1A083169F80F086E4872E3B653322D97 /* OpusData.swift in Sources */,
-				DCE5CCFEC1AC757B1090926776B55644 /* OpusDecoder.swift in Sources */,
-				51A002BDB24B54091057C1F6FEC6535B /* OpusMapping.swift in Sources */,
-				36224BB1582AE57063A3A3C193352A59 /* PlaybackBuffer.swift in Sources */,
-				A6F0F9D582CED06F55C9EE85F688F139 /* PlaybackEngine.swift in Sources */,
-				5B52A3A5C34479AB152BD40818E6D212 /* PlaybackScheduling.swift in Sources */,
-				4C910354EB6E86C712F2C6372AA47DDE /* PlayerContext.swift in Sources */,
-				D4C4073F50F1FC7FB1A06EFD933275EF /* Ybrid.swift in Sources */,
-				64FCBAA0FC8B77EF8B7DB8C2E85F67D9 /* YbridPlayerSDK-dummy.m in Sources */,
-				DFF8654A32274774F4204EB36A4D3378 /* YbridSession.swift in Sources */,
-				F3327E3FFFDF70E99C4BCE4516AB8347 /* YbridV2Controller.swift in Sources */,
+				0DA30DD943FB6D93714DF205C07A62E6 /* ApiError.swift in Sources */,
+				A3FFA21C7485076D9D1D2696C852FF92 /* AudioData.swift in Sources */,
+				D9D71573EFB542CB088DDFF97A0D4452 /* AudioDataLoader.swift in Sources */,
+				CF9765A29F3FC6CBA1B72A0C817469A2 /* AudioDecoder.swift in Sources */,
+				15A6CEB41CA3335DB6277B7DC82DC1A8 /* AudioPipeline.swift in Sources */,
+				DDBB5840BED08F3B0CB779C6C4F30896 /* AudioPlayer.swift in Sources */,
+				C9846DAB2A956007C5DA7296D3293312 /* AudioPlayerError.swift in Sources */,
+				841702CDEDB9275A5961BFAC33E797BA /* DataAccumulator.swift in Sources */,
+				FD4F963D86ECC05856011710BE0EB04A /* DecodingError.swift in Sources */,
+				6BA17B3CC6610B3A6224160691B21E8E /* FrameSkipper.swift in Sources */,
+				2B2A7EA71912B9FFE6D759E0677838B2 /* IcyDriver.swift in Sources */,
+				A41AAA07F485D5FA2159E5B03D056190 /* JsonRequest.swift in Sources */,
+				5FF9DC35A88D2900E66D97155C1FD6F5 /* LoadingError.swift in Sources */,
+				5043C2E04DD0F0EFFB32334CCCD5FFE0 /* Logger.swift in Sources */,
+				8A43BB9BB204C69A800C9859727F3715 /* MediaControl.swift in Sources */,
+				4ECE1A538ED71EBD8376813B82BFA48C /* MediaControlFactory.swift in Sources */,
+				9333CE88F4D2A5E77D7497467DD463A0 /* MediaEndpoint.swift in Sources */,
+				3AE93303F3F301815B84DC21B69A12E5 /* MediaSession.swift in Sources */,
+				E9600A7A54CDC2C57CDFC0529E4FF1CE /* Metadata.swift in Sources */,
+				5B523BADFBB397151472D65C1D46EA20 /* MetadataExtractor.swift in Sources */,
+				D0A8A3D7E97F9AB3D1EF5C2C807FACF1 /* MpegData.swift in Sources */,
+				3F38CD9E9C2F0555BBF0CBDBDE476BF7 /* MpegDecoder.swift in Sources */,
+				CD112DEF7DC9265491EA6985D85DAA8F /* OggContainer.swift in Sources */,
+				0191A450ABC6F163535D45764516DC33 /* OpusData.swift in Sources */,
+				7E396B6D34A4CDBF97F8979F31E2E62B /* OpusDecoder.swift in Sources */,
+				C1A9FDCC831A0EFD3CE168B5C8FC6E95 /* OpusMapping.swift in Sources */,
+				B85849CE39A9DB3ACD552947BC75E915 /* PlaybackBuffer.swift in Sources */,
+				736ADFA01C9136C1785E86A6D9E1563C /* PlaybackEngine.swift in Sources */,
+				A0E5EB175334FF9C77C50FF0975DF751 /* PlaybackScheduling.swift in Sources */,
+				0D4E041D0414585767EF9C41296DE9B9 /* PlayerContext.swift in Sources */,
+				AB1296711C950AAC9149C698E7F72EDB /* Ybrid.swift in Sources */,
+				7B0F39AC95F96664A68ACABD06EF4EFA /* YbridPlayerSDK-dummy.m in Sources */,
+				CACBADE75D2992AAA7430010C5168522 /* YbridV2Driver.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -971,7 +971,7 @@
 		};
 		849B5C622452DE11C17F9B9AE918D024 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1A9C5856222DD67FF11FDEC728A9967D /* YbridPlayerSDK.debug.xcconfig */;
+			baseConfigurationReference = AD1964C5A3D1097908CF5AAE54FDD176 /* YbridPlayerSDK.debug.xcconfig */;
 			buildSettings = {
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
@@ -1121,7 +1121,7 @@
 		};
 		CFE10A7856F7387D43C074FDC17E2C3F /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 037220A664D120147BF006EF7C083A51 /* YbridPlayerSDK.release.xcconfig */;
+			baseConfigurationReference = 769D7E56AEDA1307315FC566F288CC00 /* YbridPlayerSDK.release.xcconfig */;
 			buildSettings = {
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
