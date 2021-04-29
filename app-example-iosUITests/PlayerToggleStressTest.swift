@@ -43,7 +43,7 @@
 import XCTest
 import YbridPlayerSDK
 
-class PlayerToggleStressTest: XCTestCase, AudioPlayerListener {
+class PlayerToggleStressTest: XCTestCase {
     
     var triggeredPlay:Int = 0
     var triggeredStop:Int = 0
@@ -61,6 +61,7 @@ class PlayerToggleStressTest: XCTestCase, AudioPlayerListener {
     }
     
     var player:AudioPlayer?
+    var playerListener = TogglePlayerListener()
     
     var waitingQueue = DispatchQueue(label: "waiting")
     override func setUpWithError() throws {
@@ -136,7 +137,7 @@ class PlayerToggleStressTest: XCTestCase, AudioPlayerListener {
     
     fileprivate func prepare(_ mediaUrl:String) {
         let url = URL.init(string: mediaUrl)!
-        player = AudioPlayer(mediaUrl: url, listener: self)
+        player = AudioPlayer(mediaUrl: url, listener: playerListener)
     }
     
     func execute() {
@@ -203,30 +204,27 @@ class PlayerToggleStressTest: XCTestCase, AudioPlayerListener {
     
     
     // MARK: audio player listener
-    
-    func stateChanged(_ to: PlaybackState) {}
-    func displayTitleChanged(_ title: String?) {}
-    func error(_ severity: ErrorSeverity, _ error: AudioPlayerError) {
-        Logger.testing.error("-- problem \(severity): \(error.localizedDescription)" )
-    }
-    func playingSince(_ seconds: TimeInterval?) {
-        if let since = seconds {
-            Logger.testing.debug("-- + playing since \(since.S)")
+    class TogglePlayerListener : AbstractAudioPlayerListener {
+        
+        override func playingSince(_ seconds: TimeInterval?) {
+            if let since = seconds {
+                Logger.testing.debug("-- + playing since \(since.S)")
+            }
         }
-    }
-    func durationConnected(_ seconds: TimeInterval?) {
-        if let connected = seconds {
-            Logger.testing.notice("-- + connected after \(connected.S)")
+        override func durationConnected(_ seconds: TimeInterval?) {
+            if let connected = seconds {
+                Logger.testing.notice("-- + connected after \(connected.S)")
+            }
         }
-    }
-    func durationReadyToPlay(_ seconds: TimeInterval?) {
-        if let ready = seconds {
-            Logger.testing.notice("-- + ready after \(ready.S)")
+        override func durationReadyToPlay(_ seconds: TimeInterval?) {
+            if let ready = seconds {
+                Logger.testing.notice("-- + ready after \(ready.S)")
+            }
         }
-    }
-    func bufferSize(averagedSeconds: TimeInterval?, currentSeconds: TimeInterval?) {
-        if let buffer = currentSeconds {
-            Logger.testing.debug("-- + buffer \(buffer.S)")
+        override func bufferSize(averagedSeconds: TimeInterval?, currentSeconds: TimeInterval?) {
+            if let buffer = currentSeconds {
+                Logger.testing.debug("-- + buffer \(buffer.S)")
+            }
         }
     }
 }

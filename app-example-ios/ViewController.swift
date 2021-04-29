@@ -100,14 +100,14 @@ class ViewController: UIViewController, AudioPlayerListener, UIPickerViewDelegat
         urlPicker.selectRow(initialSelectedRow, inComponent: 0, animated: true)
         pickerView(urlPicker, didSelectRow: initialSelectedRow, inComponent: 0)
         
-        displayTitleChanged(nil)
+        noTitle()
         noError()
         playingSince(0)
         durationReadyToPlay(nil)
         durationConnected(nil)
         bufferSize(averagedSeconds: nil, currentSeconds: nil)
     }
-    
+
     override func didReceiveMemoryWarning() {
         Logger.shared.notice()
         if PlayerContext.handleMemoryLimit() {
@@ -122,6 +122,11 @@ class ViewController: UIViewController, AudioPlayerListener, UIPickerViewDelegat
         }
     }
     
+    private func noTitle() {
+        DispatchQueue.main.async {
+            self.playingTitle.text = ""
+        }
+    }
     
     // MARK: user actions
     
@@ -221,9 +226,9 @@ class ViewController: UIViewController, AudioPlayerListener, UIPickerViewDelegat
     
     // MARK: AudioPlayerListener
     
-    func displayTitleChanged(_ title:String?) {
+    func metadataChanged(_ metadata:Metadata) {
         DispatchQueue.main.async {
-            if let title = title {
+            if let title = metadata.displayTitle {
                 self.playingTitle.text = title
             } else {
                 self.playingTitle.text = ""
@@ -264,7 +269,7 @@ class ViewController: UIViewController, AudioPlayerListener, UIPickerViewDelegat
                 self.togglePlay.setTitle("", for: .normal)
                 self.togglePlay.setImage(self.playImage, for: UIControl.State.normal)
                 
-                self.displayTitleChanged(nil)
+                self.noTitle()
                 
             case .pausing:
                 self.togglePlay.setTitle("", for: .normal)

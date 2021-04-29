@@ -47,54 +47,36 @@ class AbstractAudioPlayerListener : AudioPlayerListener {
     func stateChanged(_ state: PlaybackState) {
         Logger.testing.notice("-- player is \(state)")
     }
-    func displayTitleChanged(_ title: String?) {
-    }
-
     func error(_ severity:ErrorSeverity, _ exception: AudioPlayerError) {
         Logger.testing.notice("-- \(severity): \(exception.localizedDescription)")
     }
-
-    func playingSince(_ seconds: TimeInterval?) {
-    }
-
-    func durationReadyToPlay(_ seconds: TimeInterval?) {
-        if let duration = seconds {
-            Logger.testing.notice("-- begin playing audio after \(duration.S) seconds ")
-        } else {
-            Logger.testing.notice("-- reset buffered until playing duration ")
-        }
-    }
-
-    func durationConnected(_ seconds: TimeInterval?) {
-    }
-
-    func bufferSize(averagedSeconds: TimeInterval?, currentSeconds: TimeInterval?) {
-    }
+    
+    func metadataChanged(_ metadata: Metadata) {}
+    func playingSince(_ seconds: TimeInterval?) {}
+    func durationReadyToPlay(_ seconds: TimeInterval?) {}
+    func durationConnected(_ seconds: TimeInterval?) {}
+    func bufferSize(averagedSeconds: TimeInterval?, currentSeconds: TimeInterval?) {}
 }
 
 
 
-class TestAudioPlayerListener : AudioPlayerListener {
+class TestAudioPlayerListener : AbstractAudioPlayerListener {
     
     var statusCode:Int32 = 0
-    func stateChanged(_ state: PlaybackState) {
-        Logger.testing.notice("-- player is \(state)")
-    }
-    func error(_ severity: ErrorSeverity, _ error: AudioPlayerError) {
+
+    override func error(_ severity: ErrorSeverity, _ error: AudioPlayerError) {
         Logger.testing.error("-- player \(severity): \(error.localizedDescription)" )
         if let code = error.osstatus, code != 0 {
             statusCode = code
         } else {
             statusCode = 0
         }
-        
-
     }
-    func displayTitleChanged(_ title: String?) {
-        Logger.testing.notice("-- combined display title is \(title ?? "(nil)")")
+    override func metadataChanged(_ metadata: Metadata) {
+        Logger.testing.notice("-- metadata cahnged: display title is \(metadata.displayTitle ?? "(nil)")")
     }
     
-    func playingSince(_ seconds: TimeInterval?) {
+    override func playingSince(_ seconds: TimeInterval?) {
         if let duration = seconds {
             Logger.testing.notice("-- playing for \(duration.S) seconds ")
         } else {
@@ -102,7 +84,7 @@ class TestAudioPlayerListener : AudioPlayerListener {
         }
     }
 
-    func durationConnected(_ seconds: TimeInterval?) {
+    override func durationConnected(_ seconds: TimeInterval?) {
         if let duration = seconds {
             Logger.testing.notice("-- recieved first data from url after \(duration.S) seconds ")
         } else {
@@ -110,7 +92,7 @@ class TestAudioPlayerListener : AudioPlayerListener {
         }
     }
 
-    func durationReadyToPlay(_ seconds: TimeInterval?) {
+    override func durationReadyToPlay(_ seconds: TimeInterval?) {
         if let duration = seconds {
             Logger.testing.notice("-- begin playing audio after \(duration.S) seconds ")
         } else {
@@ -118,7 +100,7 @@ class TestAudioPlayerListener : AudioPlayerListener {
         }
     }
 
-    func bufferSize(averagedSeconds: TimeInterval?, currentSeconds: TimeInterval?) {
+    override func bufferSize(averagedSeconds: TimeInterval?, currentSeconds: TimeInterval?) {
         if let bufferLength = currentSeconds {
             Logger.testing.notice("-- currently buffered \(bufferLength.S) seconds of audio")
         }

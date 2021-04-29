@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		129AFBCBFC4C20662B3FF92F /* Pods_app_example_ios_app_example_iosUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 727FB4809B48B22D407F2F8B /* Pods_app_example_ios_app_example_iosUITests.framework */; };
 		171449C92530F37500E76141 /* streams.txt in Resources */ = {isa = PBXBuildFile; fileRef = 171449C82530F37500E76141 /* streams.txt */; };
-		1714DA14263848D400DD17B8 /* ConsumeMetadataPlayerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1714DA13263848D400DD17B8 /* ConsumeMetadataPlayerTests.swift */; };
+		1714DA14263848D400DD17B8 /* ConsumeMetadataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1714DA13263848D400DD17B8 /* ConsumeMetadataTests.swift */; };
 		17587CBE25027DC900951211 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17587CBD25027DC900951211 /* AppDelegate.swift */; };
 		17587CC025027DC900951211 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17587CBF25027DC900951211 /* SceneDelegate.swift */; };
 		17587CC225027DC900951211 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17587CC125027DC900951211 /* ViewController.swift */; };
@@ -36,7 +36,7 @@
 
 /* Begin PBXFileReference section */
 		171449C82530F37500E76141 /* streams.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = streams.txt; sourceTree = "<group>"; };
-		1714DA13263848D400DD17B8 /* ConsumeMetadataPlayerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsumeMetadataPlayerTests.swift; sourceTree = "<group>"; };
+		1714DA13263848D400DD17B8 /* ConsumeMetadataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsumeMetadataTests.swift; sourceTree = "<group>"; };
 		17587CBA25027DC900951211 /* app-example-ios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "app-example-ios.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		17587CBD25027DC900951211 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		17587CBF25027DC900951211 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -121,7 +121,7 @@
 		176EE868257002A300AC49DD /* app-example-iosUITests */ = {
 			isa = PBXGroup;
 			children = (
-				1714DA13263848D400DD17B8 /* ConsumeMetadataPlayerTests.swift */,
+				1714DA13263848D400DD17B8 /* ConsumeMetadataTests.swift */,
 				178347EE25C2DB7600A5F23B /* YbridPlayerTests.swift */,
 				1760460E25B0B38600C79BF8 /* UITestsHelper.swift */,
 				176BDE94258CB1240038EE95 /* UseYbridPlayerTests.swift */,
@@ -353,7 +353,7 @@
 				176BDE95258CB1240038EE95 /* UseYbridPlayerTests.swift in Sources */,
 				1760460F25B0B38600C79BF8 /* UITestsHelper.swift in Sources */,
 				178347EF25C2DB7600A5F23B /* YbridPlayerTests.swift in Sources */,
-				1714DA14263848D400DD17B8 /* ConsumeMetadataPlayerTests.swift in Sources */,
+				1714DA14263848D400DD17B8 /* ConsumeMetadataTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

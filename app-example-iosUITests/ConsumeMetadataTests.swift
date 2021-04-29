@@ -26,8 +26,7 @@
 import XCTest
 import YbridPlayerSDK
 
-class ConsumeMetadataPlayerTests: XCTestCase {
-    
+class ConsumeMetadataTests: XCTestCase {
     
     let ybridEndpoint = MediaEndpoint(mediaUri: "https://stagecast.ybrid.io/adaptive-demo")
     let icecastEndpoint = MediaEndpoint(mediaUri: "https://hr-hr2-live.cast.addradio.de/hr/hr2/live/mp3/128/stream.mp3")
@@ -146,33 +145,25 @@ class ConsumeMetadataPlayerTests: XCTestCase {
     }
     
     
-    
     class TestMetadataCallsConsumer : AbstractAudioPlayerListener {
         
-        private var displayTitleCalled = 0
+        var metadataCalls = 0
         
-        override func displayTitleChanged(_ title: String?) {
-            displayTitleCalled += 1
-            Logger.testing.info("-- combined display title is \(title ?? "(nil)")")
-            XCTAssertNotNil(title)
+        override func metadataChanged(_ metadata: Metadata) {
+            metadataCalls += 1
+            Logger.testing.info("-- metadata changed, display title is \(metadata.displayTitle ?? "(nil)")")
+            XCTAssertNotNil(metadata.displayTitle)
         }
-        
         
         func checkMetadataCalls(equal expectedCalls: Int) {
-            let called = displayTitleCalled
-            XCTAssertTrue( called == expectedCalls,  "expected == \(expectedCalls)  calls, but was \(called)")
+            XCTAssertTrue( metadataCalls == expectedCalls,  "expected == \(expectedCalls)  calls, but was \(metadataCalls)")
         }
         
-        /// necessary because there could be a change of metadata while playing
+        /// max is necessary because there could be a change of metadata while playing
         func checkMetadataCalls(min expectedMinCalls: Int, max expectedMaxCalls: Int) {
-            let called = displayTitleCalled
-            XCTAssertTrue( called >= expectedMinCalls, "expected >=\(expectedMinCalls)  calls, but was \(called)")
+            XCTAssertTrue( metadataCalls >= expectedMinCalls, "expected >=\(expectedMinCalls)  calls, but was \(metadataCalls)")
             
-            XCTAssertTrue( called <= expectedMaxCalls, "expected <=\(expectedMaxCalls)  calls, but was \(called)")
+            XCTAssertTrue( metadataCalls <= expectedMaxCalls, "expected <=\(expectedMaxCalls)  calls, but was \(metadataCalls)")
         }
-
-        
-        
     }
-    
 }
