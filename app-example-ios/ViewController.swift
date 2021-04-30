@@ -43,22 +43,24 @@ class ViewController: UIViewController, AudioPlayerListener, UIPickerViewDelegat
             
             Logger.shared.debug("mediaUrl changed to \(mediaUrl?.absoluteString ?? "(nil)")")
 
-            if player?.state != PlaybackState.stopped {
+            let playing = player?.state == .playing
+            if playing {
                 player?.stop()
             }
-            
-            noError()
-            playingSince(0)
-            durationReadyToPlay(nil)
-            durationConnected(nil)
-            bufferSize(averagedSeconds: nil, currentSeconds: nil)
+              
+            resetMonitorings()
+           
             
             guard let url = mediaUrl else {
                 togglePlay.isEnabled = false
                 return
             }
             togglePlay.isEnabled = true
+
             player = AudioPlayer(mediaUrl: url, listener: self)
+            if playing {
+                player?.play()
+            }
 //            player?.canPause = true
 //            if let playbackUri = player?.session.playbackUri {
 //                urlField.text = playbackUri
@@ -70,6 +72,10 @@ class ViewController: UIViewController, AudioPlayerListener, UIPickerViewDelegat
     
     @IBOutlet weak var urlPicker: UIPickerView!
     @IBOutlet fileprivate weak var urlField: UrlField!
+    
+    @IBOutlet weak var broadcaster: UILabel!
+    @IBOutlet weak var genre: UILabel!
+    
     @IBOutlet weak var playingTitle: UILabel!
     @IBOutlet weak var problem: UILabel!
     @IBOutlet weak var togglePlay: UIButton!
@@ -100,12 +106,7 @@ class ViewController: UIViewController, AudioPlayerListener, UIPickerViewDelegat
         urlPicker.selectRow(initialSelectedRow, inComponent: 0, animated: true)
         pickerView(urlPicker, didSelectRow: initialSelectedRow, inComponent: 0)
         
-        noTitle()
-        noError()
-        playingSince(0)
-        durationReadyToPlay(nil)
-        durationConnected(nil)
-        bufferSize(averagedSeconds: nil, currentSeconds: nil)
+        resetMonitorings()
     }
 
     override func didReceiveMemoryWarning() {
@@ -116,19 +117,20 @@ class ViewController: UIViewController, AudioPlayerListener, UIPickerViewDelegat
         super.didReceiveMemoryWarning()
     }
     
-    private func noError() {
-        DispatchQueue.main.async {
-            self.problem.text = ""
-        }
-    }
     
-    private func noTitle() {
+    private func resetMonitorings() {
         DispatchQueue.main.async {
+            self.broadcaster.text = ""
+            self.genre.text = ""
             self.playingTitle.text = ""
-        }
+            self.problem.text = ""
+            self.playingSince(0)
+            self.durationReadyToPlay(nil)
+            self.durationConnected(nil)
+            self.bufferSize(averagedSeconds: nil, currentSeconds: nil)
+       }
     }
-    
-    // MARK: user actions
+     // MARK: user actions
     
     /// toggle play or stop
     @IBAction func toggle(_ sender: Any) {
@@ -138,6 +140,7 @@ class ViewController: UIViewController, AudioPlayerListener, UIPickerViewDelegat
         }
         switch player.state  {
         case .stopped, .pausing:
+            self.problem.text = ""
             player.play()
         case .playing:
             player.canPause ? player.pause() : player.stop()
@@ -166,7 +169,6 @@ class ViewController: UIViewController, AudioPlayerListener, UIPickerViewDelegat
                 self.mediaUrl = self.urlField.url
             } else {
                 self.mediaUrl = nil
-                
             }
         }        
     }
@@ -233,6 +235,14 @@ class ViewController: UIViewController, AudioPlayerListener, UIPickerViewDelegat
             } else {
                 self.playingTitle.text = ""
             }
+            
+            if let station = metadata.station {
+                self.broadcaster.text = station.name
+                self.genre.text = station.genre
+            } else {
+                self.broadcaster.text = ""
+                self.genre.text = ""
+            }
         }
     }
     
@@ -248,7 +258,7 @@ class ViewController: UIViewController, AudioPlayerListener, UIPickerViewDelegat
                 DispatchQueue.global().async {
                     sleep(5)
                     DispatchQueue.main.async {
-                        self.noError()
+                        self.problem.text = ""
                     }
                 }
             @unknown default:
@@ -269,7 +279,7 @@ class ViewController: UIViewController, AudioPlayerListener, UIPickerViewDelegat
                 self.togglePlay.setTitle("", for: .normal)
                 self.togglePlay.setImage(self.playImage, for: UIControl.State.normal)
                 
-                self.noTitle()
+                self.playingTitle.text = ""
                 
             case .pausing:
                 self.togglePlay.setTitle("", for: .normal)
