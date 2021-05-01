@@ -128,6 +128,7 @@
                                 <fontDescription key="fontDescription" type="system" weight="light" pointSize="18"/>
                                 <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardType="URL" smartQuotesType="yes" textContentType="url"/>
                                 <connections>
+                                    <action selector="uriChanged:" destination="v5y-mi-lWH" eventType="editingChanged" id="1Fm-8e-fBw"/>
                                     <action selector="urlEditChanged:" destination="BYZ-38-t0r" eventType="editingChanged" id="UdX-tl-L6h"/>
                                 </connections>
                             </textField>
@@ -239,6 +240,7 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+                <exit id="v5y-mi-lWH" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="411.59420289855075" y="149.33035714285714"/>
         </scene>

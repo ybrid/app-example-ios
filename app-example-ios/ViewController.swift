@@ -32,7 +32,7 @@ import AVFoundation
 import YbridPlayerSDK
 
 
-class ViewController: UIViewController, AudioPlayerListener, UIPickerViewDelegate, UITextFieldDelegate {
+class ViewController: UIViewController, AudioPlayerListener, UITextFieldDelegate {
     
     var player:AudioPlayer?
     var mediaUrl:URL? {
@@ -42,14 +42,14 @@ class ViewController: UIViewController, AudioPlayerListener, UIPickerViewDelegat
             }
             
             Logger.shared.debug("mediaUrl changed to \(mediaUrl?.absoluteString ?? "(nil)")")
-
-            let playing = player?.state == .playing
-            if playing {
-                player?.stop()
+            
+            var running:Bool = false
+            if let player = player, player.state != .stopped {
+                running = player.state != .pausing
+                player.stop()
             }
               
             resetMonitorings()
-           
             
             guard let url = mediaUrl else {
                 togglePlay.isEnabled = false
@@ -58,7 +58,7 @@ class ViewController: UIViewController, AudioPlayerListener, UIPickerViewDelegat
             togglePlay.isEnabled = true
 
             player = AudioPlayer(mediaUrl: url, listener: self)
-            if playing {
+            if running {
                 player?.play()
             }
 //            player?.canPause = true
@@ -71,7 +71,7 @@ class ViewController: UIViewController, AudioPlayerListener, UIPickerViewDelegat
     // MARK: ui outlets
     
     @IBOutlet weak var urlPicker: UIPickerView!
-    @IBOutlet fileprivate weak var urlField: UrlField!
+    @IBOutlet weak var urlField: UrlField!
     
     @IBOutlet weak var broadcaster: UILabel!
     @IBOutlet weak var genre: UILabel!
@@ -85,8 +85,7 @@ class ViewController: UIViewController, AudioPlayerListener, UIPickerViewDelegat
     @IBOutlet weak var bufferAveraged: UILabel!
     @IBOutlet weak var bufferCurrent: UILabel!
     
-    
-    let pickerData = MediaPickerData()
+    private var uriSelector:MediaSelector?
     
     // MARK: main
     override func viewDidLoad() {
@@ -94,17 +93,18 @@ class ViewController: UIViewController, AudioPlayerListener, UIPickerViewDelegat
         
         Logger.verbose = true
         Logger.shared.notice("using \(AudioPlayer.versionString)")
+        uriSelector = MediaSelector(main: self, urlPicker: urlPicker, urlField: urlField)
         
         hideKeyboardWhenTappedAround()
         setStaticFieldAttributes()
         
-        urlPicker.delegate = self
-        urlField.delegate = self
+        urlPicker.delegate = uriSelector
+        urlField.delegate = uriSelector
         
         let initialSelectedRow = 1
         urlPicker.dataSource = pickerData
         urlPicker.selectRow(initialSelectedRow, inComponent: 0, animated: true)
-        pickerView(urlPicker, didSelectRow: initialSelectedRow, inComponent: 0)
+        uriSelector?.pickerView(urlPicker, didSelectRow: initialSelectedRow, inComponent: 0)
         
         resetMonitorings()
     }
@@ -130,7 +130,8 @@ class ViewController: UIViewController, AudioPlayerListener, UIPickerViewDelegat
             self.bufferSize(averagedSeconds: nil, currentSeconds: nil)
        }
     }
-     // MARK: user actions
+    
+    // MARK: user actions
     
     /// toggle play or stop
     @IBAction func toggle(_ sender: Any) {
@@ -150,51 +151,13 @@ class ViewController: UIViewController, AudioPlayerListener, UIPickerViewDelegat
             fatalError("unknown player state \(player.state )")
         }
     }
-    
-    
-    /// select station
-    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        let selected = pickerData.urls[row]
-        Logger.shared.notice("\(selected.label) selected")
         
-        DispatchQueue.main.async {
-            self.urlField.text = selected.url
-            if selected.editable {
-                self.urlField.enable(placeholder: "enter URL here")
-            } else {
-                self.urlField.disable()
-            }
-            
-            if self.urlField.isValidUrl {
-                self.mediaUrl = self.urlField.url
-            } else {
-                self.mediaUrl = nil
-            }
-        }        
-    }
-    
     /// edit custom url
     @IBAction func urlEditChanged(_ sender: Any) {
-        
-        guard let text = urlField.text, !text.isEmpty else {
-            let row = urlPicker.selectedRow(inComponent: 0)
-            pickerData.urls[row].url = ""
-            mediaUrl = nil
-            return
-        }
-        
-        togglePlay.isEnabled = urlField.isValidUrl
+        let valid = uriSelector?.urlEditChanged() ?? true
+        togglePlay.isEnabled = valid 
     }
     
-    /// end edit url
-    func textFieldDidEndEditing(_ textField: UITextField) {
-        let row = urlPicker.selectedRow(inComponent: 0)
-        
-        if urlField.isValidUrl, let url = urlField.url {
-            mediaUrl = url
-            pickerData.urls[row].url = urlField.text ?? ""
-        }
-    }
     
     // MARK: initialization
     
@@ -217,14 +180,7 @@ class ViewController: UIViewController, AudioPlayerListener, UIPickerViewDelegat
             self.urlPicker.reloadAllComponents()
         }
     }
-    // workaround
-    // this is the only way I found to set the color of the url picker entries on iOS 12.4!
-    func pickerView(_ pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
-        let title = pickerData.urls[row].label
-        let pickerFont = (playedSince as UILabel).font!
-        let myTitle = NSAttributedString(string: title, attributes: [NSAttributedString.Key.font:UIFont(name: pickerFont.fontName, size: pickerFont.pointSize)!,NSAttributedString.Key.foregroundColor:UIColor.white])
-        return myTitle
-    }
+ 
     
     // MARK: AudioPlayerListener
     
@@ -264,7 +220,6 @@ class ViewController: UIViewController, AudioPlayerListener, UIPickerViewDelegat
             @unknown default:
                 Logger.shared.error("unknown error: severity \(severity), \(exception.localizedDescription)")
             }
-            
         }
     }
     
@@ -285,7 +240,7 @@ class ViewController: UIViewController, AudioPlayerListener, UIPickerViewDelegat
                 self.togglePlay.setTitle("", for: .normal)
                 self.togglePlay.setImage(self.playImage, for: UIControl.State.normal)
             case .buffering:
-                self.togglePlay.setTitle(". . .", for: .normal)
+                self.togglePlay.setTitle("● ● ●", for: .normal) // \u{25cf} Black Circle
                 self.togglePlay.setImage(nil, for: UIControl.State.normal)
             case .playing:
                 self.togglePlay.setTitle("", for: .normal)
@@ -362,94 +317,8 @@ fileprivate extension UIViewController {
         tap.cancelsTouchesInView = false
         view.addGestureRecognizer(tap)
     }
-    
     @objc func dismissKeyboard() {
         view.endEditing(true)
-    }
-    
-}
-
-struct MediaData {
-    let label:String
-    var url:String
-    var editable:Bool = false
-}
-
-class MediaPickerData: NSObject, UIPickerViewDataSource {
-
-    var urls:[MediaData] = [] // radios are added from streams.txt
-    let customUrlLabel = "custom URL"
-    
-    override init() {
-        super.init()
-        if let pathToFile = Bundle.main.path(forResource: "streams", ofType: "txt") {
-            urls.append(contentsOf: loadUrls(path: pathToFile))
-        }
-        urls.append(MediaData(label:customUrlLabel, url:"", editable: true))
-    }
-    
-    private func loadUrls(path:String) -> [MediaData]{
-        var labelUrls:[MediaData] = []
-        let fileContent = try! String(contentsOfFile: path, encoding: String.Encoding.utf8)
-        let dataArray = fileContent.components(separatedBy: "\n")
-        for line in dataArray {
-            let components = line.split(separator: "=", maxSplits: 1).map(String.init)
-            guard components.count == 2 else {
-                continue
-            }
-            let label=components[0].trimmingCharacters(in: .whitespacesAndNewlines)
-            let url=components[1].trimmingCharacters(in: .whitespacesAndNewlines)
-            labelUrls.append(MediaData(label:label,url:url))
-        }
-        return labelUrls
-    }
-    
-    func numberOfComponents(in pickerView: UIPickerView) -> Int {
-        return 1
-    }
-    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return urls.count
-    }
-    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        return urls[row].label
-    }
-    
-}
-
-fileprivate class UrlField: UITextField {
-
-    func enable(placeholder: String) {
-        self.isEnabled = true
-        self.backgroundColor = UIColor(white: 0.4, alpha: 0.3 )
-        self.textColor = UIColor.white
-        self.attributedPlaceholder = NSAttributedString(string:placeholder, attributes: [NSAttributedString.Key.foregroundColor:UIColor.lightGray])
-    }
-    
-    func disable() {
-        self.isEnabled = false
-        self.backgroundColor = UIColor(white: 0.0, alpha: 0.3 )
-        self.textColor = UIColor.gray
-    }
-    
-    var url:URL? { get {
-        guard let text = text else {
-            return nil
-        }
-        
-        let urlString = text.trimmingCharacters(in: CharacterSet.whitespaces)
-                            .addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)
-        if let urlEncoded = urlString, let url = URL(string: urlEncoded) {
-            return url
-        }
-        return nil
-    }}
-    
-    var isValidUrl:Bool {
-        guard let url = url else { return false }
-        if url.pathComponents[0].hasPrefix("icyx") {
-            return true
-        }
-        return UIApplication.shared.canOpenURL(url)
     }
 }
 
