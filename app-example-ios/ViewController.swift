@@ -32,41 +32,8 @@ import AVFoundation
 import YbridPlayerSDK
 
 
-class ViewController: UIViewController, AudioPlayerListener, UITextFieldDelegate {
+class ViewController: UIViewController, AudioPlayerListener {
     
-    var player:AudioPlayer?
-    var mediaUrl:URL? {
-        didSet {
-            if oldValue == mediaUrl {
-                return
-            }
-            
-            Logger.shared.debug("mediaUrl changed to \(mediaUrl?.absoluteString ?? "(nil)")")
-            
-            var running:Bool = false
-            if let player = player, player.state != .stopped {
-                running = player.state != .pausing
-                player.stop()
-            }
-              
-            resetMonitorings()
-            
-            guard let url = mediaUrl else {
-                togglePlay.isEnabled = false
-                return
-            }
-            togglePlay.isEnabled = true
-
-            player = AudioPlayer(mediaUrl: url, listener: self)
-            if running {
-                player?.play()
-            }
-//            player?.canPause = true
-//            if let playbackUri = player?.session.playbackUri {
-//                urlField.text = playbackUri
-//            }
-        }
-    }
     
     // MARK: ui outlets
     
@@ -85,6 +52,38 @@ class ViewController: UIViewController, AudioPlayerListener, UITextFieldDelegate
     @IBOutlet weak var bufferAveraged: UILabel!
     @IBOutlet weak var bufferCurrent: UILabel!
     
+    
+    var player:AudioPlayer?
+    var endpoint:MediaEndpoint? {
+        didSet {
+            if oldValue == endpoint {
+                return
+            }
+            
+            Logger.shared.info("endpoint changed to \(endpoint?.uri ?? "(nil)")")
+            if let player = player, player.state != .stopped {
+                player.stop()
+            }
+            genre.text = ""
+            broadcaster.text = ""
+            togglePlay.isEnabled = endpoint != nil
+            
+            if let endpoint = endpoint, self.cachedSessions[endpoint] == nil {
+                self.togglePlay.isEnabled = false
+                DispatchQueue.main.async {
+                    guard let _ = self.ensureSession(endpoint) else {
+                        Logger.shared.error("no session for \(endpoint.uri)")
+                        return
+                    }
+                    self.togglePlay.isEnabled = true
+                }
+                return
+            }
+            
+        }
+    }
+ 
+    private var cachedSessions:[MediaEndpoint:MediaSession] = [:]
     private var uriSelector:MediaSelector?
     
     // MARK: main
@@ -93,7 +92,10 @@ class ViewController: UIViewController, AudioPlayerListener, UITextFieldDelegate
         
         Logger.verbose = true
         Logger.shared.notice("using \(AudioPlayer.versionString)")
-        uriSelector = MediaSelector(main: self, urlPicker: urlPicker, urlField: urlField)
+        
+        uriSelector = MediaSelector(urlPicker: urlPicker, urlField: urlField, endpoint: { (endpoint) in
+                self.endpoint = endpoint
+        })
         
         hideKeyboardWhenTappedAround()
         setStaticFieldAttributes()
@@ -102,13 +104,13 @@ class ViewController: UIViewController, AudioPlayerListener, UITextFieldDelegate
         urlField.delegate = uriSelector
         
         let initialSelectedRow = 1
-        urlPicker.dataSource = pickerData
+        urlPicker.dataSource = uriSelector?.pickerData
         urlPicker.selectRow(initialSelectedRow, inComponent: 0, animated: true)
         uriSelector?.pickerView(urlPicker, didSelectRow: initialSelectedRow, inComponent: 0)
         
         resetMonitorings()
     }
-
+    
     override func didReceiveMemoryWarning() {
         Logger.shared.notice()
         if PlayerContext.handleMemoryLimit() {
@@ -117,31 +119,82 @@ class ViewController: UIViewController, AudioPlayerListener, UITextFieldDelegate
         super.didReceiveMemoryWarning()
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        cachedSessions.forEach { (endpoint,session) in
+            Logger.shared.info("closing session with endpoint \(endpoint.uri)")
+            session.close()
+        }
+    }
     
     private func resetMonitorings() {
         DispatchQueue.main.async {
-            self.broadcaster.text = ""
-            self.genre.text = ""
-            self.playingTitle.text = ""
-            self.problem.text = ""
+            self.broadcaster.text = nil
+            self.genre.text = nil
+            self.playingTitle.text = nil
+            self.problem.text = nil
             self.playingSince(0)
             self.durationReadyToPlay(nil)
             self.durationConnected(nil)
             self.bufferSize(averagedSeconds: nil, currentSeconds: nil)
-       }
+        }
     }
     
     // MARK: user actions
+
+    fileprivate func runNewPlayer(_ session: MediaSession) {
+        DispatchQueue.main.async {
+            let player = AudioPlayer(session:session, listener: self)
+            self.player = player
+            self.problem.text = nil
+            player.play()
+        }
+    }
+    
     
     /// toggle play or stop
     @IBAction func toggle(_ sender: Any) {
         print("toggle called")
+        guard let endpoint = endpoint else {
+            return
+        }
+        
+        guard let session = self.cachedSessions[endpoint] else {
+            self.togglePlay.isEnabled = false
+            DispatchQueue.main.async { [self] in
+                guard let session = ensureSession(endpoint) else {
+                    Logger.shared.error("no session for \(endpoint.uri)")
+                    return
+                }
+                togglePlay.isEnabled = true
+                runNewPlayer(session)
+            }
+            return
+        }
+        
+        if let player = player, session == player.session {
+            doToggle()
+            return
+        }
+        
+        runNewPlayer(session)
+    }
+    
+    func ensureSession(_ endpoint:MediaEndpoint) -> MediaSession? {
+        guard let session = endpoint.createSession() else {
+            return nil
+        }
+        self.cachedSessions[endpoint] = session
+        return session
+    }
+    
+    func doToggle() {
         guard let player = player else {
             return
         }
         switch player.state  {
         case .stopped, .pausing:
-            self.problem.text = ""
+            self.problem.text = nil
             player.play()
         case .playing:
             player.canPause ? player.pause() : player.stop()
@@ -151,7 +204,25 @@ class ViewController: UIViewController, AudioPlayerListener, UITextFieldDelegate
             fatalError("unknown player state \(player.state )")
         }
     }
-        
+    
+//    var running:Bool {
+//        guard let player = player else { return false }
+//        return player.state == .buffering || player.state == .playing
+//    }
+//
+//    func doToggle(_ running:Bool) {
+//        guard let player = player else { return }
+//        if running {
+//            self.problem.text = ""
+//            player.play()
+//        } else {
+//            player.canPause ? player.pause() : player.stop()
+//        }
+//
+//    }
+    
+ 
+    
     /// edit custom url
     @IBAction func urlEditChanged(_ sender: Any) {
         let valid = uriSelector?.urlEditChanged() ?? true
@@ -174,13 +245,9 @@ class ViewController: UIViewController, AudioPlayerListener, UITextFieldDelegate
             self.connected.font = self.connected.font.monospacedDigitFont
             self.bufferAveraged.font = self.bufferAveraged.font.monospacedDigitFont
             self.bufferCurrent.font = self.bufferCurrent.font.monospacedDigitFont
-            
-            // this is usually enough to see white text color in urlPicker - except fpr iOS 12.4
-            // see workaround below (func pickerView(_ pickerView: UIPickerView, attributedTitleForRow row: ...)
-            self.urlPicker.reloadAllComponents()
         }
     }
- 
+    
     
     // MARK: AudioPlayerListener
     
@@ -227,6 +294,10 @@ class ViewController: UIViewController, AudioPlayerListener, UITextFieldDelegate
     let pauseImage = UIImage(named: "pause")!.scale(factor: 0.9)
     let stopImage = UIImage(named: "stop")!.scale(factor: 0.8)
     func stateChanged(_ state: PlaybackState) {
+        guard player?.state == state else {
+            /// ignore events from the last player
+            return
+        }
         DispatchQueue.main.async {
             Logger.shared.debug("state changed to \(state)")
             switch state {
@@ -347,7 +418,7 @@ extension UIImage {
         guard let processedCGImage = CIContext().createCGImage(grayscale, from: grayscale.extent) else { return self }
         return UIImage(cgImage: processedCGImage, scale: scale, orientation: imageOrientation)
     }
-
+    
     func scale(factor: Float) -> UIImage {
         let scaledImage = UIImage( cgImage: self.cgImage!, scale: self.scale/CGFloat(factor), orientation: self.imageOrientation)
         return scaledImage

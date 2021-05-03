@@ -26,24 +26,23 @@
 import UIKit
 import YbridPlayerSDK
 
-struct MediaData {
+fileprivate struct MediaData {
     let label:String
     var url:String
     var editable:Bool = false
 }
 
-let pickerData:MediaPickerData = MediaPickerData()
-
 class MediaSelector: NSObject, UIPickerViewDelegate, UITextFieldDelegate {
     
-    let mainCtrl: ViewController
+    let pickerData:MediaPickerData = MediaPickerData()
     let urlPicker: UIPickerView
     let urlField: UrlField
+    let setMediaEndpoint:(MediaEndpoint?) -> ()
     
-    init(main: ViewController, urlPicker: UIPickerView, urlField: UrlField) {
-        self.mainCtrl = main
+    init(urlPicker: UIPickerView, urlField: UrlField, endpoint:@escaping (MediaEndpoint?) -> ()) {
         self.urlPicker = urlPicker
         self.urlField = urlField
+        self.setMediaEndpoint = endpoint
     }
     
     /// on select station
@@ -51,30 +50,29 @@ class MediaSelector: NSObject, UIPickerViewDelegate, UITextFieldDelegate {
         let selected = pickerData.urls[row]
         Logger.shared.notice("\(selected.label) selected")
         
-        DispatchQueue.main.async {
-            self.urlField.text = selected.url
-            if selected.editable {
-                self.urlField.enable(placeholder: "enter URL here")
-            } else {
-                self.urlField.disable()
-            }
-            
-            if self.urlField.isValidUrl {
-                self.mainCtrl.mediaUrl = self.urlField.url
-            } else {
-                self.mainCtrl.mediaUrl = nil
-            }
+        self.urlField.text = selected.url
+        if selected.editable {
+            self.urlField.enable(placeholder: "enter URL here")
+        } else {
+            self.urlField.disable()
+        }
+        
+        if self.urlField.isValidUrl, let uri = self.urlField.text {
+            self.setMediaEndpoint(MediaEndpoint(mediaUri: uri))
+        } else {
+            setMediaEndpoint(nil)
         }
     }
     
     /// on edit custom url
-    func urlEditChanged() -> Bool{
+    func urlEditChanged() -> Bool {
         guard let text = urlField.text, !text.isEmpty else {
             let row = urlPicker.selectedRow(inComponent: 0)
             pickerData.urls[row].url = ""
-            mainCtrl.mediaUrl = nil
+            setMediaEndpoint(nil)
             return false
         }
+        setMediaEndpoint(MediaEndpoint(mediaUri: urlField.text))
         return urlField.isValidUrl
     }
     
@@ -82,17 +80,17 @@ class MediaSelector: NSObject, UIPickerViewDelegate, UITextFieldDelegate {
     func textFieldDidEndEditing(_ textField: UITextField) {
         let row = urlPicker.selectedRow(inComponent: 0)
         
-        if urlField.isValidUrl, let url = urlField.url {
-            mainCtrl.mediaUrl = url
-            pickerData.urls[row].url = urlField.text ?? ""
+        if urlField.isValidUrl, let uri = urlField.text {
+            pickerData.urls[row].url = uri
+            setMediaEndpoint(MediaEndpoint(mediaUri: urlField.text))
         }
     }
     
-    // workaround
+    // urlPicker.reloadAllComponents() should satisfy seeing white text color in urlPicker - except for iOS 12.4
     // this is the only way I found to set the color of the url picker entries on iOS 12.4!
     func pickerView(_ pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
         let title = pickerData.urls[row].label
-        let pickerFont = (mainCtrl.playedSince as UILabel).font!
+        let pickerFont = (urlField as UITextField).font!
         let myTitle = NSAttributedString(string: title, attributes: [NSAttributedString.Key.font:UIFont(name: pickerFont.fontName, size: pickerFont.pointSize)!,NSAttributedString.Key.foregroundColor:UIColor.white])
         return myTitle
     }
@@ -100,9 +98,9 @@ class MediaSelector: NSObject, UIPickerViewDelegate, UITextFieldDelegate {
 
 
 class MediaPickerData: NSObject, UIPickerViewDataSource {
-
-    var urls:[MediaData] = [] // radios are added from streams.txt
-    let customUrlLabel = "custom URL"
+    
+    fileprivate var urls:[MediaData] = [] // radios are added from streams.txt
+    fileprivate let customUrlLabel = "custom URL"
     
     override init() {
         super.init()
@@ -142,36 +140,36 @@ class MediaPickerData: NSObject, UIPickerViewDataSource {
 
 
 class UrlField: UITextField {
-
-        func enable(placeholder: String) {
-            self.isEnabled = true
-            self.backgroundColor = UIColor(white: 0.4, alpha: 0.3 )
-            self.textColor = UIColor.white
-            self.attributedPlaceholder = NSAttributedString(string:placeholder, attributes: [NSAttributedString.Key.foregroundColor:UIColor.lightGray])
-        }
-        
-        func disable() {
-            self.isEnabled = false
-            self.backgroundColor = UIColor(white: 0.0, alpha: 0.3 )
-            self.textColor = UIColor.gray
-        }
-        
-        var url:URL? { get {
-            guard let text = text else {
-                return nil
-            }
-            
-            let urlString = text.trimmingCharacters(in: CharacterSet.whitespaces)
-                                .addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)
-            if let urlEncoded = urlString, let url = URL(string: urlEncoded) {
-                return url
-            }
-            return nil
-        }}
-        
-        var isValidUrl:Bool {
-            guard let url = url else { return false }
-            return UIApplication.shared.canOpenURL(url)
-        }
+    
+    func enable(placeholder: String) {
+        self.isEnabled = true
+        self.backgroundColor = UIColor(white: 0.4, alpha: 0.3 )
+        self.textColor = UIColor.white
+        self.attributedPlaceholder = NSAttributedString(string:placeholder, attributes: [NSAttributedString.Key.foregroundColor:UIColor.lightGray])
     }
+    
+    func disable() {
+        self.isEnabled = false
+        self.backgroundColor = UIColor(white: 0.0, alpha: 0.3 )
+        self.textColor = UIColor.gray
+    }
+    
+    var url:URL? { get {
+        guard let text = text else {
+            return nil
+        }
+        
+        let urlString = text.trimmingCharacters(in: CharacterSet.whitespaces)
+            .addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)
+        if let urlEncoded = urlString, let url = URL(string: urlEncoded) {
+            return url
+        }
+        return nil
+    }}
+    
+    var isValidUrl:Bool {
+        guard let url = url else { return false }
+        return UIApplication.shared.canOpenURL(url)
+    }
+}
 
