@@ -72,7 +72,8 @@ class MediaSelector: NSObject, UIPickerViewDelegate, UITextFieldDelegate {
             setMediaEndpoint(nil)
             return false
         }
-        setMediaEndpoint(MediaEndpoint(mediaUri: urlField.text))
+//        setMediaEndpoint(MediaEndpoint(mediaUri: urlField.text))
+        setMediaEndpoint(nil)
         return urlField.isValidUrl
     }
     

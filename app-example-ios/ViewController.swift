@@ -61,23 +61,23 @@ class ViewController: UIViewController, AudioPlayerListener {
             }
             
             Logger.shared.info("endpoint changed to \(endpoint?.uri ?? "(nil)")")
+            
+            var running = false
             if let player = player, player.state != .stopped {
+                running = player.state == .playing
                 player.stop()
             }
             genre.text = ""
             broadcaster.text = ""
             togglePlay.isEnabled = endpoint != nil
             
-            if let endpoint = endpoint, self.cachedSessions[endpoint] == nil {
-                self.togglePlay.isEnabled = false
-                DispatchQueue.main.async {
-                    guard let _ = self.ensureSession(endpoint) else {
-                        Logger.shared.error("no session for \(endpoint.uri)")
-                        return
+            if let endpoint = endpoint {
+                ensureSession(endpoint) {
+                    (session) in
+                    if running {
+                        self.runNewPlayer(session)
                     }
-                    self.togglePlay.isEnabled = true
                 }
-                return
             }
             
         }
@@ -159,15 +159,9 @@ class ViewController: UIViewController, AudioPlayerListener {
             return
         }
         
-        guard let session = self.cachedSessions[endpoint] else {
-            self.togglePlay.isEnabled = false
-            DispatchQueue.main.async { [self] in
-                guard let session = ensureSession(endpoint) else {
-                    Logger.shared.error("no session for \(endpoint.uri)")
-                    return
-                }
-                togglePlay.isEnabled = true
-                runNewPlayer(session)
+        guard let session = cachedSessions[endpoint] else {
+            ensureSession(endpoint) {(session) in
+                self.runNewPlayer(session)
             }
             return
         }
@@ -180,12 +174,21 @@ class ViewController: UIViewController, AudioPlayerListener {
         runNewPlayer(session)
     }
     
-    func ensureSession(_ endpoint:MediaEndpoint) -> MediaSession? {
-        guard let session = endpoint.createSession() else {
-            return nil
+    func ensureSession(_ endpoint:MediaEndpoint, callback: @escaping (MediaSession) -> ()) {
+        guard let session = self.cachedSessions[endpoint] else {
+            self.togglePlay.isEnabled = false
+            DispatchQueue.main.async {
+                guard let session = endpoint.createSession() else {
+                    Logger.shared.error("no session for \(endpoint.uri)")
+                    return
+                }
+                self.cachedSessions[endpoint] = session
+                self.togglePlay.isEnabled = true
+                callback(session)
+            }
+            return
         }
-        self.cachedSessions[endpoint] = session
-        return session
+        callback(session)
     }
     
     func doToggle() {
@@ -204,24 +207,6 @@ class ViewController: UIViewController, AudioPlayerListener {
             fatalError("unknown player state \(player.state )")
         }
     }
-    
-//    var running:Bool {
-//        guard let player = player else { return false }
-//        return player.state == .buffering || player.state == .playing
-//    }
-//
-//    func doToggle(_ running:Bool) {
-//        guard let player = player else { return }
-//        if running {
-//            self.problem.text = ""
-//            player.play()
-//        } else {
-//            player.canPause ? player.pause() : player.stop()
-//        }
-//
-//    }
-    
- 
     
     /// edit custom url
     @IBAction func urlEditChanged(_ sender: Any) {
