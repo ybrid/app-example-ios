@@ -45,6 +45,8 @@ class MediaSelector: NSObject, UIPickerViewDelegate, UITextFieldDelegate {
         self.setMediaEndpoint = endpoint
     }
     
+    // MARK: delegate methods
+    
     /// on select station
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         let selected = pickerData.urls[row]
@@ -63,20 +65,7 @@ class MediaSelector: NSObject, UIPickerViewDelegate, UITextFieldDelegate {
             setMediaEndpoint(nil)
         }
     }
-    
-    /// on edit custom url
-    func urlEditChanged() -> Bool {
-        guard let text = urlField.text, !text.isEmpty else {
-            let row = urlPicker.selectedRow(inComponent: 0)
-            pickerData.urls[row].url = ""
-            setMediaEndpoint(nil)
-            return false
-        }
-//        setMediaEndpoint(MediaEndpoint(mediaUri: urlField.text))
-        setMediaEndpoint(nil)
-        return urlField.isValidUrl
-    }
-    
+
     /// on end edit url
     func textFieldDidEndEditing(_ textField: UITextField) {
         let row = urlPicker.selectedRow(inComponent: 0)
@@ -86,6 +75,19 @@ class MediaSelector: NSObject, UIPickerViewDelegate, UITextFieldDelegate {
             setMediaEndpoint(MediaEndpoint(mediaUri: urlField.text))
         }
     }
+    
+    /// on edit custom url ("manually" called by view controller)
+    func urlEditChanged() -> Bool {
+        guard let text = urlField.text, !text.isEmpty else {
+            let row = urlPicker.selectedRow(inComponent: 0)
+            pickerData.urls[row].url = ""
+            setMediaEndpoint(nil)
+            return false
+        }
+        setMediaEndpoint(nil)
+        return urlField.isValidUrl
+    }
+
     
     // urlPicker.reloadAllComponents() should satisfy seeing white text color in urlPicker - except for iOS 12.4
     // this is the only way I found to set the color of the url picker entries on iOS 12.4!

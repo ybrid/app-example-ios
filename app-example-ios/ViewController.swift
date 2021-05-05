@@ -71,15 +71,21 @@ class ViewController: UIViewController, AudioPlayerListener {
             broadcaster.text = ""
             togglePlay.isEnabled = endpoint != nil
             
-            if let endpoint = endpoint {
-                ensureSession(endpoint) {
-                    (session) in
+            guard let endpoint = endpoint else {
+                return
+            }
+            
+            guard let session = cachedSessions[endpoint] else {
+                newSession(endpoint) { (session) in
                     if running {
                         self.runNewPlayer(session)
                     }
                 }
+                return
             }
-            
+            if running {
+                self.runNewPlayer(session)
+            }
         }
     }
  
@@ -142,16 +148,6 @@ class ViewController: UIViewController, AudioPlayerListener {
     
     // MARK: user actions
 
-    fileprivate func runNewPlayer(_ session: MediaSession) {
-        DispatchQueue.main.async {
-            let player = AudioPlayer(session:session, listener: self)
-            self.player = player
-            self.problem.text = nil
-            player.play()
-        }
-    }
-    
-    
     /// toggle play or stop
     @IBAction func toggle(_ sender: Any) {
         print("toggle called")
@@ -160,7 +156,7 @@ class ViewController: UIViewController, AudioPlayerListener {
         }
         
         guard let session = cachedSessions[endpoint] else {
-            ensureSession(endpoint) {(session) in
+            newSession(endpoint) {(session) in
                 self.runNewPlayer(session)
             }
             return
@@ -170,28 +166,43 @@ class ViewController: UIViewController, AudioPlayerListener {
             doToggle()
             return
         }
-        
+
         runNewPlayer(session)
     }
     
-    func ensureSession(_ endpoint:MediaEndpoint, callback: @escaping (MediaSession) -> ()) {
-        guard let session = self.cachedSessions[endpoint] else {
-            self.togglePlay.isEnabled = false
-            DispatchQueue.main.async {
-                guard let session = endpoint.createSession() else {
-                    Logger.shared.error("no session for \(endpoint.uri)")
-                    return
-                }
-                self.cachedSessions[endpoint] = session
-                self.togglePlay.isEnabled = true
-                callback(session)
-            }
-            return
-        }
-        callback(session)
+    /// edit custom url
+    @IBAction func urlEditChanged(_ sender: Any) {
+        let valid = uriSelector?.urlEditChanged() ?? true
+        togglePlay.isEnabled = valid
     }
     
-    func doToggle() {
+    
+    
+    fileprivate func runNewPlayer(_ session: MediaSession) {
+        DispatchQueue.main.async {
+            let player = AudioPlayer(session:session, listener: self)
+            self.player = player
+            self.problem.text = nil
+            player.play()
+        }
+    }
+    
+    fileprivate func newSession(_ endpoint:MediaEndpoint, callback: @escaping (MediaSession) -> ()) {
+        self.togglePlay.isEnabled = false
+        DispatchQueue.main.async {
+            guard let session = endpoint.createSession() else {
+                Logger.shared.error("no session for \(endpoint.uri)")
+                self.togglePlay.isEnabled = true
+                return
+            }
+            self.cachedSessions[endpoint] = session
+            self.togglePlay.isEnabled = true
+            callback(session)
+        }
+        return
+    }
+    
+    fileprivate func doToggle() {
         guard let player = player else {
             return
         }
@@ -206,12 +217,6 @@ class ViewController: UIViewController, AudioPlayerListener {
         @unknown default:
             fatalError("unknown player state \(player.state )")
         }
-    }
-    
-    /// edit custom url
-    @IBAction func urlEditChanged(_ sender: Any) {
-        let valid = uriSelector?.urlEditChanged() ?? true
-        togglePlay.isEnabled = valid 
     }
     
     
