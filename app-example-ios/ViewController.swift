@@ -32,7 +32,7 @@ import AVFoundation
 import YbridPlayerSDK
 
 
-class ViewController: UIViewController, AudioPlayerListener {
+class ViewController: UIViewController, AudioPlayerListener, MediaEndpointListener {
     
     
     // MARK: ui outlets
@@ -75,28 +75,29 @@ class ViewController: UIViewController, AudioPlayerListener {
                 return
             }
             
-            guard let session = cachedSessions[endpoint] else {
-                newSession(endpoint) { (session) in
+            player = cachedPlayer[endpoint]
+            guard let player = player else {
+                newPlayer(endpoint) { (player) in
                     if running {
-                        self.runNewPlayer(session)
+                        player.play()
                     }
                 }
                 return
             }
             if running {
-                self.runNewPlayer(session)
+                player.play()
             }
         }
     }
  
-    private var cachedSessions:[MediaEndpoint:MediaSession] = [:]
+    private var cachedPlayer:[MediaEndpoint:AudioPlayer] = [:]
     private var uriSelector:MediaSelector?
     
     // MARK: main
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        Logger.verbose = true
+//        Logger.verbose = true
         Logger.shared.notice("using \(AudioPlayer.versionString)")
         
         uriSelector = MediaSelector(urlPicker: urlPicker, urlField: urlField, endpoint: { (endpoint) in
@@ -127,9 +128,9 @@ class ViewController: UIViewController, AudioPlayerListener {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        cachedSessions.forEach { (endpoint,session) in
-            Logger.shared.info("closing session with endpoint \(endpoint.uri)")
-            session.close()
+        cachedPlayer.forEach { (endpoint,player) in
+            Logger.shared.info("closing player for endpoint \(endpoint.uri)")
+            player.close()
         }
     }
     
@@ -155,19 +156,21 @@ class ViewController: UIViewController, AudioPlayerListener {
             return
         }
         
-        guard let session = cachedSessions[endpoint] else {
-            newSession(endpoint) {(session) in
-                self.runNewPlayer(session)
+        guard let _ = cachedPlayer[endpoint] else {
+            newPlayer(endpoint) {(player) in
+                player.play()
             }
             return
         }
         
-        if let player = player, session == player.session {
+        if let _ = self.player {
             doToggle()
             return
         }
 
-        runNewPlayer(session)
+        newPlayer(endpoint) { (player) in
+            player.play()
+        }
     }
     
     /// edit custom url
@@ -176,28 +179,20 @@ class ViewController: UIViewController, AudioPlayerListener {
         togglePlay.isEnabled = valid
     }
     
-    
-    
-    fileprivate func runNewPlayer(_ session: MediaSession) {
-        DispatchQueue.main.async {
-            let player = AudioPlayer(session:session, listener: self)
-            self.player = player
-            self.problem.text = nil
-            player.play()
-        }
-    }
-    
-    fileprivate func newSession(_ endpoint:MediaEndpoint, callback: @escaping (MediaSession) -> ()) {
+    fileprivate func newPlayer(_ endpoint:MediaEndpoint, callback: @escaping (AudioPlayer) -> ()) {
         self.togglePlay.isEnabled = false
         DispatchQueue.main.async {
-            guard let session = endpoint.createSession() else {
-                Logger.shared.error("no session for \(endpoint.uri)")
+            guard let player = endpoint.audioPlayer(listener:  self) else {
+                Logger.shared.error("no player for \(endpoint.uri)")
                 self.togglePlay.isEnabled = true
                 return
             }
-            self.cachedSessions[endpoint] = session
+            self.cachedPlayer[endpoint] = player
             self.togglePlay.isEnabled = true
-            callback(session)
+            
+            self.player = player
+            
+            callback(player)
         }
         return
     }
@@ -237,6 +232,8 @@ class ViewController: UIViewController, AudioPlayerListener {
             self.bufferCurrent.font = self.bufferCurrent.font.monospacedDigitFont
         }
     }
+    
+    // MARK: MediaEndpointListener
     
     
     // MARK: AudioPlayerListener
