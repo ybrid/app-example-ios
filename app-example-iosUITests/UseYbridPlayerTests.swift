@@ -67,7 +67,7 @@ class UseYbridPlayerTests: XCTestCase {
         XCTAssertEqual(player.state, PlaybackState.stopped)
         player.play()
         XCTAssertEqual(player.state, PlaybackState.buffering)
-        sleep(5)
+        sleep(3)
         XCTAssertEqual(player.state, PlaybackState.playing)
         player.stop()
         XCTAssertEqual(player.state, PlaybackState.playing)

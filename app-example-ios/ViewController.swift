@@ -32,7 +32,7 @@ import AVFoundation
 import YbridPlayerSDK
 
 
-class ViewController: UIViewController, AudioPlayerListener, MediaEndpointListener {
+class ViewController: UIViewController, AudioPlayerListener {
     
     
     // MARK: ui outlets
@@ -75,21 +75,23 @@ class ViewController: UIViewController, AudioPlayerListener, MediaEndpointListen
                 return
             }
             
-            player = cachedPlayer[endpoint]
-            guard let player = player else {
+            guard let player = cachedPlayer[endpoint] else {
                 newPlayer(endpoint) { (player) in
+                    self.player = player
                     if running {
-                        player.play()
+                        self.doToggle(player)
                     }
+                    self.cachedPlayer[endpoint] = player
                 }
                 return
             }
+            self.player = player
             if running {
-                player.play()
+                self.doToggle(player)
             }
         }
     }
- 
+    
     private var cachedPlayer:[MediaEndpoint:AudioPlayer] = [:]
     private var uriSelector:MediaSelector?
     
@@ -97,11 +99,11 @@ class ViewController: UIViewController, AudioPlayerListener, MediaEndpointListen
     override func viewDidLoad() {
         super.viewDidLoad()
         
-//        Logger.verbose = true
+        //        Logger.verbose = true
         Logger.shared.notice("using \(AudioPlayer.versionString)")
         
         uriSelector = MediaSelector(urlPicker: urlPicker, urlField: urlField, endpoint: { (endpoint) in
-                self.endpoint = endpoint
+            self.endpoint = endpoint
         })
         
         hideKeyboardWhenTappedAround()
@@ -148,7 +150,7 @@ class ViewController: UIViewController, AudioPlayerListener, MediaEndpointListen
     }
     
     // MARK: user actions
-
+    
     /// toggle play or stop
     @IBAction func toggle(_ sender: Any) {
         print("toggle called")
@@ -158,18 +160,22 @@ class ViewController: UIViewController, AudioPlayerListener, MediaEndpointListen
         
         guard let _ = cachedPlayer[endpoint] else {
             newPlayer(endpoint) {(player) in
-                player.play()
+                self.player = player
+                self.doToggle(player)
+                self.cachedPlayer[endpoint] = player
             }
             return
         }
         
-        if let _ = self.player {
-            doToggle()
+        if let player = self.player {
+            doToggle(player)
             return
         }
-
+        
         newPlayer(endpoint) { (player) in
-            player.play()
+            self.player = player
+            self.doToggle(player)
+            self.cachedPlayer[endpoint] = player
         }
     }
     
@@ -181,26 +187,21 @@ class ViewController: UIViewController, AudioPlayerListener, MediaEndpointListen
     
     fileprivate func newPlayer(_ endpoint:MediaEndpoint, callback: @escaping (AudioPlayer) -> ()) {
         self.togglePlay.isEnabled = false
+        self.playingTitle.text = nil
         DispatchQueue.main.async {
             guard let player = endpoint.audioPlayer(listener:  self) else {
                 Logger.shared.error("no player for \(endpoint.uri)")
                 self.togglePlay.isEnabled = true
                 return
             }
-            self.cachedPlayer[endpoint] = player
-            self.togglePlay.isEnabled = true
-            
-            self.player = player
-            
             callback(player)
+            self.togglePlay.isEnabled = true
         }
         return
     }
     
-    fileprivate func doToggle() {
-        guard let player = player else {
-            return
-        }
+    fileprivate func doToggle(_ player:AudioPlayer) {
+
         switch player.state  {
         case .stopped, .pausing:
             self.problem.text = nil
