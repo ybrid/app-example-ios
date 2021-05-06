@@ -1,6 +1,6 @@
 {
   "name": "YbridPlayerSDK",
-  "version": "1.0.0",
+  "version": "0.10.0",
   "summary": "Audio player SDK for iOS.",
   "description": "Audio player SDK written in Swift supports audio codecs mp3, acc and opus.\nThis XCFramework runs on iOS devices and simulators version 9 to 14.",
   "homepage": "https://github.com/ybrid/player-sdk-swift",
@@ -12,7 +12,7 @@
     "Florian Nowotny": "Florian.Nowotny@nacamar.de"
   },
   "source": {
-    "http": "https://github.com/ybrid/player-sdk-swift/releases/download/1.0.0/YbridPlayerSDK.xcframework.zip"
+    "http": "https://github.com/ybrid/player-sdk-swift/releases/download/0.10.0/YbridPlayerSDK.xcframework.zip"
   },
   "swift_versions": "4.0",
   "platforms": {
