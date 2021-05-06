@@ -59,8 +59,8 @@ class MediaSelector: NSObject, UIPickerViewDelegate, UITextFieldDelegate {
             self.urlField.disable()
         }
         
-        if self.urlField.isValidUrl, let uri = self.urlField.text {
-            self.setMediaEndpoint(MediaEndpoint(mediaUri: uri))
+        if self.urlField.isValidUrl, let url = self.urlField.url {
+            self.setMediaEndpoint(MediaEndpoint(mediaUri: url.absoluteString))
         } else {
             setMediaEndpoint(nil)
         }
@@ -72,7 +72,8 @@ class MediaSelector: NSObject, UIPickerViewDelegate, UITextFieldDelegate {
         
         if urlField.isValidUrl, let uri = urlField.text {
             pickerData.urls[row].url = uri
-            setMediaEndpoint(MediaEndpoint(mediaUri: urlField.text))
+            let encoded = urlField.url?.absoluteString
+            setMediaEndpoint(MediaEndpoint(mediaUri: encoded))
         }
     }
     
