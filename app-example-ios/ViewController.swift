@@ -44,13 +44,13 @@ class ViewController: UIViewController, AudioPlayerListener {
     @IBOutlet weak var genre: UILabel!
     
     @IBOutlet weak var playingTitle: UILabel!
-    @IBOutlet weak var problem: UILabel!
+    @IBOutlet weak var problem: UILabel! { didSet { problem.text = nil }}
     @IBOutlet weak var togglePlay: UIButton!
-    @IBOutlet weak var playedSince: UILabel!
-    @IBOutlet weak var ready: UILabel!
-    @IBOutlet weak var connected: UILabel!
-    @IBOutlet weak var bufferAveraged: UILabel!
-    @IBOutlet weak var bufferCurrent: UILabel!
+    @IBOutlet weak var playedSince: UILabel! { didSet { playedSince.text = nil }}
+    @IBOutlet weak var ready: UILabel! { didSet { ready.text = nil }}
+    @IBOutlet weak var connected: UILabel! { didSet { connected.text = nil }}
+    @IBOutlet weak var bufferAveraged: UILabel! { didSet { bufferAveraged.text = nil }}
+    @IBOutlet weak var bufferCurrent: UILabel! { didSet { bufferCurrent.text = nil }}
     
     
     var player:AudioPlayer?
@@ -96,11 +96,13 @@ class ViewController: UIViewController, AudioPlayerListener {
     private var uriSelector:MediaSelector?
     
     // MARK: main
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         //        Logger.verbose = true
         Logger.shared.notice("using \(AudioPlayer.versionString)")
+
         
         uriSelector = MediaSelector(urlPicker: urlPicker, urlField: urlField, endpoint: { (endpoint) in
             self.endpoint = endpoint
