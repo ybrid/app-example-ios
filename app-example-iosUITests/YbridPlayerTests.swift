@@ -39,7 +39,6 @@ struct Platform {
 
 class YbridPlayerTests: XCTestCase {
 
-    let url = URL.init(string: "https://stagecast.ybrid.io/swr3/mp3/mid")!
     let opus = URL.init(string:  "https://dradio-dlf-live.cast.addradio.de/dradio/dlf/live/opus/high/stream.opus")!
  
     override func setUpWithError() throws {
@@ -49,7 +48,11 @@ class YbridPlayerTests: XCTestCase {
             Logger.testing.notice("-- running on real device")
         }
     }
-    
+    var player:AudioPlayer?
+
+    override func tearDownWithError() throws {
+        player?.close()
+    }
     
     func test01_VersionString() {
         Logger.verbose = true
@@ -60,20 +63,36 @@ class YbridPlayerTests: XCTestCase {
     
     func test02_Mp3() {
         Logger.verbose = true
-        let player = AudioPlayer(mediaUrl: url, listener: nil)
-        player.play()
+        let url = URL.init(string: "https://stagecast.ybrid.io/swr3/mp3/mid")!
+        player = AudioPlayer(mediaUrl: url, listener: nil)
+        player?.play()
+        _ = wait(until: .playing, maxSeconds: 10)
         sleep(6)
-        player.stop()
+        player?.stop()
         sleep(1)
     }
 
     func test03_Opus() {
-        Logger.verbose = false
+        Logger.verbose = true
         let playerListener = TestAudioPlayerListener()
-        let player = AudioPlayer(mediaUrl: opus, listener: playerListener)
-        player.play()
+        player = AudioPlayer(mediaUrl: opus, listener: playerListener)
+        player?.play()
+        _ = wait(until: .playing, maxSeconds: 10)
         sleep(6)
-        player.stop()
+        player?.stop()
         sleep(1)
+    }
+    
+    
+    
+    private func wait(until:PlaybackState, maxSeconds:Int) -> Int {
+        guard let player = player else { XCTFail("no player"); return -1 }
+        var seconds = 0
+        while player.state != until && seconds < maxSeconds {
+            sleep(1)
+            seconds += 1
+        }
+        XCTAssertEqual(until, player.state, "not \(until) within \(maxSeconds) s")
+        return seconds
     }
 }

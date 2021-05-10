@@ -73,7 +73,7 @@ class TestAudioPlayerListener : AbstractAudioPlayerListener {
         }
     }
     override func metadataChanged(_ metadata: Metadata) {
-        Logger.testing.notice("-- metadata cahnged: display title is \(metadata.displayTitle ?? "(nil)")")
+        Logger.testing.notice("-- metadata changed: display title is \(metadata.displayTitle ?? "(nil)")")
     }
     
     override func playingSince(_ seconds: TimeInterval?) {

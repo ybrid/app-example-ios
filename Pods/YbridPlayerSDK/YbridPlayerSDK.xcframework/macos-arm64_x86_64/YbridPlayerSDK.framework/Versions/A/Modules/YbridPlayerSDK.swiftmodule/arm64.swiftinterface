@@ -2,6 +2,7 @@
 // swift-compiler-version: Apple Swift version 5.3.2 effective-4.1.50 (swiftlang-1200.0.45 clang-1200.0.32.28)
 // swift-module-flags: -target arm64-apple-macos10.10 -enable-objc-interop -enable-library-evolution -swift-version 4 -enforce-exclusivity=checked -O -module-name YbridPlayerSDK
 import AVFoundation
+import CommonCrypto
 import Foundation
 import Network
 import Swift
@@ -35,14 +36,72 @@ public typealias ErrorCode = Swift.Int32
   }
   @objc deinit
 }
+public protocol Metadata {
+  var displayTitle: Swift.String? { get }
+  var station: YbridPlayerSDK.Station? { get }
+  var current: YbridPlayerSDK.Item? { get }
+  var next: YbridPlayerSDK.Item? { get }
+}
+public struct Item {
+  public let type: YbridPlayerSDK.ItemType
+  public let displayTitle: Swift.String
+  public let identifier: Swift.String?
+  public let title: Swift.String?
+  public let version: Swift.String?
+  public let artist: Swift.String?
+  public let album: Swift.String?
+  public let description: Swift.String?
+  public let durationMillis: Swift.Int64?
+}
+public enum ItemType : Swift.String {
+  case ADVERTISEMENT
+  case COMEDY
+  case JINGLE
+  case MUSIC
+  case NEWS
+  case TRAFFIC
+  case VOICE
+  case WEATHER
+  case UNKNOWN
+  public typealias RawValue = Swift.String
+  public init?(rawValue: Swift.String)
+  public var rawValue: Swift.String {
+    get
+  }
+}
+public struct Station {
+  public let name: Swift.String?
+  public let genre: Swift.String?
+}
 @_hasMissingDesignatedInitializers public class PlayerContext {
   public static var memoryLimitMB: Swift.Float
   public static func handleMemoryLimit() -> Swift.Bool
   @objc deinit
 }
+public class MediaEndpoint : Swift.Equatable, Swift.Hashable {
+  public static func == (lhs: YbridPlayerSDK.MediaEndpoint, rhs: YbridPlayerSDK.MediaEndpoint) -> Swift.Bool
+  public var hashValue: Swift.Int {
+    get
+  }
+  public func hash(into hasher: inout Swift.Hasher)
+  final public let uri: Swift.String
+  public init(mediaUri: Swift.String!)
+  public func audioPlayer(listener: YbridPlayerSDK.AudioPlayerListener?) -> YbridPlayerSDK.AudioPlayer?
+  @objc deinit
+}
+@_hasMissingDesignatedInitializers public class MediaSession {
+  final public let endpoint: YbridPlayerSDK.MediaEndpoint
+  public var mediaProtocol: YbridPlayerSDK.MediaProtocol? {
+    get
+  }
+  public var playbackUri: Swift.String {
+    get
+  }
+  @objc deinit
+}
 public protocol AudioPlayerListener : AnyObject {
   func stateChanged(_ state: YbridPlayerSDK.PlaybackState)
-  func displayTitleChanged(_ title: Swift.String?)
+  func metadataChanged(_ metadata: YbridPlayerSDK.Metadata)
   func error(_ severity: YbridPlayerSDK.ErrorSeverity, _ exception: YbridPlayerSDK.AudioPlayerError)
   func playingSince(_ seconds: Foundation.TimeInterval?)
   func durationReadyToPlay(_ seconds: Foundation.TimeInterval?)
@@ -60,19 +119,22 @@ public enum PlaybackState {
   }
   public func hash(into hasher: inout Swift.Hasher)
 }
-public class AudioPlayer {
+@_hasMissingDesignatedInitializers public class AudioPlayer {
   public static var versionString: Swift.String {
     get
   }
   public var state: YbridPlayerSDK.PlaybackState {
     get
   }
+  public var mediaUrl: Foundation.URL?
+  public var session: YbridPlayerSDK.MediaSession?
   public var canPause: Swift.Bool
   public init(mediaUrl: Foundation.URL, listener: YbridPlayerSDK.AudioPlayerListener?)
   @objc deinit
   public func play()
   public func stop()
   public func pause()
+  public func close()
 }
 public class Logger {
   public static var verbose: Swift.Bool
@@ -84,7 +146,23 @@ public class Logger {
   public func error(_ message: Swift.String = "", fullSourcePath: Swift.String = #file, functionWithParameters: Swift.String = #function, line: Swift.Int = #line)
   @objc deinit
 }
+public enum MediaProtocol : Swift.String {
+  case plain
+  case icy
+  case ybridV2
+  public typealias RawValue = Swift.String
+  public init?(rawValue: Swift.String)
+  public var rawValue: Swift.String {
+    get
+  }
+}
 extension YbridPlayerSDK.ErrorSeverity : Swift.Equatable {}
 extension YbridPlayerSDK.ErrorSeverity : Swift.Hashable {}
+extension YbridPlayerSDK.ItemType : Swift.Equatable {}
+extension YbridPlayerSDK.ItemType : Swift.Hashable {}
+extension YbridPlayerSDK.ItemType : Swift.RawRepresentable {}
 extension YbridPlayerSDK.PlaybackState : Swift.Equatable {}
 extension YbridPlayerSDK.PlaybackState : Swift.Hashable {}
+extension YbridPlayerSDK.MediaProtocol : Swift.Equatable {}
+extension YbridPlayerSDK.MediaProtocol : Swift.Hashable {}
+extension YbridPlayerSDK.MediaProtocol : Swift.RawRepresentable {}
