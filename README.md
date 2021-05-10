@@ -17,7 +17,7 @@ Of course you can choose your own connected device as well.
 The scheme 'app-example-iosUITests' contains some test classes. Select the scheme, change to the 'Test navigator' tab and run one of the tests.
 
 - 'UseYbridPlayerTests' is a tutorial. It explains how to use YbridPlayerSDK.
-- 'YbridPlayerTests' covers the basic use cases. Run it to make sure everything works fine.
+- 'YbridPlayerTests' covers the very basic use cases.
 - 'PlayerToggleStressTests' takes about 7 Minutes. It toggles play and stop in decreasing time intervalls. It's purpose is to demonstrate robustness and watch memory usage.
 
 You can run tests on connected devices as well.
@@ -26,7 +26,7 @@ You can run tests on connected devices as well.
 
 
 # Update the player-sdk
-If you want to update to the latest version of ```player-sdk-swift``` you need cocoapod installed. Execute
+If you want to update to the latest version of ```YbridPlayerSDK``` you need CocoaPod installed. Execute
 ```shell
 pod update
 ```
@@ -34,7 +34,7 @@ on a terminal in the project's directory.
 
 
 # Known issues
-Since the update on macOS BigSur (and still in Version 11.2.1) there is a problem running the player with simulators on versions smaller than iOS 14. The problem is already reported on https://developer.apple.com/forums/thread/667921?login=true&page=1#650224022. I hope the issue will be fixed by apple...
+Since the update on macOS BigSur (and still in Version 11.3.1) there is a problem running the player with simulators on versions smaller than iOS 14. The problem is already reported on https://developer.apple.com/forums/thread/667921?login=true&page=1#650224022. I hope the issue will be fixed by apple...
 
 # Further documentation
 See [player-sdk-swift](https://github.com/ybrid/player-sdk-swift)
