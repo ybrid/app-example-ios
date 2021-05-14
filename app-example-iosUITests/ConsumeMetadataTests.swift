@@ -27,13 +27,7 @@ import XCTest
 import YbridPlayerSDK
 
 class ConsumeMetadataTests: XCTestCase {
-    
-    let ybridDemoEndpoint = MediaEndpoint(mediaUri: "https://stagecast.ybrid.io/adaptive-demo")
-    let ybridSwr3Endpoint = MediaEndpoint(mediaUri: "https://stagecast.ybrid.io/swr3/mp3/mid")
-    let icecastHr2Endpoint = MediaEndpoint(mediaUri: "https://hr-hr2-live.cast.addradio.de/hr/hr2/live/mp3/128/stream.mp3")
-    let opusDlfEndpoint = MediaEndpoint(mediaUri: "http://theradio.cc:8000/trcc-stream.opus")
-    let onDemandEndpoint = MediaEndpoint(mediaUri: "https://opus-codec.org/static/examples/ehren-paper_lights-96.opus")
-    
+        
     
     var consumer = TestMetadataCallsConsumer()
     var mediaSession:MediaSession?
@@ -45,49 +39,14 @@ class ConsumeMetadataTests: XCTestCase {
     }
 
     
-    func test01_MetadataYbrid_OnEachPlayAndInStream() {
+    func test01_MetadataYbrid_OnEachPlayAndInStream_FullCurrentNext() {
         player = ybridDemoEndpoint.audioPlayer(listener: consumer)
         self.playCheckPlayingCheckStopPlayPlayingCheck(
             fistCheck: { consumer.checkMetadataCalls(equal:1) },
             secondCheck: { consumer.checkMetadataCalls(min:2) },
             thirdCheck: { consumer.checkMetadataCalls(min:3) }
         )
-    }
-
-    func test02_MetadataIcy_InStreamOnly() {
-        player = icecastHr2Endpoint.audioPlayer(listener: consumer)
-        self.playCheckPlayingCheckStopPlayPlayingCheck(
-            fistCheck: { consumer.checkMetadataCalls(equal:0) },
-            secondCheck: { consumer.checkMetadataCalls(min:1) },
-            thirdCheck: { consumer.checkMetadataCalls(min:2) }
-        )
-    }
-    
-    func test03_MetadataOpus_InStreamOnly() throws {
-        player = opusDlfEndpoint.audioPlayer(listener: consumer)
-        self.playCheckPlayingCheckStopPlayPlayingCheck(
-            fistCheck: { consumer.checkMetadataCalls(equal:0) },
-            secondCheck: { consumer.checkMetadataCalls(min:1) },
-            thirdCheck: { consumer.checkMetadataCalls(min:2) }
-        )
-    }
-    
-    func test04_MetadataOnDemand_OnBeginningNoneOnResume() throws {
-        player = onDemandEndpoint.audioPlayer(listener: consumer)
-        self.playPlayingCheckPausePlayPlayingCheck(
-            fistCheck: { consumer.checkMetadataCalls(equal:1) },
-            secondCheck: { consumer.checkMetadataCalls(equal:1) }
-        )
-    }
-    
-    
-    func test05_MetadataYbrid_Demo_FullCurrentItem() {
-        player = ybridDemoEndpoint.audioPlayer(listener: consumer)
-        player?.play()
-        consumer.checkMetadataCalls(equal: 1)
-        player?.stop()
-        _ = wait(until: .stopped, maxSeconds: 2)
-        
+                
         let metadata = consumer.metadatas[0]
         guard let current = metadata.current else { XCTFail("current expected"); return }
         let expectedTypes = [ItemType.MUSIC, ItemType.JINGLE]
@@ -106,15 +65,20 @@ class ConsumeMetadataTests: XCTestCase {
         XCTAssertNotNil(current.identifier,"id expected")
         XCTAssertNotNil(current.description,"descriptiion expected")
         XCTAssertNotNil(current.durationMillis,"durationMillis expected")
- 
+        
+        guard let _ = metadata.next else { XCTFail("next expected"); return }
+        
+        guard let _ = metadata.station else { XCTFail("next expected"); return }
+        
     }
     
-    
-    func test06_MetadataYbrid_Swr3_CurrentNextStation() {
+    func test02_MetadataYbrid_Swr3_OnEachPlayAndInStream_CurrentNextStation() {
         player = ybridSwr3Endpoint.audioPlayer(listener: consumer)
-        player?.play()
-        consumer.checkMetadataCalls(equal: 1)
-        player?.stop()
+        self.playCheckPlayingCheckStopPlayPlayingCheck(
+            fistCheck: { consumer.checkMetadataCalls(equal:1) },
+            secondCheck: { consumer.checkMetadataCalls(min:2) },
+            thirdCheck: { consumer.checkMetadataCalls(min:3) }
+        )
         
         let currentItems = consumer.metadatas.filter{ return $0.current != nil }.map{ $0.current! }
         XCTAssertGreaterThan(currentItems.count, 0, "must be at least one current item")
@@ -133,16 +97,16 @@ class ConsumeMetadataTests: XCTestCase {
         }
         XCTAssertEqual("SWR3", station.name)
         XCTAssertEqual("Pop Music", station.genre)
-
-        _ = wait(until: .stopped, maxSeconds: 2)
     }
+
     
-    func test07_MetadataIcy_Hr2_CurrentStation() {
+    func test03_MetadataIcy_InStreamOnly_CurrentStation() {
         player = icecastHr2Endpoint.audioPlayer(listener: consumer)
-        player?.play()
-        _ = wait(until: .playing, maxSeconds: 10)
-        consumer.checkMetadataCalls(equal: 1)
-        player?.stop()
+        self.playCheckPlayingCheckStopPlayPlayingCheck(
+            fistCheck: { consumer.checkMetadataCalls(equal:0) },
+            secondCheck: { consumer.checkMetadataCalls(min:1) },
+            thirdCheck: { consumer.checkMetadataCalls(min:2) }
+        )
         
         let currentItems = consumer.metadatas.filter{ return $0.current != nil }.map{ $0.current! }
         XCTAssertGreaterThan(currentItems.count, 0, "must be at least one current item")
@@ -161,15 +125,72 @@ class ConsumeMetadataTests: XCTestCase {
         XCTAssertEqual("hr2", station.name)
         XCTAssertNil(station.genre)
         
-        _ = wait(until: .stopped, maxSeconds: 1)
     }
     
-    func test08_MetadataOpusOnDemand_TitleArtistAlbum() {
-        player = onDemandEndpoint.audioPlayer(listener: consumer)
-        player?.play()
-        _ = wait(until: .playing, maxSeconds: 10)
-        consumer.checkMetadataCalls(equal: 1)
-        player?.stop()
+    func test04_MetadataOpusDlf_InStreamOnly_CurrentStation() throws {
+        player = opusDlfEndpoint.audioPlayer(listener: consumer)
+        self.playCheckPlayingCheckStopPlayPlayingCheck(
+            fistCheck: { consumer.checkMetadataCalls(equal:0) },
+            secondCheck: { consumer.checkMetadataCalls(min:1) },
+            thirdCheck: { consumer.checkMetadataCalls(min:2) }
+        )
+        
+        let currentItems = consumer.metadatas.filter{ return $0.current != nil }.map{ $0.current! }
+        XCTAssertGreaterThan(currentItems.count, 0, "must be at least one current item")
+        currentItems.map{ $0.type }.forEach{ (type) in
+            XCTAssertEqual(ItemType.UNKNOWN, type, "\(type) not expected")
+        }
+        currentItems.map{ $0.displayTitle }.forEach{ (displayTitle) in
+            XCTAssertNotNil(displayTitle, "\(displayTitle) expected")
+        }
+        
+        XCTAssertNil(consumer.metadatas[0].next, "icy usually doesn't include next item")
+        
+        guard let station = consumer.metadatas[0].station else {
+            XCTFail("icy usually uses http-header 'icy-name'"); return
+        }
+        XCTAssertEqual("Deutschlandfunk", station.name)
+        XCTAssertEqual("Information", station.genre)
+
+    }
+    
+    func test05_MetadataOpusCC_InStreamOnly_TitleArtistAlbum() throws {
+        player = opusCCEndpoint.audioPlayer(listener: consumer)
+        self.playCheckPlayingCheckStopPlayPlayingCheck(
+            fistCheck: { consumer.checkMetadataCalls(equal:0) },
+            secondCheck: { consumer.checkMetadataCalls(min:1) },
+            thirdCheck: { consumer.checkMetadataCalls(min:2) }
+        )
+        
+        let currentItems = consumer.metadatas.filter{ return $0.current != nil }.map{ $0.current }
+        XCTAssertGreaterThan(currentItems.count, 1, "must be one current item")
+        guard let item = currentItems[0] else { XCTFail(); return }
+        
+        XCTAssertNotNil(item.album)
+        XCTAssertNotNil(item.title)
+        XCTAssertNotNil(item.artist)
+        XCTAssertNotNil(item.displayTitle)
+        XCTAssertNil(item.description)
+        XCTAssertNil(item.identifier)
+        XCTAssertNil(item.version)
+        XCTAssertEqual(ItemType.UNKNOWN, item.type)
+        
+        
+        XCTAssertNil(consumer.metadatas[0].next, "icy usually doesn't include next item")
+        
+        guard let station = consumer.metadatas[0].station else {
+            XCTFail("This server supports icy-fields, 'icy-name' missing"); return
+        }
+        XCTAssertEqual("TheRadio.CC", station.name)
+        XCTAssertEqual("Creative Commons", station.genre)
+    }
+    
+    func test06_MetadataOnDemand_OnBeginningNoneOnResume() throws {
+        player = onDemandOpusEndpoint.audioPlayer(listener: consumer)
+        self.playPlayingCheckPausePlayPlayingCheck(
+            fistCheck: { consumer.checkMetadataCalls(equal:1) },
+            secondCheck: { consumer.checkMetadataCalls(equal:1) }
+        )
         
         let currentItems = consumer.metadatas.filter{ return $0.current != nil }.map{ $0.current }
         XCTAssertEqual(currentItems.count, 1, "must be one current item")
@@ -186,16 +207,13 @@ class ConsumeMetadataTests: XCTestCase {
         
         XCTAssertNil(consumer.metadatas[0].next, "icy usually doesn't include next item")
         
-        guard let station = consumer.metadatas[0].station else {
-            XCTFail("icy usually uses http-header 'icy-name'"); return
-        }
-        XCTAssertNil(station.name)
-        XCTAssertNil(station.genre)
-        
-        _ = wait(until: .stopped, maxSeconds: 1)
+        let station = consumer.metadatas[0].station
+        XCTAssertNil(station, "This server does not support icy-fields")
     }
     
-
+     
+       
+    
 
     
     private func playCheckPlayingCheckStopPlayPlayingCheck(fistCheck: () -> (), secondCheck: () -> (), thirdCheck: () -> () ) {

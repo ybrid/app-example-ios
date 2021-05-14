@@ -114,7 +114,7 @@ class ViewController: UIViewController, AudioPlayerListener {
         urlPicker.delegate = uriSelector
         urlField.delegate = uriSelector
         
-        let initialSelectedRow = 1
+        let initialSelectedRow = 0
         urlPicker.dataSource = uriSelector?.pickerData
         urlPicker.selectRow(initialSelectedRow, inComponent: 0, animated: true)
         uriSelector?.pickerView(urlPicker, didSelectRow: initialSelectedRow, inComponent: 0)

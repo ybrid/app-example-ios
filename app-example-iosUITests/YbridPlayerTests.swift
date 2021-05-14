@@ -63,8 +63,7 @@ class YbridPlayerTests: XCTestCase {
     
     func test02_Mp3() {
         Logger.verbose = true
-        let url = URL.init(string: "https://stagecast.ybrid.io/swr3/mp3/mid")!
-        player = AudioPlayer(mediaUrl: url, listener: nil)
+        player = ybridDemoEndpoint.audioPlayer(listener: nil)
         player?.play()
         _ = wait(until: .playing, maxSeconds: 10)
         sleep(6)
@@ -75,7 +74,7 @@ class YbridPlayerTests: XCTestCase {
     func test03_Opus() {
         Logger.verbose = true
         let playerListener = TestAudioPlayerListener()
-        player = AudioPlayer(mediaUrl: opus, listener: playerListener)
+        player = opusDlfEndpoint.audioPlayer(listener: playerListener)
         player?.play()
         _ = wait(until: .playing, maxSeconds: 10)
         sleep(6)

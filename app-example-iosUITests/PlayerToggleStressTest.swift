@@ -93,8 +93,21 @@ class PlayerToggleStressTest: XCTestCase {
         Logger.testing.notice("------------------")
     }
     
-    func testOpusPlayStop() throws {
-        prepare("https://dradio-dlf-live.cast.addradio.de/dradio/dlf/live/opus/high/stream.opus")
+    func test01_MP3PlayStop() throws {
+        player = icecastSwr3Endpoint.audioPlayer(listener: playerListener)
+        
+        stepDuration = 10
+        rangeFrom = 1 /// on first step
+        rangeTo = 3 /// on first step
+        restBetweenSteps = 5
+        stepsDecrease = 10
+        
+        self.execute()
+        
+    }
+    
+    func test02_OpusPlayStop() throws {
+        player = opusDlfEndpoint.audioPlayer(listener: playerListener)
         
         stepDuration = 10
         rangeFrom = 1 /// on first step
@@ -108,8 +121,8 @@ class PlayerToggleStressTest: XCTestCase {
         self.execute()
     }
     
-    func testMP3PlayStop() throws {
-        prepare("https://swr-edge-20b9-fra-lg-cdn.cast.addradio.de/swr/swr3/live/mp3/128/stream.mp3")
+    func test03_OnDemmandPlayPause() throws {
+        player = onDemandMp3Endpoint.audioPlayer(listener: playerListener)
         
         stepDuration = 10
         rangeFrom = 1 /// on first step
@@ -118,26 +131,12 @@ class PlayerToggleStressTest: XCTestCase {
         stepsDecrease = 10
         
         self.execute()
-        
-    }
-    
-    func testMusicPlayPause() throws {
-        prepare("https://github.com/ybrid/test-files/blob/main/mpeg-audio/music/music.mp3?raw=true")
-        
-        stepDuration = 10
-        rangeFrom = 1 /// on first step
-        rangeTo = 3 /// on first step
-        restBetweenSteps = 5
-        stepsDecrease = 10
-        
-        self.execute()
-        
     }
     
     
     fileprivate func prepare(_ mediaUrl:String) {
-        let url = URL.init(string: mediaUrl)!
-        player = AudioPlayer(mediaUrl: url, listener: playerListener)
+        let mediaEndpoint = MediaEndpoint(mediaUri: mediaUrl)
+        player = mediaEndpoint.audioPlayer(listener: playerListener)
     }
     
     func execute() {

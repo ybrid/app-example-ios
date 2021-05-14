@@ -1,9 +1,12 @@
 # ybrid streams
-addradio-demo (ybrid)   = https://stagecast.ybrid.io/adaptive-demo
+adaptive-demo (ybrid)   = https://democast.ybrid.io/adaptive-demo
+ad-injection-demo (ybrid) = https://democast.ybrid.io/ad-injection-demo
 swr3 (ybrid)        = https://stagecast.ybrid.io/swr3/mp3/mid
+# should be https://swr-swr3.cast.ybrid.io/swr/swr3/ybrid
+
 
 # icecast streams
-swr3 (icecast)        = https://swr-swr3.cast.ybrid.io/swr/swr3/ybrid
+swr3 (icecast)        = http://swr-swr3-live.cast.addradio.de/swr/swr3/live/mp3/128/stream.mp3
 hr2 (icecast, 48kHz)       =  https://hr-hr2-live.cast.addradio.de/hr/hr2/live/mp3/128/stream.mp3
 egoFM (icecast, 44,1kHz)     = https://egofm-live.cast.addradio.de/egofm/live/mp3/high/stream.mp3
 dlf-live (icecast, mono) = http://dradio-dlf-live.cast.addradio.de/dradio/dlf/live/mp3/64/stream.mp3
