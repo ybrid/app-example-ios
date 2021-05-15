@@ -37,7 +37,7 @@ class UseYbridPlayerTests: XCTestCase {
     }
  
     // of course you may choose your own radio station here
-    let url = URL.init(string: "https://swr-swr3.cast.ybrid.io/swr/swr3/ybrid")!
+    let endpoint = MediaEndpoint(mediaUri: "https://swr-swr3.cast.ybrid.io/swr/swr3/ybrid")
    
     /*
     Let the player play your radio.
@@ -48,7 +48,7 @@ class UseYbridPlayerTests: XCTestCase {
     Stop may take a second to clean up properly.
     */
     func test01_PlaySomeSeconds() {
-        let player = AudioPlayer(mediaUrl: url, listener: nil)
+        let player = AudioPlayer.open(for: endpoint, listener: nil)!
         player.play()
         sleep(5)
         player.stop()
@@ -63,7 +63,7 @@ class UseYbridPlayerTests: XCTestCase {
      In this test we assume it takes less than 3 seconds all together.
      */
     func test02_PlayerStates() {
-        let player = AudioPlayer(mediaUrl: url, listener: nil)
+        let player = AudioPlayer.open(for: endpoint, listener: nil)!
         XCTAssertEqual(player.state, PlaybackState.stopped)
         player.play()
         XCTAssertEqual(player.state, PlaybackState.buffering)
@@ -76,14 +76,14 @@ class UseYbridPlayerTests: XCTestCase {
     }
 
     /*
-     Use your own audio player listener to be called back.
+     Implement audio player listener to be called back.
      Filter console output by '-- ' and watch.
 
      Make sure the listener stays alive because internally its held as a weak reference.
      */
     let playerListener = TestAudioPlayerListener()
     func test03_ListenToPlayer() {
-        let player = AudioPlayer(mediaUrl: url, listener: playerListener)
+        let player = AudioPlayer.open(for: endpoint, listener: playerListener)!
         player.play()
         sleep(3)
         player.stop()
@@ -97,8 +97,8 @@ class UseYbridPlayerTests: XCTestCase {
      You can always query statusCode for detailed information
      */
     func test04_ErrorWithPlayer() {
-        let badUrl = URL.init(string: "https://unknown.cast.io/bad/url")!
-        let player = AudioPlayer(mediaUrl: badUrl, listener: playerListener)
+        let badEndpoint = MediaEndpoint(mediaUri: "https://cast.ybrid.io/bad/url")
+        let player = AudioPlayer.open(for: badEndpoint, listener: playerListener)!
         XCTAssertEqual(0, playerListener.statusCode)
         player.play()
         XCTAssertEqual(0, playerListener.statusCode)
@@ -108,7 +108,7 @@ class UseYbridPlayerTests: XCTestCase {
         XCTAssertNotEqual(0, playerListener.statusCode)
         XCTAssertEqual(player.state, PlaybackState.stopped)
 
-        XCTAssertEqual(-1003, playerListener.statusCode) // see code AudioPipeline.ErrorKind.hostNotFound
+        XCTAssertEqual(302, playerListener.statusCode) // see code AudioPipeline.ErrorKind.cannotProcessMimeType
     }
 
     
@@ -116,8 +116,8 @@ class UseYbridPlayerTests: XCTestCase {
      The audio codec opus is supported
      */
     func test05_PlayOpus() {
-        let opusUrl = URL.init(string: "https://dradio-dlf-live.cast.addradio.de/dradio/dlf/live/opus/high/stream.opus")!
-        let player = AudioPlayer(mediaUrl: opusUrl, listener: playerListener)
+        let opusEndpoint = MediaEndpoint(mediaUri: "https://dradio-dlf-live.cast.addradio.de/dradio/dlf/live/opus/high/stream.opus")
+        let player = AudioPlayer.open(for: opusEndpoint, listener: playerListener)!
         player.play()
         sleep(6)
         player.stop()
@@ -131,8 +131,8 @@ class UseYbridPlayerTests: XCTestCase {
      Because all actions are asynchronous assertions are 1 second later.
      */
     func test06_OnDemandPlayPausePlayPauseStop() {
-        let opusUrl = URL.init(string: "https://github.com/ybrid/test-files/blob/main/mpeg-audio/music/organ.mp3?raw=true")!
-        let player = AudioPlayer(mediaUrl: opusUrl, listener: playerListener)
+        let media = MediaEndpoint(mediaUri: "https://github.com/ybrid/test-files/blob/main/mpeg-audio/music/organ.mp3?raw=true")
+        let player = AudioPlayer.open(for: media, listener: playerListener)!
         XCTAssertFalse(player.canPause)
         player.play()
         XCTAssertEqual(player.state, PlaybackState.buffering)

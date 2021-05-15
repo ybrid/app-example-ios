@@ -124,8 +124,12 @@ class MediaPickerData: NSObject, UIPickerViewDataSource {
         let fileContent = try! String(contentsOfFile: path, encoding: String.Encoding.utf8)
         let dataArray = fileContent.components(separatedBy: "\n")
         for line in dataArray {
+            if line.starts(with: "#") || line.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                continue
+            }
             let components = line.split(separator: "|", maxSplits: 2).map(String.init)
-            guard components.count >= 2 else {
+            guard (2...3).contains(components.count) else {
+                Logger.shared.error("ignoring \(line)")
                 continue
             }
             let label=components[0].trimmingCharacters(in: .whitespacesAndNewlines)

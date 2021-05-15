@@ -63,13 +63,16 @@ class AbstractAudioPlayerListener : AudioPlayerListener {
 class TestAudioPlayerListener : AbstractAudioPlayerListener {
     
     var statusCode:Int32 = 0
-
+    var osCode:Int32 = 0
+    
     override func error(_ severity: ErrorSeverity, _ error: AudioPlayerError) {
-        Logger.testing.error("-- player \(severity): \(error.localizedDescription)" )
+        super.error(severity, error)
+        statusCode = error.code
+        
         if let code = error.osstatus, code != 0 {
-            statusCode = code
+            osCode = code
         } else {
-            statusCode = 0
+            osCode = 0
         }
     }
     override func metadataChanged(_ metadata: Metadata) {

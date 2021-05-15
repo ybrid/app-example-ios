@@ -191,7 +191,7 @@ class ViewController: UIViewController, AudioPlayerListener {
         self.togglePlay.isEnabled = false
         self.playingTitle.text = nil
         DispatchQueue.main.async {
-            guard let player = endpoint.audioPlayer(listener:  self) else {
+            guard let player = AudioPlayer.open(for: endpoint, listener:  self) else {
                 Logger.shared.error("no player for \(endpoint.uri)")
                 self.togglePlay.isEnabled = true
                 return

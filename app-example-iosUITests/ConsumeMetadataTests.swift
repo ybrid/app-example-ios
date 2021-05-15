@@ -38,9 +38,9 @@ class ConsumeMetadataTests: XCTestCase {
         consumer = TestMetadataCallsConsumer()
     }
 
-    
+
     func test01_MetadataYbrid_OnEachPlayAndInStream_FullCurrentNext() {
-        player = ybridDemoEndpoint.audioPlayer(listener: consumer)
+        player = AudioPlayer.open(for: ybridDemoEndpoint, listener: consumer)
         self.playCheckPlayingCheckStopPlayPlayingCheck(
             fistCheck: { consumer.checkMetadataCalls(equal:1) },
             secondCheck: { consumer.checkMetadataCalls(min:2) },
@@ -49,31 +49,39 @@ class ConsumeMetadataTests: XCTestCase {
                 
         let metadata = consumer.metadatas[0]
         guard let current = metadata.current else { XCTFail("current expected"); return }
-        let expectedTypes = [ItemType.MUSIC, ItemType.JINGLE]
-        XCTAssertTrue( expectedTypes.contains(current.type), "\(current.type) not expected" )
+        XCTAssertTrue(checkIsDemoItem(current))
         
-        guard let title = current.title else { XCTFail("title expected"); return }
-        let expectedTitles = ["The Winner Takes It All", "Your Personal Audio Experience", "All I Need"]
-        XCTAssertTrue(expectedTitles.contains(title), "\(title) not expected" )
-
-        XCTAssertNotNil(current.displayTitle,"display title expected")
-        XCTAssertNil(current.version,"no version expected")
-        guard let artist = current.artist else { XCTFail("artist expected"); return }
-        let expectedArtists = ["ABBA", "Ybrid® Hybrid Dynamic Live Audio Technology", "Air"]
-        XCTAssertNotNil(expectedArtists.contains(artist),"one of \(expectedArtists) expected")
-        
-        XCTAssertNotNil(current.identifier,"id expected")
-        XCTAssertNotNil(current.description,"descriptiion expected")
-        XCTAssertNotNil(current.durationMillis,"durationMillis expected")
-        
-        guard let _ = metadata.next else { XCTFail("next expected"); return }
+           
+        guard let next = metadata.next else { XCTFail("next expected"); return }
+        XCTAssertTrue(checkIsDemoItem(next))
         
         guard let _ = metadata.station else { XCTFail("next expected"); return }
         
     }
     
+    
+    private func checkIsDemoItem(_ item:Item) -> Bool {
+        let expectedTypes = [ItemType.MUSIC, ItemType.JINGLE]
+        XCTAssertTrue( expectedTypes.contains(item.type), "\(item.type) not expected" )
+        
+        guard let title = item.title else { XCTFail("title expected"); return false }
+        let expectedTitles = ["The Winner Takes It All", "Your Personal Audio Experience", "All I Need"]
+        XCTAssertTrue(expectedTitles.contains(title), "\(title) not expected" )
+
+        XCTAssertNotNil(item.displayTitle,"display title expected")
+        XCTAssertNil(item.version,"no version expected")
+        guard let artist = item.artist else { XCTFail("artist expected"); return false }
+        let expectedArtists = ["ABBA", "Ybrid® Hybrid Dynamic Live Audio Technology", "Air"]
+        XCTAssertNotNil(expectedArtists.contains(artist),"one of \(expectedArtists) expected")
+        
+        XCTAssertNotNil(item.identifier,"id expected")
+        XCTAssertNotNil(item.description,"descriptiion expected")
+        XCTAssertNotNil(item.durationMillis,"durationMillis expected")
+        return true
+    }
+    
     func test02_MetadataYbrid_Swr3_OnEachPlayAndInStream_CurrentNextStation() {
-        player = ybridSwr3Endpoint.audioPlayer(listener: consumer)
+        player = AudioPlayer.open(for: ybridSwr3Endpoint, listener: consumer)
         self.playCheckPlayingCheckStopPlayPlayingCheck(
             fistCheck: { consumer.checkMetadataCalls(equal:1) },
             secondCheck: { consumer.checkMetadataCalls(min:2) },
@@ -92,16 +100,17 @@ class ConsumeMetadataTests: XCTestCase {
             XCTAssertNotEqual(ItemType.UNKNOWN, type, "\(type) not expected")
         }
         
-        guard let station = consumer.metadatas[0].station else {
-            XCTFail(); return
+        let stations = consumer.metadatas.filter{ return $0.station != nil }.map { $0.station! }
+        XCTAssertGreaterThan(stations.count, 0, "must be at least one station")
+        stations.forEach { (station) in
+            XCTAssertEqual("SWR3", station.name)
+            XCTAssertEqual("Pop Music", station.genre)
         }
-        XCTAssertEqual("SWR3", station.name)
-        XCTAssertEqual("Pop Music", station.genre)
     }
 
     
     func test03_MetadataIcy_InStreamOnly_CurrentStation() {
-        player = icecastHr2Endpoint.audioPlayer(listener: consumer)
+        player = AudioPlayer.open(for: icecastHr2Endpoint, listener: consumer)
         self.playCheckPlayingCheckStopPlayPlayingCheck(
             fistCheck: { consumer.checkMetadataCalls(equal:0) },
             secondCheck: { consumer.checkMetadataCalls(min:1) },
@@ -128,7 +137,7 @@ class ConsumeMetadataTests: XCTestCase {
     }
     
     func test04_MetadataOpusDlf_InStreamOnly_CurrentStation() throws {
-        player = opusDlfEndpoint.audioPlayer(listener: consumer)
+        player = AudioPlayer.open(for: opusDlfEndpoint, listener: consumer)
         self.playCheckPlayingCheckStopPlayPlayingCheck(
             fistCheck: { consumer.checkMetadataCalls(equal:0) },
             secondCheck: { consumer.checkMetadataCalls(min:1) },
@@ -155,7 +164,7 @@ class ConsumeMetadataTests: XCTestCase {
     }
     
     func test05_MetadataOpusCC_InStreamOnly_TitleArtistAlbum() throws {
-        player = opusCCEndpoint.audioPlayer(listener: consumer)
+        player = AudioPlayer.open(for: opusCCEndpoint, listener: consumer)
         self.playCheckPlayingCheckStopPlayPlayingCheck(
             fistCheck: { consumer.checkMetadataCalls(equal:0) },
             secondCheck: { consumer.checkMetadataCalls(min:1) },
@@ -186,7 +195,7 @@ class ConsumeMetadataTests: XCTestCase {
     }
     
     func test06_MetadataOnDemand_OnBeginningNoneOnResume() throws {
-        player = onDemandOpusEndpoint.audioPlayer(listener: consumer)
+        player = AudioPlayer.open(for: onDemandOpusEndpoint, listener: consumer)
         self.playPlayingCheckPausePlayPlayingCheck(
             fistCheck: { consumer.checkMetadataCalls(equal:1) },
             secondCheck: { consumer.checkMetadataCalls(equal:1) }
@@ -286,4 +295,3 @@ class ConsumeMetadataTests: XCTestCase {
         }
     }
 }
-
