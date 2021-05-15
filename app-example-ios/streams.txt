@@ -1,25 +1,34 @@
-# ybrid streams
-adaptive-demo (ybrid)   = https://democast.ybrid.io/adaptive-demo
-ad-injection-demo (ybrid) = https://democast.ybrid.io/ad-injection-demo
-swr3 (ybrid)        = https://stagecast.ybrid.io/swr3/mp3/mid
-# should be https://swr-swr3.cast.ybrid.io/swr/swr3/ybrid
+# list of selectable steams
+#
+# syntax:
+# label | mediaUri | forced protocol
+#
+# forced media protocols can be one of
+# "v2" --> ybrid version 2
+# "icy" --> icecast protocol
+# "plain" --> plain http (no icy-headers or fields)
+#
 
+# ybrid streams
+adaptive-demo (ybrid)       | https://democast.ybrid.io/adaptive-demo
+ad-injection-demo (ybrid)   | https://democast.ybrid.io/ad-injection-demo
+swr3 (ybrid)                | https://swr-swr3.cast.ybrid.io/swr/swr3/ybrid | v2
 
 # icecast streams
-swr3 (icecast)        = http://swr-swr3-live.cast.addradio.de/swr/swr3/live/mp3/128/stream.mp3
-hr2 (icecast, 48kHz)       =  https://hr-hr2-live.cast.addradio.de/hr/hr2/live/mp3/128/stream.mp3
-egoFM (icecast, 44,1kHz)     = https://egofm-live.cast.addradio.de/egofm/live/mp3/high/stream.mp3
-dlf-live (icecast, mono) = http://dradio-dlf-live.cast.addradio.de/dradio/dlf/live/mp3/64/stream.mp3
+swr3 (icecast)          | http://swr-swr3-live.cast.addradio.de/swr/swr3/live/mp3/128/stream.mp3
+hr2 (icecast, 48kHz)    |  https://hr-hr2-live.cast.addradio.de/hr/hr2/live/mp3/128/stream.mp3 | icy
+egoFM (icecast, 44,1kHz) | https://egofm-live.cast.addradio.de/egofm/live/mp3/high/stream.mp3
+dlf-live (icecast, mono) | http://dradio-dlf-live.cast.addradio.de/dradio/dlf/live/mp3/64/stream.mp3
 
 # opus over http and https
-dlf-live (opus)     = https://dradio-dlf-live.cast.addradio.de/dradio/dlf/live/opus/high/stream.opus
-TheRadio.CC (opus)  = http://theradio.cc:8000/trcc-stream.opus
+dlf-live (opus)     | https://dradio-dlf-live.cast.addradio.de/dradio/dlf/live/opus/high/stream.opus
+TheRadio.CC (opus)  | http://theradio.cc:8000/trcc-stream.opus
 
 # AAC
-radio13.ru (aac)  = http://play.radio13.ru:8000/96
-1Live (aac-v2, mono)   = https://wdr-1live-live.cast.addradio.de/wdr/1live/live/aac/low
+radio13.ru (aac)        | http://play.radio13.ru:8000/96
+1Live (aac-v2, mono)    | https://wdr-1live-live.cast.addradio.de/wdr/1live/live/aac/low
 
 # on demand files
-organ sound (mp3, short)    = https://github.com/ybrid/test-files/blob/main/mpeg-audio/music/organ.mp3?raw=true
-music (mp3, 6 min) = https://github.com/ybrid/test-files/blob/main/mpeg-audio/music/music.mp3?raw=true
-paper lights (opus, 4 min) = https://opus-codec.org/static/examples/ehren-paper_lights-96.opus
+organ sound (mp3, short)    | https://github.com/ybrid/test-files/blob/main/mpeg-audio/music/organ.mp3?raw=true
+music (mp3, 6 min)          | https://github.com/ybrid/test-files/blob/main/mpeg-audio/music/music.mp3?raw=true
+paper lights (opus, 4 min)  | https://opus-codec.org/static/examples/ehren-paper_lights-96.opus

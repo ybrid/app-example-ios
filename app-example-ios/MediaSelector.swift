@@ -29,6 +29,7 @@ import YbridPlayerSDK
 fileprivate struct MediaData {
     let label:String
     var url:String
+    var forced:MediaProtocol?
     var editable:Bool = false
 }
 
@@ -60,7 +61,11 @@ class MediaSelector: NSObject, UIPickerViewDelegate, UITextFieldDelegate {
         }
         
         if self.urlField.isValidUrl, let url = self.urlField.url {
-            self.setMediaEndpoint(MediaEndpoint(mediaUri: url.absoluteString))
+            let endpoint = MediaEndpoint(mediaUri: url.absoluteString)
+            if let forced = selected.forced {
+               _ = endpoint.forceProtocol(forced)
+            }
+            self.setMediaEndpoint(endpoint)
         } else {
             setMediaEndpoint(nil)
         }
@@ -119,13 +124,22 @@ class MediaPickerData: NSObject, UIPickerViewDataSource {
         let fileContent = try! String(contentsOfFile: path, encoding: String.Encoding.utf8)
         let dataArray = fileContent.components(separatedBy: "\n")
         for line in dataArray {
-            let components = line.split(separator: "=", maxSplits: 1).map(String.init)
-            guard components.count == 2 else {
+            let components = line.split(separator: "|", maxSplits: 2).map(String.init)
+            guard components.count >= 2 else {
                 continue
             }
             let label=components[0].trimmingCharacters(in: .whitespacesAndNewlines)
             let url=components[1].trimmingCharacters(in: .whitespacesAndNewlines)
-            labelUrls.append(MediaData(label:label,url:url))
+            if components.count > 2 {
+                let force=components[2].trimmingCharacters(in: .whitespacesAndNewlines)
+                guard let forcedProtocol = MediaProtocol.init(rawValue: force) else {
+                    Logger.shared.error("\(force) cannot be a forced media protocol")
+                    continue
+                }
+                labelUrls.append(MediaData(label:label,url:url,forced: forcedProtocol))
+            } else {
+                labelUrls.append(MediaData(label:label,url:url))
+            }
         }
         return labelUrls
     }
