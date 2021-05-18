@@ -45,7 +45,7 @@ class ViewController: UIViewController, AudioPlayerListener {
     
     @IBOutlet weak var playingTitle: UILabel!
     @IBOutlet weak var problem: UILabel! { didSet { problem.text = nil }}
-//    @IBOutlet weak var offset: UILabel! { didSet { offset.text = nil }}
+    @IBOutlet weak var offset: UILabel! { didSet { offset.text = nil }}
     
     @IBOutlet weak var togglePlay: UIButton!
     @IBOutlet weak var playedSince: UILabel! { didSet { playedSince.text = nil }}
@@ -194,7 +194,7 @@ class ViewController: UIViewController, AudioPlayerListener {
         do {
             try AudioPlayer.initialize(for: endpoint, listener: self,
                playbackControl: { (playback, mediaProtocol) in
-//                self.offset(nil)
+                self.offset(nil)
                 self.cachedController[endpoint] = playback
                 callback(playback)
                 DispatchQueue.main.async {
@@ -202,7 +202,7 @@ class ViewController: UIViewController, AudioPlayerListener {
                 }
                },
                ybridControl: { (ybridControl) in
-//                self.offset(ybridControl.offsetToLiveS)
+                self.offset(ybridControl.offsetToLiveS)
                 let playback = ybridControl as! PlaybackControl
                 self.cachedController[endpoint] = playback
                 callback(playback)
@@ -220,15 +220,15 @@ class ViewController: UIViewController, AudioPlayerListener {
         }
     }
     
-//    fileprivate func offset(_ offsetS:TimeInterval?) {
-//        DispatchQueue.main.async {
-//            if let seconds = offsetS {
-//                self.offset.text =  String(format: "%.3f s", seconds)
-//            } else {
-//                self.offset.text = ""
-//            }
-//        }
-//    }
+    fileprivate func offset(_ offsetS:TimeInterval?) {
+        DispatchQueue.main.async {
+            if let seconds = offsetS {
+                self.offset.text =  String(format: "%.3f s", seconds)
+            } else {
+                self.offset.text = ""
+            }
+        }
+    }
     
     fileprivate func doToggle(_ player:PlaybackControl) {
 
