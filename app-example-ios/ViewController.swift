@@ -45,6 +45,8 @@ class ViewController: UIViewController, AudioPlayerListener {
     
     @IBOutlet weak var playingTitle: UILabel!
     @IBOutlet weak var problem: UILabel! { didSet { problem.text = nil }}
+//    @IBOutlet weak var offset: UILabel! { didSet { offset.text = nil }}
+    
     @IBOutlet weak var togglePlay: UIButton!
     @IBOutlet weak var playedSince: UILabel! { didSet { playedSince.text = nil }}
     @IBOutlet weak var ready: UILabel! { didSet { ready.text = nil }}
@@ -77,7 +79,6 @@ class ViewController: UIViewController, AudioPlayerListener {
             
             guard let playback = cachedController[endpoint] else {
                 newController(endpoint) { (playback) in
-                    self.cachedController[endpoint] = playback
                     self.currentPlayback = playback
                     if running {
                         self.doToggle(playback)
@@ -162,7 +163,6 @@ class ViewController: UIViewController, AudioPlayerListener {
         
         guard let _ = cachedController[endpoint] else {
             newController(endpoint) {(playback) in
-                self.cachedController[endpoint] = playback
                 self.currentPlayback = playback
                 self.doToggle(playback)
             }
@@ -175,7 +175,6 @@ class ViewController: UIViewController, AudioPlayerListener {
         }
         
         newController(endpoint) {(playback) in
-            self.cachedController[endpoint] = playback
             self.currentPlayback = playback
             self.doToggle(playback)
         }
@@ -193,13 +192,24 @@ class ViewController: UIViewController, AudioPlayerListener {
         
         DispatchQueue.global().async {
         do {
-            try AudioController.create(for: endpoint, listener: self) {
-                (playback, MediaProtocol) in
+            try AudioPlayer.initialize(for: endpoint, listener: self,
+               playbackControl: { (playback, mediaProtocol) in
+//                self.offset(nil)
+                self.cachedController[endpoint] = playback
                 callback(playback)
                 DispatchQueue.main.async {
                     self.togglePlay.isEnabled = true
                 }
-            }
+               },
+               ybridControl: { (ybridControl) in
+//                self.offset(ybridControl.offsetToLiveS)
+                let playback = ybridControl as! PlaybackControl
+                self.cachedController[endpoint] = playback
+                callback(playback)
+                DispatchQueue.main.async {
+                    self.togglePlay.isEnabled = true
+                }
+               })
         } catch {
             Logger.shared.error("no player for \(endpoint.uri)")
             DispatchQueue.main.async {
@@ -209,6 +219,16 @@ class ViewController: UIViewController, AudioPlayerListener {
         }
         }
     }
+    
+//    fileprivate func offset(_ offsetS:TimeInterval?) {
+//        DispatchQueue.main.async {
+//            if let seconds = offsetS {
+//                self.offset.text =  String(format: "%.3f s", seconds)
+//            } else {
+//                self.offset.text = ""
+//            }
+//        }
+//    }
     
     fileprivate func doToggle(_ player:PlaybackControl) {
 
