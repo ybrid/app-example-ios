@@ -53,7 +53,7 @@ class ViewController: UIViewController, AudioPlayerListener {
     @IBOutlet weak var bufferCurrent: UILabel! { didSet { bufferCurrent.text = nil }}
     
     
-    var player:AudioPlayer?
+    var currentPlayback:PlaybackControl?
     var endpoint:MediaEndpoint? {
         didSet {
             if oldValue == endpoint {
@@ -63,9 +63,9 @@ class ViewController: UIViewController, AudioPlayerListener {
             Logger.shared.info("endpoint changed to \(endpoint?.uri ?? "(nil)")")
             
             var running = false
-            if let player = player, player.state != .stopped {
-                running = player.state == .playing
-                player.stop()
+            if oldValue != nil, let oldPlayer = cachedController[oldValue!], oldPlayer.state != .stopped {
+                running = oldPlayer.state == .playing
+                oldPlayer.stop()
             }
             genre.text = ""
             broadcaster.text = ""
@@ -75,24 +75,24 @@ class ViewController: UIViewController, AudioPlayerListener {
                 return
             }
             
-            guard let player = cachedPlayer[endpoint] else {
-                newPlayer(endpoint) { (player) in
-                    self.player = player
+            guard let playback = cachedController[endpoint] else {
+                newController(endpoint) { (playback) in
+                    self.cachedController[endpoint] = playback
+                    self.currentPlayback = playback
                     if running {
-                        self.doToggle(player)
+                        self.doToggle(playback)
                     }
-                    self.cachedPlayer[endpoint] = player
                 }
                 return
             }
-            self.player = player
+            self.currentPlayback = playback
             if running {
-                self.doToggle(player)
+                self.doToggle(playback)
             }
         }
     }
     
-    private var cachedPlayer:[MediaEndpoint:AudioPlayer] = [:]
+    private var cachedController:[MediaEndpoint:PlaybackControl] = [:]
     private var uriSelector:MediaSelector?
     
     // MARK: main
@@ -132,7 +132,7 @@ class ViewController: UIViewController, AudioPlayerListener {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        cachedPlayer.forEach { (endpoint,player) in
+        cachedController.forEach { (endpoint,player) in
             Logger.shared.info("closing player for endpoint \(endpoint.uri)")
             player.close()
         }
@@ -160,24 +160,24 @@ class ViewController: UIViewController, AudioPlayerListener {
             return
         }
         
-        guard let _ = cachedPlayer[endpoint] else {
-            newPlayer(endpoint) {(player) in
-                self.player = player
-                self.doToggle(player)
-                self.cachedPlayer[endpoint] = player
+        guard let _ = cachedController[endpoint] else {
+            newController(endpoint) {(playback) in
+                self.cachedController[endpoint] = playback
+                self.currentPlayback = playback
+                self.doToggle(playback)
             }
             return
         }
         
-        if let player = self.player {
+        if let player = self.currentPlayback {
             doToggle(player)
             return
         }
         
-        newPlayer(endpoint) { (player) in
-            self.player = player
-            self.doToggle(player)
-            self.cachedPlayer[endpoint] = player
+        newController(endpoint) {(playback) in
+            self.cachedController[endpoint] = playback
+            self.currentPlayback = playback
+            self.doToggle(playback)
         }
     }
     
@@ -187,26 +187,36 @@ class ViewController: UIViewController, AudioPlayerListener {
         togglePlay.isEnabled = valid
     }
     
-    fileprivate func newPlayer(_ endpoint:MediaEndpoint, callback: @escaping (AudioPlayer) -> ()) {
+    fileprivate func newController(_ endpoint:MediaEndpoint, callback: @escaping (PlaybackControl) -> ()) {
         self.togglePlay.isEnabled = false
         self.playingTitle.text = nil
-        DispatchQueue.main.async {
-            guard let player = AudioPlayer.open(for: endpoint, listener:  self) else {
-                Logger.shared.error("no player for \(endpoint.uri)")
-                self.togglePlay.isEnabled = true
-                return
+        
+        DispatchQueue.global().async {
+        do {
+            try AudioController.create(for: endpoint, listener: self) {
+                (playback, MediaProtocol) in
+                callback(playback)
+                DispatchQueue.main.async {
+                    self.togglePlay.isEnabled = true
+                }
             }
-            callback(player)
-            self.togglePlay.isEnabled = true
+        } catch {
+            Logger.shared.error("no player for \(endpoint.uri)")
+            DispatchQueue.main.async {
+                self.togglePlay.isEnabled = true
+            }
+            return
         }
-        return
+        }
     }
     
-    fileprivate func doToggle(_ player:AudioPlayer) {
+    fileprivate func doToggle(_ player:PlaybackControl) {
 
         switch player.state  {
         case .stopped, .pausing:
-            self.problem.text = nil
+            DispatchQueue.main.async {
+                self.problem.text = nil
+            }
             player.play()
         case .playing:
             player.canPause ? player.pause() : player.stop()
@@ -217,7 +227,42 @@ class ViewController: UIViewController, AudioPlayerListener {
         }
     }
     
-    
+    let playImage = UIImage(named: "play")!
+    let pauseImage = UIImage(named: "pause")!.scale(factor: 0.9)
+    let stopImage = UIImage(named: "stop")!.scale(factor: 0.8)
+    func stateChanged(_ state: PlaybackState) {
+        guard currentPlayback?.state == state else {
+            /// ignore events from the last player
+            return
+        }
+        DispatchQueue.main.sync {
+            Logger.shared.debug("state changed to \(state)")
+            switch state {
+            case .stopped:
+                self.togglePlay.setTitle("", for: .normal)
+                self.togglePlay.setImage(self.playImage, for: UIControl.State.normal)
+                
+                self.playingTitle.text = ""
+                
+            case .pausing:
+                self.togglePlay.setTitle("", for: .normal)
+                self.togglePlay.setImage(self.playImage, for: UIControl.State.normal)
+            case .buffering:
+                self.togglePlay.setTitle("● ● ●", for: .normal) // \u{25cf} Black Circle
+                self.togglePlay.setImage(nil, for: UIControl.State.normal)
+            case .playing:
+                self.togglePlay.setTitle("", for: .normal)
+                if let player = self.currentPlayback, player.canPause {
+                    self.togglePlay.setImage(self.pauseImage, for: UIControl.State.normal)
+                } else {
+                    self.togglePlay.setImage(self.stopImage, for: UIControl.State.normal)
+                }
+            @unknown default:
+                Logger.shared.error("state changed to unknown \(state)")
+            }
+        }
+    }
+
     // MARK: initialization
     
     private func setStaticFieldAttributes() {
@@ -227,6 +272,7 @@ class ViewController: UIViewController, AudioPlayerListener {
             
             self.togglePlay.setTitleColor(UIColor.gray, for: UIControl.State.disabled)
             self.togglePlay.setImage(self.playImage.withGrayscale, for: UIControl.State.disabled)
+            self.togglePlay.setTitle("", for: .disabled)
             
             self.playedSince.font = self.playedSince.font.monospacedDigitFont
             self.ready.font = self.ready.font.monospacedDigitFont
@@ -280,42 +326,7 @@ class ViewController: UIViewController, AudioPlayerListener {
         }
     }
     
-    let playImage = UIImage(named: "play")!
-    let pauseImage = UIImage(named: "pause")!.scale(factor: 0.9)
-    let stopImage = UIImage(named: "stop")!.scale(factor: 0.8)
-    func stateChanged(_ state: PlaybackState) {
-        guard player?.state == state else {
-            /// ignore events from the last player
-            return
-        }
-        DispatchQueue.main.async {
-            Logger.shared.debug("state changed to \(state)")
-            switch state {
-            case .stopped:
-                self.togglePlay.setTitle("", for: .normal)
-                self.togglePlay.setImage(self.playImage, for: UIControl.State.normal)
-                
-                self.playingTitle.text = ""
-                
-            case .pausing:
-                self.togglePlay.setTitle("", for: .normal)
-                self.togglePlay.setImage(self.playImage, for: UIControl.State.normal)
-            case .buffering:
-                self.togglePlay.setTitle("● ● ●", for: .normal) // \u{25cf} Black Circle
-                self.togglePlay.setImage(nil, for: UIControl.State.normal)
-            case .playing:
-                self.togglePlay.setTitle("", for: .normal)
-                if let player = self.player, player.canPause {
-                    self.togglePlay.setImage(self.pauseImage, for: UIControl.State.normal)
-                } else {
-                    self.togglePlay.setImage(self.stopImage, for: UIControl.State.normal)
-                }
-            @unknown default:
-                Logger.shared.error("state changed to unknown \(state)")
-            }
-        }
-    }
-    
+     
     func playingSince(_ seconds: TimeInterval?) {
         DispatchQueue.main.async {
             guard let playedS = seconds else {
