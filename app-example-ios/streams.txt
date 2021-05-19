@@ -3,10 +3,13 @@
 # syntax:
 # label | mediaUri | forced protocol
 #
-# forced media protocols can be one of
+# Force the matching media protocol. It can be one of
 # "v2" --> ybrid version 2
 # "icy" --> icecast protocol
-# "plain" --> plain http (no icy-headers or fields)
+# "plain" --> plain http (no icy-headers or icy-metadata)
+#
+# Without forcing, the matching media protocol will be detected automatically the
+# first time the media is chosen. It can take 3 seconds. Default and fallback are "icy".
 #
 
 # ybrid streams

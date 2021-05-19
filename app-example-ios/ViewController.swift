@@ -47,8 +47,8 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
     
     @IBOutlet weak var playingTitle: UILabel!
     @IBOutlet weak var problem: UILabel! { didSet { problem.text = nil }}
-    @IBOutlet weak var offset: UILabel! { didSet { offset.text = nil }}
-    
+    @IBOutlet weak var offsetS: UILabel! { didSet { offsetS.text = nil }}
+    @IBOutlet weak var offsetLabel: UILabel!
     @IBOutlet weak var togglePlay: UIButton!
     @IBOutlet weak var playedSince: UILabel! { didSet { playedSince.text = nil }}
     @IBOutlet weak var ready: UILabel! { didSet { ready.text = nil }}
@@ -76,6 +76,7 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
             togglePlay.isEnabled = endpoint != nil
             
             guard let endpoint = endpoint else {
+                currentControl = nil
                 return
             }
             
@@ -103,30 +104,31 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
                 Logger.shared.notice("control changed to (nil)")
                 DispatchQueue.main.async {
                     self.togglePlay.isEnabled = false
+                    self.offsetLabel.isHidden = true
                 }
                 return
             }
-            Logger.shared.debug("control changed to \(type(of: current))")
             
-            DispatchQueue.main.async {
-                self.togglePlay.isEnabled = true
-            }
+            Logger.shared.debug("control changed to \(type(of: current))")
             
             if var ybrid = current as? YbridControl {
                 ybrid.listener = self
+            
+                DispatchQueue.main.async {
+                    self.togglePlay.isEnabled = true
+                    self.offsetS.isHidden = false
+                    self.offsetLabel.isHidden = false
+                }
             } else {
-                offset(nil)
+                DispatchQueue.main.async {
+                    self.togglePlay.isEnabled = true
+                    self.offsetS.isHidden = true
+                    self.offsetLabel.isHidden = true
+                }
             }
         }
     }
 
-    func offsetToLiveChanged() {
-        if let ybrid = currentControl as? YbridControl {
-            offset(ybrid.offsetToLiveS)
-        } else {
-            offset(nil)
-        }
-    }
     
     // MARK: main
     
@@ -143,6 +145,7 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
         
         hideKeyboardWhenTappedAround()
         setStaticFieldAttributes()
+        self.view.layoutIfNeeded()
         
         urlPicker.delegate = uriSelector
         urlField.delegate = uriSelector
@@ -233,18 +236,7 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
                 self.togglePlay.isEnabled = true
             }
             return
-        }
-        }
-    }
-    
-    fileprivate func offset(_ offsetS:TimeInterval?) {
-        DispatchQueue.main.async {
-            if let seconds = offsetS {
-                self.offset.text =  String(format: "%.3f s", seconds)
-            } else {
-                self.offset.text = ""
-            }
-        }
+        }}
     }
     
     fileprivate func doToggle(_ player:PlaybackControl) {
@@ -276,20 +268,22 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
             Logger.shared.debug("state changed to \(state)")
             switch state {
             case .stopped:
-                self.togglePlay.setTitle("", for: .normal)
+                self.togglePlay.setTitle(nil, for: .normal)
                 self.togglePlay.setImage(self.playImage, for: UIControl.State.normal)
-                
+
                 self.playingTitle.text = ""
                 
             case .pausing:
-                self.togglePlay.setTitle("", for: .normal)
+                self.togglePlay.setTitle(nil, for: .normal)
                 self.togglePlay.setImage(self.playImage, for: UIControl.State.normal)
+                
             case .buffering:
                 self.togglePlay.setTitle("● ● ●", for: .normal) // \u{25cf} Black Circle
                 self.togglePlay.setImage(nil, for: UIControl.State.normal)
+                
             case .playing:
-                self.togglePlay.setTitle("", for: .normal)
-                if let player = self.currentControl, player.canPause {
+                self.togglePlay.setTitle(nil, for: .normal)
+                if let control = self.currentControl, control.canPause {
                     self.togglePlay.setImage(self.pauseImage, for: UIControl.State.normal)
                 } else {
                     self.togglePlay.setImage(self.stopImage, for: UIControl.State.normal)
@@ -319,9 +313,18 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
         }
     }
     
-    // MARK: MediaEndpointListener
+    // MARK: YbridControlListener
     
-    
+    func offsetToLiveChanged() {
+        DispatchQueue.main.async {
+            if let seconds = (self.currentControl as? YbridControl)?.offsetToLiveS  {
+                self.offsetS.text =  seconds.hmsS
+            } else {
+                self.offsetS.text = nil
+            }
+        }
+    }
+
     // MARK: AudioPlayerListener
     
     func metadataChanged(_ metadata:Metadata) {
@@ -370,26 +373,15 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
                 self.playedSince.text = ""
                 return
             }
-            
-            if playedS.isLess(than: 60) {
-                self.playedSince.text = String(format: "%.1f s", playedS)
-                return
-            }
-            if playedS.isLess(than: 3600) {
-                let min = Int(playedS / 60)
-                self.playedSince.text = String(format: "%dm %02ds", min, Int(playedS - Double(min * 60)))
-                return
-            }
-            let hour = Int(playedS / 3600)
-            let min = Int(playedS / 60) - hour * 60
-            self.playedSince.text = String(format: "%dh %02dm", hour, min)
-            return
+            self.playedSince.text = playedS.hmsS
         }
     }
+
+    
     func durationReadyToPlay(_ seconds: TimeInterval?) {
         DispatchQueue.main.async {
             if let readyS = seconds {
-                self.ready.text = String(format: "%.3f s", readyS)
+                self.ready.text = readyS.sSSS
             } else {
                 self.ready.text = ""
             }
@@ -398,7 +390,7 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
     func durationConnected(_ seconds: TimeInterval?) {
         DispatchQueue.main.async {
             if let connectS = seconds {
-                self.connected.text = String(format: "%.3f s", connectS)
+                self.connected.text = connectS.sSSS
             } else {
                 self.connected.text = ""
             }
@@ -407,12 +399,12 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
     func bufferSize(averagedSeconds: TimeInterval?, currentSeconds: TimeInterval?) {
         DispatchQueue.main.async {
             if let averaged = averagedSeconds {
-                self.bufferAveraged.text = String(format: "%.1f s", averaged)
+                self.bufferAveraged.text = averaged.sS
             } else {
                 self.bufferAveraged.text = ""
             }
             if let current = currentSeconds {
-                self.bufferCurrent.text = String(format: "%.2f s", current)
+                self.bufferCurrent.text = current.sSS
             } else {
                 self.bufferCurrent.text = ""
             }
@@ -460,5 +452,32 @@ extension UIImage {
     func scale(factor: Float) -> UIImage {
         let scaledImage = UIImage( cgImage: self.cgImage!, scale: self.scale/CGFloat(factor), orientation: self.imageOrientation)
         return scaledImage
+    }
+}
+
+extension TimeInterval {
+    var hmsS:String {
+        if isLess(than: 60) {
+            return String(format: "%.1f s", self)
+        }
+        if isLess(than: 3600) {
+            let min = Int(self / 60)
+            return String(format: "%dm %02ds", min, Int(self - Double(min * 60)))
+        }
+        let hour = Int(self / 3600)
+        let min = Int(self / 60) - hour * 60
+        return String(format: "%dh %02dm", hour, min)
+    }
+    
+    var sSSS:String {
+        return String(format: "%.3f s", self)
+    }
+    
+    var sSS:String {
+        return String(format: "%.2f s", self)
+    }
+    
+    var sS:String {
+        return String(format: "%.1f s", self)
     }
 }

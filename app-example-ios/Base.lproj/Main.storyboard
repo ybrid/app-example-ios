@@ -246,7 +246,8 @@
                         <outlet property="bufferCurrent" destination="Hh0-PX-fsf" id="cVA-cq-2Sx"/>
                         <outlet property="connected" destination="DyK-RF-1Wl" id="9Qn-2Z-CKq"/>
                         <outlet property="genre" destination="08c-fV-PIe" id="fob-4M-LXM"/>
-                        <outlet property="offset" destination="2fM-w0-pgB" id="4r9-kz-UaF"/>
+                        <outlet property="offsetLabel" destination="jIK-AS-qbk" id="WpT-2a-URO"/>
+                        <outlet property="offsetS" destination="2fM-w0-pgB" id="4r9-kz-UaF"/>
                         <outlet property="playedSince" destination="fSV-kl-ZJX" id="t3t-hb-BJ9"/>
                         <outlet property="playingTitle" destination="BTB-qz-aRk" id="LnT-sD-mM6"/>
                         <outlet property="problem" destination="A7F-yx-e4d" id="Uy5-Lz-1Em"/>
