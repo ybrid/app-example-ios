@@ -32,7 +32,9 @@ import AVFoundation
 import YbridPlayerSDK
 
 
-class ViewController: UIViewController, AudioPlayerListener {
+class ViewController: UIViewController, AudioPlayerListener, YbridControlListener {
+
+    
     
     
     // MARK: ui outlets
@@ -110,15 +112,21 @@ class ViewController: UIViewController, AudioPlayerListener {
                 self.togglePlay.isEnabled = true
             }
             
-            if let ybrid = current as? YbridControl {
-                offset(ybrid.offsetToLiveS)
+            if var ybrid = current as? YbridControl {
+                ybrid.listener = self
             } else {
                 offset(nil)
             }
         }
     }
 
-
+    func offsetToLiveChanged() {
+        if let ybrid = currentControl as? YbridControl {
+            offset(ybrid.offsetToLiveS)
+        } else {
+            offset(nil)
+        }
+    }
     
     // MARK: main
     
