@@ -318,7 +318,7 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
     func offsetToLiveChanged() {
         DispatchQueue.main.async {
             if let seconds = (self.currentControl as? YbridControl)?.offsetToLiveS  {
-                self.offsetS.text =  seconds.hmsS
+                self.offsetS.text =  seconds.hmmssS
             } else {
                 self.offsetS.text = nil
             }
@@ -456,7 +456,7 @@ extension UIImage {
 }
 
 extension TimeInterval {
-    var hmsS:String {
+    var hmsSManually:String {
         if isLess(than: 60) {
             return String(format: "%.1f s", self)
         }
@@ -467,6 +467,28 @@ extension TimeInterval {
         let hour = Int(self / 3600)
         let min = Int(self / 60) - hour * 60
         return String(format: "%dh %02dm", hour, min)
+    }
+    
+    var hmsS:String {
+        let date = Date(timeIntervalSince1970: self)
+        let formatter = DateFormatter()
+        formatter.timeZone = TimeZone(abbreviation: "UTC+00")
+        if isLess(than: 60) {
+            formatter.dateFormat = "s.S' s'"
+        } else if isLess(than: 3600) {
+            formatter.dateFormat = "m'm 'ss's'"
+        } else {
+            formatter.dateFormat = "h'h 'mm'm'"
+        }
+        return formatter.string(from: date)
+    }
+    
+    var hmmssS:String {
+        let date = Date(timeIntervalSince1970: -self)
+        let formatter = DateFormatter()
+        formatter.timeZone = TimeZone(abbreviation: "UTC+00")
+        formatter.dateFormat = "-H:mm:ss.S"
+        return formatter.string(from: date)
     }
     
     var sSSS:String {
