@@ -34,9 +34,6 @@ import YbridPlayerSDK
 
 class ViewController: UIViewController, AudioPlayerListener, YbridControlListener {
 
-    
-    
-    
     // MARK: ui outlets
     
     @IBOutlet weak var urlPicker: UIPickerView!
@@ -49,6 +46,10 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
     @IBOutlet weak var problem: UILabel! { didSet { problem.text = nil }}
     @IBOutlet weak var offsetS: UILabel! { didSet { offsetS.text = nil }}
     @IBOutlet weak var offsetLabel: UILabel!
+    @IBOutlet weak var windBackButton: UIButton! { didSet {
+        let windBackImage = UIImage(named: "windBack")!.scale(factor: 0.6)
+        windBackButton.setImage(windBackImage, for: .normal)
+    }}
     @IBOutlet weak var togglePlay: UIButton!
     @IBOutlet weak var playedSince: UILabel! { didSet { playedSince.text = nil }}
     @IBOutlet weak var ready: UILabel! { didSet { ready.text = nil }}
@@ -118,12 +119,14 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
                     self.togglePlay.isEnabled = true
                     self.offsetS.isHidden = false
                     self.offsetLabel.isHidden = false
+                    self.windBackButton.isHidden = false
                 }
             } else {
                 DispatchQueue.main.async {
                     self.togglePlay.isEnabled = true
                     self.offsetS.isHidden = true
                     self.offsetLabel.isHidden = true
+                    self.windBackButton.isHidden = true
                 }
             }
         }
@@ -210,6 +213,15 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
     @IBAction func urlEditChanged(_ sender: Any) {
         let valid = uriSelector?.urlEditChanged() ?? true
         togglePlay.isEnabled = valid
+    }
+    
+    let windBackImage = UIImage(named: "windBack")!.scale(factor: 0.7)
+    @IBAction func windBack(_ sender: Any) {
+        print("wind back called")
+        guard let ybrid = currentControl as? YbridControl else {
+            return
+        }
+        ybrid.wind(by: -10.0)
     }
     
     fileprivate func newControl(_ endpoint:MediaEndpoint, callback: @escaping (PlaybackControl) -> ()) {
