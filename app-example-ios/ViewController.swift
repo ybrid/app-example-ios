@@ -50,13 +50,18 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
     @IBOutlet weak var togglePlay: UIButton!
 
     @IBOutlet weak var windBackButton: UIButton! { didSet {
-        windBackButton.isHidden = true
+//        windBackButton.isHidden = true
         let windBackImage = UIImage(named: "windBack")!.scale(factor: 0.6)
         windBackButton.setImage(windBackImage, for: .normal)
     }}
+    @IBOutlet weak var windForwardButton: UIButton! { didSet {
+//        windForwardButton.isHidden = true
+        let windForwardImage = UIImage(named: "windForward")!.scale(factor: 0.6)
+        windForwardButton.setImage(windForwardImage, for: .normal)
+    }}
     @IBOutlet weak var windToLiveButton: UIButton! { didSet {
-        windToLiveButton.isHidden = true
-        let windToLiveImage = UIImage(named: "windToLive")!.scale(factor: 0.55)
+//        windToLiveButton.isHidden = true
+        let windToLiveImage = UIImage(named: "windToLive")!.scale(factor: 0.6)
         windToLiveButton.setImage(windToLiveImage, for: .normal)
     }}
     @IBOutlet weak var offsetS: UILabel! { didSet { offsetS.text = nil }}
@@ -151,10 +156,7 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
                     self.togglePlay.setTitle(nil, for: .normal)
                     self.togglePlay.setImage(self.playImage, for: UIControl.State.normal)
                     self.playbackControls(enable: false)
-                    self.offsetS.isHidden = true
-                    self.offsetLabel.isHidden = true
-                    self.windBackButton.isHidden = true
-                    self.windToLiveButton.isHidden = true
+                    self.timeshift(visible: false)
                 }
                 return
             }
@@ -166,16 +168,10 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
                     ybrid.listener = self
                     
                     self.playbackControls(enable: true)
-                    self.offsetS.isHidden = false
-                    self.offsetLabel.isHidden = false
-                    self.windBackButton.isHidden = false
-                    self.windToLiveButton.isHidden = false
+                    self.timeshift(visible: true)
                 } else {
                     self.playbackControls(enable: true)
-                    self.offsetS.isHidden = true
-                    self.offsetLabel.isHidden = true
-                    self.windBackButton.isHidden = true
-                    self.windToLiveButton.isHidden = true
+                    self.timeshift(visible: false)
                 }
 
             }
@@ -209,7 +205,9 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
         urlPicker.selectRow(initialSelectedRow, inComponent: 0, animated: true)
         uriSelector?.pickerView(urlPicker, didSelectRow: initialSelectedRow, inComponent: 0)
         
+        
         resetMonitorings()
+        timeshift(visible: false)
     }
     
     override func didReceiveMemoryWarning() {
@@ -260,8 +258,17 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
         guard let ybrid = currentControl as? YbridControl else {
             return
         }
-        ybrid.wind(by: -10.0)
+        ybrid.wind(by: -15.0)
     }
+    
+    @IBAction func windForward(_ sender: Any) {
+        print("wind forward called")
+        guard let ybrid = currentControl as? YbridControl else {
+            return
+        }
+        ybrid.wind(by: 15.0)
+    }
+
     
     @IBAction func windToLive(_ sender: Any) {
         print("wind to live called")
@@ -279,8 +286,20 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
         let running = (currentControl?.state == .playing || currentControl?.state == .buffering)
         DispatchQueue.main.async {
             self.windBackButton.isEnabled = enable && running
+            self.windForwardButton.isEnabled = enable && running
             self.togglePlay.isEnabled = enable
             self.windToLiveButton.isEnabled = enable && running
+        }
+    }
+    
+    private func timeshift(visible:Bool) {
+        let hidden = !visible
+        DispatchQueue.main.async {
+            self.offsetS.isHidden = hidden
+            self.offsetLabel.isHidden = hidden
+            self.windBackButton.isHidden = hidden
+            self.windToLiveButton.isHidden = hidden
+            self.windForwardButton.isHidden = hidden
         }
     }
     
