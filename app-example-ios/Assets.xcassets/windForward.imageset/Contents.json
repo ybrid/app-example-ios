@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "Element 8.png",
+      "filename" : "wind-forward@1x.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "Element 8@2x.png",
+      "filename" : "wind-forward@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "Element 8@3x.png",
+      "filename" : "wind-forward@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

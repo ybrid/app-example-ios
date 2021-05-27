@@ -50,18 +50,15 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
     @IBOutlet weak var togglePlay: UIButton!
 
     @IBOutlet weak var windBackButton: UIButton! { didSet {
-//        windBackButton.isHidden = true
-        let windBackImage = UIImage(named: "windBack")!.scale(factor: 0.6)
+        let windBackImage = UIImage(named: "windBack")!.scale(factor: 0.5)
         windBackButton.setImage(windBackImage, for: .normal)
     }}
     @IBOutlet weak var windForwardButton: UIButton! { didSet {
-//        windForwardButton.isHidden = true
-        let windForwardImage = UIImage(named: "windForward")!.scale(factor: 0.6)
+        let windForwardImage = UIImage(named: "windForward")!.scale(factor: 0.5)
         windForwardButton.setImage(windForwardImage, for: .normal)
     }}
     @IBOutlet weak var windToLiveButton: UIButton! { didSet {
-//        windToLiveButton.isHidden = true
-        let windToLiveImage = UIImage(named: "windToLive")!.scale(factor: 0.6)
+        let windToLiveImage = UIImage(named: "windToLive")!.scale(factor: 0.9)
         windToLiveButton.setImage(windToLiveImage, for: .normal)
     }}
     @IBOutlet weak var offsetS: UILabel! { didSet { offsetS.text = nil }}
