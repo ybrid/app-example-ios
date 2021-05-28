@@ -35,12 +35,6 @@ import YbridPlayerSDK
 class ViewController: UIViewController, AudioPlayerListener, YbridControlListener {
 
     // MARK: ui outlets
-    @IBAction func itemBackward(_ sender: Any) {
-        print("item backward called")
-    }
-    @IBAction func itemForward(_ sender: Any) {
-        print("item forward called")
-    }
 
     @IBOutlet weak var urlPicker: UIPickerView!
     @IBOutlet weak var urlField: UrlField!
@@ -56,17 +50,10 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
     @IBOutlet weak var togglePlay: UIButton!
 
     @IBOutlet weak var itemBackwardButton: UIButton!
-    @IBOutlet weak var windBackButton: UIButton! { didSet {
-
-    }}
-    @IBOutlet weak var windForwardButton: UIButton! { didSet {
-  
-    }}
-    @IBOutlet weak var windToLiveButton: UIButton! { didSet {
-
-    }}
+    @IBOutlet weak var windBackButton: UIButton!
+    @IBOutlet weak var windForwardButton: UIButton!
+    @IBOutlet weak var windToLiveButton: UIButton!
     @IBOutlet weak var itemForwardButton: UIButton!
-    
     
     @IBOutlet weak var offsetS: UILabel! { didSet { offsetS.text = nil }}
     @IBOutlet weak var offsetLabel: UILabel!
@@ -90,11 +77,11 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
             
             let itemBackwardImage = UIImage(named: "itemBackward")!.scale(factor: 0.5)
             self.itemBackwardButton.setImage(itemBackwardImage, for: .normal)
-            let windBackImage = UIImage(named: "windBack")!.scale(factor: 0.5)
+            let windBackImage = UIImage(named: "windBack")!.scale(factor: 0.4)
             self.windBackButton.setImage(windBackImage, for: .normal)
             let windToLiveImage = UIImage(named: "windToLive")!.scale(factor: 0.9)
             self.windToLiveButton.setImage(windToLiveImage, for: .normal)
-            let windForwardImage = UIImage(named: "windForward")!.scale(factor: 0.5)
+            let windForwardImage = UIImage(named: "windForward")!.scale(factor: 0.4)
             self.windForwardButton.setImage(windForwardImage, for: .normal)
             let itemForwardImage = UIImage(named: "itemForward")!.scale(factor: 0.5)
             self.itemForwardButton.setImage(itemForwardImage, for: .normal)
@@ -293,19 +280,32 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
         ybrid.windToLive()
     }
 
-
+    @IBAction func itemBackward(_ sender: Any) {
+        print("item backward called")
+        guard let ybrid = currentControl as? YbridControl else {
+            return
+        }
+        ybrid.skipBackward(nil)//ItemType.NEWS)
+    }
+    @IBAction func itemForward(_ sender: Any) {
+        print("item forward called")
+        guard let ybrid = currentControl as? YbridControl else {
+            return
+        }
+        ybrid.skipForward(nil)//ItemType.MUSIC)
+    }
 
     // MARK: helpers
     
     private func playbackControls(enable:Bool) {
         let running = (currentControl?.state == .playing || currentControl?.state == .buffering)
         DispatchQueue.main.async {
-            self.windBackButton.isEnabled = enable && running
-            self.windForwardButton.isEnabled = enable && running
+            self.windBackButton.isEnabled = enable //&& running
+            self.windForwardButton.isEnabled = enable //&& running
             self.togglePlay.isEnabled = enable
-            self.windToLiveButton.isEnabled = enable && running
-            self.itemBackwardButton.isEnabled = false
-            self.itemForwardButton.isEnabled = false
+            self.windToLiveButton.isEnabled = enable //&& running
+            self.itemBackwardButton.isEnabled = enable
+            self.itemForwardButton.isEnabled = enable
         }
     }
     
@@ -317,6 +317,8 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
             self.windBackButton.isHidden = hidden
             self.windToLiveButton.isHidden = hidden
             self.windForwardButton.isHidden = hidden
+            self.itemBackwardButton.isHidden = hidden
+            self.itemForwardButton.isHidden = hidden
         }
     }
     
