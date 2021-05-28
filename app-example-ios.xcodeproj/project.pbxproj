@@ -22,7 +22,6 @@
 		176BDE84258CAD940038EE95 /* PlayerToggleStressTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 176BDE83258CAD940038EE95 /* PlayerToggleStressTest.swift */; };
 		176BDE95258CB1240038EE95 /* UseYbridPlayerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 176BDE94258CB1240038EE95 /* UseYbridPlayerTests.swift */; };
 		178347EF25C2DB7600A5F23B /* YbridPlayerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 178347EE25C2DB7600A5F23B /* YbridPlayerTests.swift */; };
-		17B6CF9E25D9EC7100D25A25 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 17B6CF9D25D9EC7100D25A25 /* Images.xcassets */; };
 		3DE4632F9C5B79744D9597DB /* Pods_app_example_ios.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F08C6EBCE5B6DC10660F6A7C /* Pods_app_example_ios.framework */; };
 /* End PBXBuildFile section */
 
@@ -55,7 +54,6 @@
 		176EE867257002A300AC49DD /* app-example-iosUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "app-example-iosUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		176EE86B257002A300AC49DD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		178347EE25C2DB7600A5F23B /* YbridPlayerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YbridPlayerTests.swift; sourceTree = "<group>"; };
-		17B6CF9D25D9EC7100D25A25 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		17D3A0332507D29700859BF9 /* app-example-ios.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "app-example-ios.entitlements"; sourceTree = "<group>"; };
 		248D87F35ADE806513210A89 /* Pods-app-example-ios.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-app-example-ios.debug.xcconfig"; path = "Target Support Files/Pods-app-example-ios/Pods-app-example-ios.debug.xcconfig"; sourceTree = "<group>"; };
 		4B4F7883DA6DC4D88169DCEC /* Pods-app-example-ios-app-example-iosUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-app-example-ios-app-example-iosUITests.release.xcconfig"; path = "Target Support Files/Pods-app-example-ios-app-example-iosUITests/Pods-app-example-ios-app-example-iosUITests.release.xcconfig"; sourceTree = "<group>"; };
@@ -118,7 +116,6 @@
 				17587CC925027DCC00951211 /* Assets.xcassets */,
 				17587CCE25027DCC00951211 /* Info.plist */,
 				17587CC625027DC900951211 /* app_example_ios.xcdatamodeld */,
-				17B6CF9D25D9EC7100D25A25 /* Images.xcassets */,
 			);
 			path = "app-example-ios";
 			sourceTree = "<group>";
@@ -243,7 +240,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				171449C92530F37500E76141 /* streams.txt in Resources */,
-				17B6CF9E25D9EC7100D25A25 /* Images.xcassets in Resources */,
 				17587CCA25027DCC00951211 /* Assets.xcassets in Resources */,
 				17587CC525027DC900951211 /* Main.storyboard in Resources */,
 			);
