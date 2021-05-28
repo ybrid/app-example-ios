@@ -164,7 +164,7 @@
                                     <constraint firstAttribute="height" constant="40" id="al0-Ze-BGU"/>
                                 </constraints>
                             </imageView>
-                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TDH-yJ-Bni" userLabel="Wind To Live">
+                            <button opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="749" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TDH-yJ-Bni" userLabel="Wind To Live">
                                 <rect key="frame" x="181" y="484" width="58" height="58"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                 <state key="normal" image="windToLive">
@@ -174,7 +174,7 @@
                                     <action selector="windToLive:" destination="BYZ-38-t0r" eventType="touchUpInside" id="79M-ub-Wc0"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rfV-dc-y0p" userLabel="Wind Back">
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rfV-dc-y0p" userLabel="Wind Back">
                                 <rect key="frame" x="101" y="484" width="58" height="58"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                 <state key="normal" image="windBack">
@@ -184,14 +184,11 @@
                                     <action selector="windBack:" destination="BYZ-38-t0r" eventType="touchUpInside" id="LDo-Hi-T4v"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="a4P-CE-qso" userLabel="Wind Forward">
-                                <rect key="frame" x="263" y="484" width="58" height="58"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                                <state key="normal" image="windForward">
-                                    <color key="titleColor" red="0.9179020524" green="0.19964426760000001" blue="0.96868473290000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                </state>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0YJ-69-Ho2" userLabel="Item Forward">
+                                <rect key="frame" x="336" y="484" width="58" height="58"/>
+                                <state key="normal" image="itemForward"/>
                                 <connections>
-                                    <action selector="windForward:" destination="BYZ-38-t0r" eventType="touchUpInside" id="qDi-1S-x8O"/>
+                                    <action selector="itemForward:" destination="BYZ-38-t0r" eventType="touchUpInside" id="wHp-ES-Gc4"/>
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" alpha="0.75" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="playing since" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XAX-JF-8k1">
@@ -200,6 +197,23 @@
                                 <color key="textColor" red="0.9179020524" green="0.19964426760000001" blue="0.96868473290000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="a4P-CE-qso" userLabel="Wind Forward">
+                                <rect key="frame" x="261" y="484" width="58" height="58"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                <state key="normal" image="windForward">
+                                    <color key="titleColor" red="0.9179020524" green="0.19964426760000001" blue="0.96868473290000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                </state>
+                                <connections>
+                                    <action selector="windForward:" destination="BYZ-38-t0r" eventType="touchUpInside" id="qDi-1S-x8O"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SFj-Ko-4Gc" userLabel="Item Backward">
+                                <rect key="frame" x="26" y="484" width="58" height="58"/>
+                                <state key="normal" image="itemBackward"/>
+                                <connections>
+                                    <action selector="itemBackward:" destination="BYZ-38-t0r" eventType="touchUpInside" id="ylR-iX-UVK"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -208,11 +222,12 @@
                             <constraint firstItem="weW-fG-4s2" firstAttribute="centerY" relation="lessThanOrEqual" secondItem="vIB-Zb-9qf" secondAttribute="centerY" priority="900" constant="150" id="4Ks-yl-Xjf"/>
                             <constraint firstItem="wCK-0O-Wvu" firstAttribute="centerY" secondItem="Hh0-PX-fsf" secondAttribute="centerY" constant="20" id="4gn-6a-Lgp"/>
                             <constraint firstItem="TDH-yJ-Bni" firstAttribute="centerX" secondItem="weW-fG-4s2" secondAttribute="centerX" id="6IL-FA-SWR"/>
-                            <constraint firstItem="TDH-yJ-Bni" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="rfV-dc-y0p" secondAttribute="trailing" priority="950" constant="10" id="79X-6w-kUC"/>
+                            <constraint firstItem="TDH-yJ-Bni" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="rfV-dc-y0p" secondAttribute="trailing" priority="950" constant="20" id="79X-6w-kUC"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="BTB-qz-aRk" secondAttribute="trailing" constant="10" id="802-TY-qeL"/>
                             <constraint firstItem="2fM-w0-pgB" firstAttribute="centerX" secondItem="jIK-AS-qbk" secondAttribute="centerX" id="8Mj-0R-Rrs"/>
                             <constraint firstItem="08c-fV-PIe" firstAttribute="centerY" secondItem="vIB-Zb-9qf" secondAttribute="centerY" constant="-1.5" id="9YM-Dv-Zpu"/>
                             <constraint firstItem="of3-5X-iLa" firstAttribute="centerY" secondItem="Ltq-1m-jqR" secondAttribute="bottom" constant="20" id="9b3-qG-QFs"/>
+                            <constraint firstItem="rfV-dc-y0p" firstAttribute="leading" secondItem="SFj-Ko-4Gc" secondAttribute="trailing" constant="20" id="AEg-9C-tG5"/>
                             <constraint firstItem="jIK-AS-qbk" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="D3H-he-nhD"/>
                             <constraint firstItem="7QN-Kw-pvi" firstAttribute="leading" secondItem="wop-Ut-BsE" secondAttribute="leading" id="DRc-ot-53B"/>
                             <constraint firstItem="T1X-Xs-cjv" firstAttribute="centerY" secondItem="DyK-RF-1Wl" secondAttribute="centerY" priority="800" constant="20" id="EQP-re-jVJ"/>
@@ -222,9 +237,12 @@
                             <constraint firstItem="TDH-yJ-Bni" firstAttribute="centerY" secondItem="weW-fG-4s2" secondAttribute="centerY" constant="65" id="JgX-0u-kjx"/>
                             <constraint firstItem="BTB-qz-aRk" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="10" id="Jh3-MY-paW"/>
                             <constraint firstItem="fSV-kl-ZJX" firstAttribute="centerX" secondItem="XAX-JF-8k1" secondAttribute="centerX" id="KAd-Eu-Mvg"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="0YJ-69-Ho2" secondAttribute="trailing" constant="10" id="KOL-F8-GXX"/>
+                            <constraint firstItem="0YJ-69-Ho2" firstAttribute="centerY" secondItem="TDH-yJ-Bni" secondAttribute="centerY" id="MiZ-6K-uWn"/>
                             <constraint firstItem="08c-fV-PIe" firstAttribute="trailing" secondItem="weW-fG-4s2" secondAttribute="centerX" priority="750" constant="145" id="MyX-fb-qzb"/>
-                            <constraint firstItem="TDH-yJ-Bni" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="a4P-CE-qso" secondAttribute="leading" priority="950" constant="-10" id="NCK-qO-9bA"/>
+                            <constraint firstItem="TDH-yJ-Bni" firstAttribute="trailing" relation="lessThanOrEqual" secondItem="a4P-CE-qso" secondAttribute="leading" priority="950" constant="-20" id="NCK-qO-9bA"/>
                             <constraint firstItem="of3-5X-iLa" firstAttribute="trailing" secondItem="udR-tg-S7A" secondAttribute="trailing" id="O92-H4-mt7"/>
+                            <constraint firstItem="0YJ-69-Ho2" firstAttribute="leading" secondItem="a4P-CE-qso" secondAttribute="trailing" constant="20" id="P7N-J0-XF1"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="xmB-be-FaE" secondAttribute="bottom" constant="5" id="PEJ-iz-ox5"/>
                             <constraint firstItem="weW-fG-4s2" firstAttribute="centerY" secondItem="BTB-qz-aRk" secondAttribute="bottom" priority="800" constant="55" id="QEZ-al-UfJ"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="of3-5X-iLa" secondAttribute="trailing" constant="15" id="QGv-DI-Wka"/>
@@ -244,8 +262,9 @@
                             <constraint firstItem="jIK-AS-qbk" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="wop-Ut-BsE" secondAttribute="trailing" constant="20" id="bQi-bX-Uao"/>
                             <constraint firstItem="vWV-Ob-c7C" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="firstBaseline" priority="500" id="bdr-hW-ayD"/>
                             <constraint firstItem="wCK-0O-Wvu" firstAttribute="bottom" relation="lessThanOrEqual" secondItem="8bC-Xf-vdC" secondAttribute="baseline" constant="-20" id="br9-jr-BsH"/>
+                            <constraint firstItem="SFj-Ko-4Gc" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="10" id="bvy-JM-6rC"/>
                             <constraint firstItem="weW-fG-4s2" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="cuX-Uk-CJP"/>
-                            <constraint firstItem="rfV-dc-y0p" firstAttribute="centerX" secondItem="TDH-yJ-Bni" secondAttribute="centerX" priority="950" constant="-80" id="eSw-fW-qOh"/>
+                            <constraint firstItem="rfV-dc-y0p" firstAttribute="centerX" secondItem="TDH-yJ-Bni" secondAttribute="centerX" priority="950" constant="-70" id="eSw-fW-qOh"/>
                             <constraint firstItem="Ml7-EU-1Wn" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="10" id="eav-A3-Mdc"/>
                             <constraint firstItem="xmB-be-FaE" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="110" id="f2N-nT-jOi"/>
                             <constraint firstItem="Ltq-1m-jqR" firstAttribute="trailing" secondItem="weW-fG-4s2" secondAttribute="centerX" priority="800" constant="184" id="fiS-KR-81F"/>
@@ -265,11 +284,12 @@
                             <constraint firstItem="Hh0-PX-fsf" firstAttribute="centerY" secondItem="Ltq-1m-jqR" secondAttribute="bottom" constant="65" id="nwb-dU-vZz"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="Ml7-EU-1Wn" secondAttribute="trailing" constant="10" id="oe4-qG-n9F"/>
                             <constraint firstItem="DyK-RF-1Wl" firstAttribute="centerY" secondItem="bFj-vD-VTg" secondAttribute="bottom" constant="65" id="ord-0y-lyc"/>
-                            <constraint firstItem="a4P-CE-qso" firstAttribute="centerX" secondItem="TDH-yJ-Bni" secondAttribute="centerX" priority="980" constant="80" id="s8K-bY-EOZ"/>
+                            <constraint firstItem="a4P-CE-qso" firstAttribute="centerX" secondItem="TDH-yJ-Bni" secondAttribute="centerX" priority="950" constant="70" id="s8K-bY-EOZ"/>
                             <constraint firstItem="Ml7-EU-1Wn" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="tZK-He-K4t"/>
                             <constraint firstItem="udR-tg-S7A" firstAttribute="trailing" secondItem="Ltq-1m-jqR" secondAttribute="trailing" id="ulh-kS-GWq"/>
                             <constraint firstItem="A7F-yx-e4d" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="10" id="xBS-yX-BsF"/>
                             <constraint firstItem="7QN-Kw-pvi" firstAttribute="centerY" secondItem="bFj-vD-VTg" secondAttribute="bottom" constant="20" id="xE2-vQ-IPB"/>
+                            <constraint firstItem="SFj-Ko-4Gc" firstAttribute="centerY" secondItem="TDH-yJ-Bni" secondAttribute="centerY" id="xeG-Ks-DEf"/>
                             <constraint firstItem="weW-fG-4s2" firstAttribute="centerX" secondItem="bFj-vD-VTg" secondAttribute="leading" priority="700" constant="184" id="yNB-QW-gaO"/>
                             <constraint firstItem="wop-Ut-BsE" firstAttribute="centerY" secondItem="7QN-Kw-pvi" secondAttribute="centerY" priority="800" constant="20" id="zkE-pG-KRS"/>
                             <constraint firstItem="weW-fG-4s2" firstAttribute="centerX" secondItem="vIB-Zb-9qf" secondAttribute="leading" priority="750" constant="145" id="zpS-4Y-1Hn"/>
@@ -286,6 +306,8 @@
                         <outlet property="bufferCurrent" destination="Hh0-PX-fsf" id="cVA-cq-2Sx"/>
                         <outlet property="connected" destination="DyK-RF-1Wl" id="9Qn-2Z-CKq"/>
                         <outlet property="genre" destination="08c-fV-PIe" id="fob-4M-LXM"/>
+                        <outlet property="itemBackwardButton" destination="SFj-Ko-4Gc" id="qC3-sO-tPs"/>
+                        <outlet property="itemForwardButton" destination="0YJ-69-Ho2" id="r8m-sQ-dNs"/>
                         <outlet property="offsetLabel" destination="jIK-AS-qbk" id="WpT-2a-URO"/>
                         <outlet property="offsetS" destination="2fM-w0-pgB" id="4r9-kz-UaF"/>
                         <outlet property="playedSince" destination="fSV-kl-ZJX" id="t3t-hb-BJ9"/>
@@ -308,6 +330,8 @@
     </scenes>
     <resources>
         <image name="YBRID-Logo-Redesign-Horizontal-weiß" width="578" height="141"/>
+        <image name="itemBackward" width="67.5" height="63.5"/>
+        <image name="itemForward" width="67.5" height="63"/>
         <image name="play" width="52" height="57.5"/>
         <image name="windBack" width="84.5" height="85"/>
         <image name="windForward" width="84.5" height="85"/>

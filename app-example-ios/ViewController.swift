@@ -35,7 +35,13 @@ import YbridPlayerSDK
 class ViewController: UIViewController, AudioPlayerListener, YbridControlListener {
 
     // MARK: ui outlets
-    
+    @IBAction func itemBackward(_ sender: Any) {
+        print("item backward called")
+    }
+    @IBAction func itemForward(_ sender: Any) {
+        print("item forward called")
+    }
+
     @IBOutlet weak var urlPicker: UIPickerView!
     @IBOutlet weak var urlField: UrlField!
     
@@ -49,18 +55,19 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
     private let stopImage = UIImage(named: "stop")!.scale(factor: 0.8)
     @IBOutlet weak var togglePlay: UIButton!
 
+    @IBOutlet weak var itemBackwardButton: UIButton!
     @IBOutlet weak var windBackButton: UIButton! { didSet {
-        let windBackImage = UIImage(named: "windBack")!.scale(factor: 0.5)
-        windBackButton.setImage(windBackImage, for: .normal)
+
     }}
     @IBOutlet weak var windForwardButton: UIButton! { didSet {
-        let windForwardImage = UIImage(named: "windForward")!.scale(factor: 0.5)
-        windForwardButton.setImage(windForwardImage, for: .normal)
+  
     }}
     @IBOutlet weak var windToLiveButton: UIButton! { didSet {
-        let windToLiveImage = UIImage(named: "windToLive")!.scale(factor: 0.9)
-        windToLiveButton.setImage(windToLiveImage, for: .normal)
+
     }}
+    @IBOutlet weak var itemForwardButton: UIButton!
+    
+    
     @IBOutlet weak var offsetS: UILabel! { didSet { offsetS.text = nil }}
     @IBOutlet weak var offsetLabel: UILabel!
     
@@ -80,6 +87,17 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
             self.playingTitle.numberOfLines = 0
             
             self.togglePlay.setTitle("", for: .disabled)
+            
+            let itemBackwardImage = UIImage(named: "itemBackward")!.scale(factor: 0.5)
+            self.itemBackwardButton.setImage(itemBackwardImage, for: .normal)
+            let windBackImage = UIImage(named: "windBack")!.scale(factor: 0.5)
+            self.windBackButton.setImage(windBackImage, for: .normal)
+            let windToLiveImage = UIImage(named: "windToLive")!.scale(factor: 0.9)
+            self.windToLiveButton.setImage(windToLiveImage, for: .normal)
+            let windForwardImage = UIImage(named: "windForward")!.scale(factor: 0.5)
+            self.windForwardButton.setImage(windForwardImage, for: .normal)
+            let itemForwardImage = UIImage(named: "itemForward")!.scale(factor: 0.5)
+            self.itemForwardButton.setImage(itemForwardImage, for: .normal)
             
             self.playedSince.font = self.playedSince.font.monospacedDigitFont
             self.ready.font = self.ready.font.monospacedDigitFont
@@ -286,6 +304,8 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
             self.windForwardButton.isEnabled = enable && running
             self.togglePlay.isEnabled = enable
             self.windToLiveButton.isEnabled = enable && running
+            self.itemBackwardButton.isEnabled = false
+            self.itemForwardButton.isEnabled = false
         }
     }
     
