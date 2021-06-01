@@ -164,20 +164,10 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
             }
             
             Logger.shared.debug("control changed to \(type(of: current))")
-            
-            DispatchQueue.main.async {
-                if var ybrid = current as? YbridControl {
-                    ybrid.listener = self
-                    
-                    self.playbackControls(enable: true)
-                    self.timeshift(visible: true)
-                } else {
-                    self.playbackControls(enable: true)
-                    self.timeshift(visible: false)
-                }
-
+            DispatchQueue.global().async {
+                self.playbackControls(enable: true)
+                self.timeshift(visible: current is YbridControl)
             }
-            
         }
     }
 
@@ -298,11 +288,11 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
     // MARK: helpers
     
     private func playbackControls(enable:Bool) {
-        let running = (currentControl?.state == .playing || currentControl?.state == .buffering)
+//        let running = (currentControl?.state == .playing || currentControl?.state == .buffering)
         DispatchQueue.main.async {
+            self.togglePlay.isEnabled = enable
             self.windBackButton.isEnabled = enable //&& running
             self.windForwardButton.isEnabled = enable //&& running
-            self.togglePlay.isEnabled = enable
             self.windToLiveButton.isEnabled = enable //&& running
             self.itemBackwardButton.isEnabled = enable
             self.itemForwardButton.isEnabled = enable
@@ -328,17 +318,16 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
         
         DispatchQueue.global().async {
         do {
-            try AudioPlayer.initialize(for: endpoint, listener: self,
-               playbackControl: { (control, mediaProtocol) in
+            try AudioPlayer.open(for: endpoint, listener: self,
+               playbackControl: { (control) in
                 self.cachedControls[endpoint] = control
                 self.currentControl = control
                 callback(control)
                },
                ybridControl: { (ybridControl) in
-                let control = ybridControl as! PlaybackControl
-                self.cachedControls[endpoint] = control
-                self.currentControl = control
-                callback(control)
+                self.cachedControls[endpoint] = ybridControl
+                self.currentControl = ybridControl
+                callback(ybridControl)
                })
         } catch {
             Logger.shared.error("no player for \(endpoint.uri)")
@@ -367,9 +356,9 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
     
     // MARK: YbridControlListener
     
-    func offsetToLiveChanged() {
+    func offsetToLiveChanged(_ offset:TimeInterval?) {
         DispatchQueue.main.async {
-            if let seconds = (self.currentControl as? YbridControl)?.offsetToLiveS  {
+            if let seconds = offset {
                 self.offsetS.text =  seconds.hmmssS
             } else {
                 self.offsetS.text = nil

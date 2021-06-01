@@ -63,7 +63,7 @@ class YbridPlayerTests: XCTestCase {
     
     func test02_Mp3() {
         Logger.verbose = true
-        player = AudioPlayer.open(for: ybridDemoEndpoint, listener: nil)
+        player = AudioPlayer.openSync(for: ybridDemoEndpoint, listener: nil)
         player?.play()
         _ = wait(until: .playing, maxSeconds: 10)
         sleep(6)
@@ -74,7 +74,7 @@ class YbridPlayerTests: XCTestCase {
     func test03_Opus() {
         Logger.verbose = true
         let playerListener = TestAudioPlayerListener()
-        player = AudioPlayer.open(for: opusDlfEndpoint, listener: playerListener)
+        player = AudioPlayer.openSync(for: opusDlfEndpoint, listener: playerListener)
         player?.play()
         _ = wait(until: .playing, maxSeconds: 10)
         sleep(6)

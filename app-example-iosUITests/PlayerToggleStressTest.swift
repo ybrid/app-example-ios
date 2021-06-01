@@ -94,7 +94,7 @@ class PlayerToggleStressTest: XCTestCase {
     }
     
     func test01_MP3PlayStop() throws {
-        player = AudioPlayer.open(for: icecastSwr3Endpoint, listener: playerListener)
+        player = AudioPlayer.openSync(for: icecastSwr3Endpoint, listener: playerListener)
         
         stepDuration = 10
         rangeFrom = 1 /// on first step
@@ -107,7 +107,7 @@ class PlayerToggleStressTest: XCTestCase {
     }
     
     func test02_OpusPlayStop() throws {
-        player = AudioPlayer.open(for: opusDlfEndpoint, listener: playerListener)
+        player = AudioPlayer.openSync(for: opusDlfEndpoint, listener: playerListener)
         
         stepDuration = 10
         rangeFrom = 1 /// on first step
@@ -122,7 +122,7 @@ class PlayerToggleStressTest: XCTestCase {
     }
     
     func test03_OnDemmandPlayPause() throws {
-        player = AudioPlayer.open(for: onDemandMp3Endpoint, listener: playerListener)
+        player = AudioPlayer.openSync(for: onDemandMp3Endpoint, listener: playerListener)
         
         stepDuration = 10
         rangeFrom = 1 /// on first step
@@ -136,7 +136,7 @@ class PlayerToggleStressTest: XCTestCase {
     
     fileprivate func prepare(_ mediaUrl:String) {
         let mediaEndpoint = MediaEndpoint(mediaUri: mediaUrl)
-        player = AudioPlayer.open(for: mediaEndpoint, listener: playerListener)
+        player = AudioPlayer.openSync(for: mediaEndpoint, listener: playerListener)
     }
     
     func execute() {
