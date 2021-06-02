@@ -61,45 +61,29 @@ class AbstractAudioPlayerListener : AudioPlayerListener {
 
 
 class TestAudioPlayerListener : AbstractAudioPlayerListener {
-    
-    var statusCode:Int32 = 0
-    var osCode:Int32 = 0
-    
-    override func error(_ severity: ErrorSeverity, _ error: AudioPlayerError) {
-        super.error(severity, error)
-        statusCode = error.code
-        
-        if let code = error.osstatus, code != 0 {
-            osCode = code
-        } else {
-            osCode = 0
-        }
+
+    func reset() {
+        metadatas.removeAll()
+        errors.removeAll()
     }
+    
+    var metadatas:[Metadata] = []
     override func metadataChanged(_ metadata: Metadata) {
-        Logger.testing.notice("-- metadata changed: display title is \(metadata.displayTitle ?? "(nil)")")
+        super.metadataChanged(metadata)
+        metadatas.append(metadata)
     }
     
+    var errors:[AudioPlayerError] = []
+    override func error(_ severity:ErrorSeverity, _ error: AudioPlayerError) {
+        super.error(severity, error)
+        errors.append(error)
+    }
+
     override func playingSince(_ seconds: TimeInterval?) {
         if let duration = seconds {
             Logger.testing.notice("-- playing for \(duration.S) seconds ")
         } else {
             Logger.testing.notice("-- reset playing duration ")
-        }
-    }
-
-    override func durationConnected(_ seconds: TimeInterval?) {
-        if let duration = seconds {
-            Logger.testing.notice("-- recieved first data from url after \(duration.S) seconds ")
-        } else {
-            Logger.testing.notice("-- reset recieved first data duration ")
-        }
-    }
-
-    override func durationReadyToPlay(_ seconds: TimeInterval?) {
-        if let duration = seconds {
-            Logger.testing.notice("-- begin playing audio after \(duration.S) seconds ")
-        } else {
-            Logger.testing.notice("-- reset buffered until playing duration ")
         }
     }
 

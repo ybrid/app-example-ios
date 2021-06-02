@@ -164,7 +164,7 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
             }
             
             Logger.shared.debug("control changed to \(type(of: current))")
-            DispatchQueue.global().async {
+            DispatchQueue.main.async {
                 self.playbackControls(enable: true)
                 self.timeshift(visible: current is YbridControl)
             }
@@ -177,7 +177,7 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        //        Logger.verbose = true
+                Logger.verbose = true
         Logger.shared.notice("using \(AudioPlayer.versionString)")
 
         

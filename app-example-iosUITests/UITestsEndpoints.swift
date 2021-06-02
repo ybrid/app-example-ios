@@ -27,7 +27,7 @@ import Foundation
 import YbridPlayerSDK
 
 let ybridDemoEndpoint = MediaEndpoint(mediaUri: "https://democast.ybrid.io/adaptive-demo")
-let ybridSwr3Endpoint = MediaEndpoint(mediaUri: "https://stagecast.ybrid.io/swr3/mp3/mid")
+let ybridStageSwr3Endpoint = MediaEndpoint(mediaUri: "https://stagecast.ybrid.io/swr3/mp3/mid")
 // sould use "https://swr-swr3.cast.ybrid.io/swr/swr3/ybrid"
 
 let icecastSwr3Endpoint = MediaEndpoint(mediaUri: "http://swr-swr3-live.cast.addradio.de/swr/swr3/live/mp3/128/stream.mp3")
