@@ -214,6 +214,13 @@
                                     <action selector="itemBackward:" destination="BYZ-38-t0r" eventType="touchUpInside" id="ylR-iX-UVK"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xvv-zn-uJk">
+                                <rect key="frame" x="290" y="419" width="89" height="58"/>
+                                <state key="normal" image="swapItem"/>
+                                <connections>
+                                    <action selector="swapItem:" destination="BYZ-38-t0r" eventType="touchUpInside" id="9wU-6u-OOx"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -231,6 +238,7 @@
                             <constraint firstItem="jIK-AS-qbk" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="D3H-he-nhD"/>
                             <constraint firstItem="7QN-Kw-pvi" firstAttribute="leading" secondItem="wop-Ut-BsE" secondAttribute="leading" id="DRc-ot-53B"/>
                             <constraint firstItem="T1X-Xs-cjv" firstAttribute="centerY" secondItem="DyK-RF-1Wl" secondAttribute="centerY" priority="800" constant="20" id="EQP-re-jVJ"/>
+                            <constraint firstItem="a4P-CE-qso" firstAttribute="centerY" secondItem="TDH-yJ-Bni" secondAttribute="centerY" id="H6L-8C-6FD"/>
                             <constraint firstItem="Hh0-PX-fsf" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="7QN-Kw-pvi" secondAttribute="trailing" priority="500" constant="155" id="Hcr-n3-dxh"/>
                             <constraint firstItem="weW-fG-4s2" firstAttribute="centerX" secondItem="XAX-JF-8k1" secondAttribute="centerX" priority="980" id="IFQ-jS-Pmv"/>
                             <constraint firstItem="Ltq-1m-jqR" firstAttribute="top" secondItem="weW-fG-4s2" secondAttribute="centerY" priority="500" constant="110" id="Ily-a0-bHn"/>
@@ -257,6 +265,7 @@
                             <constraint firstItem="weW-fG-4s2" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="XEB-Xt-fMX"/>
                             <constraint firstItem="Hh0-PX-fsf" firstAttribute="trailing" secondItem="wCK-0O-Wvu" secondAttribute="trailing" id="Yhw-6g-Ffz"/>
                             <constraint firstItem="A7F-yx-e4d" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="ZaN-YL-w0S"/>
+                            <constraint firstItem="xvv-zn-uJk" firstAttribute="centerY" secondItem="weW-fG-4s2" secondAttribute="centerY" priority="950" id="aCx-tC-Ji1"/>
                             <constraint firstItem="wCK-0O-Wvu" firstAttribute="trailing" secondItem="Ltq-1m-jqR" secondAttribute="trailing" id="afq-un-PcU"/>
                             <constraint firstItem="vWV-Ob-c7C" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="atK-Jk-TLs"/>
                             <constraint firstItem="jIK-AS-qbk" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="wop-Ut-BsE" secondAttribute="trailing" constant="20" id="bQi-bX-Uao"/>
@@ -287,6 +296,7 @@
                             <constraint firstItem="a4P-CE-qso" firstAttribute="centerX" secondItem="TDH-yJ-Bni" secondAttribute="centerX" priority="950" constant="70" id="s8K-bY-EOZ"/>
                             <constraint firstItem="Ml7-EU-1Wn" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="tZK-He-K4t"/>
                             <constraint firstItem="udR-tg-S7A" firstAttribute="trailing" secondItem="Ltq-1m-jqR" secondAttribute="trailing" id="ulh-kS-GWq"/>
+                            <constraint firstItem="xvv-zn-uJk" firstAttribute="centerX" secondItem="weW-fG-4s2" secondAttribute="centerX" priority="950" constant="110" id="wDB-gg-LAP"/>
                             <constraint firstItem="A7F-yx-e4d" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="10" id="xBS-yX-BsF"/>
                             <constraint firstItem="7QN-Kw-pvi" firstAttribute="centerY" secondItem="bFj-vD-VTg" secondAttribute="bottom" constant="20" id="xE2-vQ-IPB"/>
                             <constraint firstItem="SFj-Ko-4Gc" firstAttribute="centerY" secondItem="TDH-yJ-Bni" secondAttribute="centerY" id="xeG-Ks-DEf"/>
@@ -314,6 +324,7 @@
                         <outlet property="playingTitle" destination="BTB-qz-aRk" id="LnT-sD-mM6"/>
                         <outlet property="problem" destination="A7F-yx-e4d" id="Uy5-Lz-1Em"/>
                         <outlet property="ready" destination="7QN-Kw-pvi" id="jA0-4J-ALB"/>
+                        <outlet property="swapItemButton" destination="xvv-zn-uJk" id="LAg-f5-Ek8"/>
                         <outlet property="togglePlay" destination="weW-fG-4s2" id="AAL-FP-Rfp"/>
                         <outlet property="urlField" destination="Ml7-EU-1Wn" id="fkf-RT-OVE"/>
                         <outlet property="urlPicker" destination="vWV-Ob-c7C" id="Ye2-2g-vyZ"/>
@@ -333,6 +344,7 @@
         <image name="itemBackward" width="67.5" height="63.5"/>
         <image name="itemForward" width="67.5" height="63"/>
         <image name="play" width="52" height="57.5"/>
+        <image name="swapItem" width="107" height="69.5"/>
         <image name="windBack" width="84.5" height="85"/>
         <image name="windForward" width="84.5" height="85"/>
         <image name="windToLive" width="59.5" height="59"/>

@@ -44,11 +44,10 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
 
     @IBOutlet weak var playingTitle: UILabel!
     @IBOutlet weak var problem: UILabel! { didSet { problem.text = nil }}
-    private let playImage = UIImage(named: "play")!
-    private let pauseImage = UIImage(named: "pause")!.scale(factor: 0.9)
-    private let stopImage = UIImage(named: "stop")!.scale(factor: 0.8)
+    
     @IBOutlet weak var togglePlay: UIButton!
-
+    @IBOutlet weak var swapItemButton: UIButton!
+    
     @IBOutlet weak var itemBackwardButton: UIButton!
     @IBOutlet weak var windBackButton: UIButton!
     @IBOutlet weak var windForwardButton: UIButton!
@@ -57,7 +56,6 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
     
     @IBOutlet weak var offsetS: UILabel! { didSet { offsetS.text = nil }}
     @IBOutlet weak var offsetLabel: UILabel!
-    
     @IBOutlet weak var playedSince: UILabel! { didSet { playedSince.text = nil }}
     @IBOutlet weak var ready: UILabel! { didSet { ready.text = nil }}
     @IBOutlet weak var connected: UILabel! { didSet { connected.text = nil }}
@@ -75,6 +73,8 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
             
             self.togglePlay.setTitle("", for: .disabled)
             
+            let swapItemImage = UIImage(named: "swapItem")!.scale(factor: 0.7)
+            self.swapItemButton.setImage(swapItemImage, for: .normal)
             let itemBackwardImage = UIImage(named: "itemBackward")!.scale(factor: 0.5)
             self.itemBackwardButton.setImage(itemBackwardImage, for: .normal)
             let windBackImage = UIImage(named: "windBack")!.scale(factor: 0.4)
@@ -245,6 +245,14 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
     }
     
 
+    @IBAction func swapItem(_ sender: Any) {
+        print("swap item called")
+        guard let ybrid = currentControl as? YbridControl else {
+            return
+        }
+        ybrid.swapItem()
+    }
+    
     @IBAction func windBack(_ sender: Any) {
         print("wind back called")
         guard let ybrid = currentControl as? YbridControl else {
@@ -367,7 +375,9 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
     }
 
     // MARK: AudioPlayerListener
-    
+    private let playImage = UIImage(named: "play")!
+    private let pauseImage = UIImage(named: "pause")!.scale(factor: 0.9)
+    private let stopImage = UIImage(named: "stop")!.scale(factor: 0.8)
     func stateChanged(_ state: PlaybackState) {
         guard currentControl?.state == state else {
             /// ignore events from the last player
