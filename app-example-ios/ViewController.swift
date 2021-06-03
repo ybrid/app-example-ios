@@ -73,7 +73,7 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
             
             self.togglePlay.setTitle("", for: .disabled)
             
-            let swapItemImage = UIImage(named: "swapItem")!.scale(factor: 0.7)
+            let swapItemImage = UIImage(named: "swapItem")!.scale(factor: 0.5)
             self.swapItemButton.setImage(swapItemImage, for: .normal)
             let itemBackwardImage = UIImage(named: "itemBackward")!.scale(factor: 0.5)
             self.itemBackwardButton.setImage(itemBackwardImage, for: .normal)
@@ -177,7 +177,7 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
     override func viewDidLoad() {
         super.viewDidLoad()
         
-                Logger.verbose = true
+//                Logger.verbose = true
         Logger.shared.notice("using \(AudioPlayer.versionString)")
 
         
@@ -304,6 +304,7 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
             self.windToLiveButton.isEnabled = enable //&& running
             self.itemBackwardButton.isEnabled = enable
             self.itemForwardButton.isEnabled = enable
+            self.swapItemButton.isEnabled = enable
         }
     }
     
@@ -317,6 +318,7 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
             self.windForwardButton.isHidden = hidden
             self.itemBackwardButton.isHidden = hidden
             self.itemForwardButton.isHidden = hidden
+            self.swapItemButton.isHidden = hidden
         }
     }
     
@@ -433,18 +435,24 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
     }
     
     func error(_ severity: ErrorSeverity, _ exception: AudioPlayerError) {
-        DispatchQueue.main.async {
+        DispatchQueue.main.async { [self] in
             switch severity {
-            case .fatal: self.problem.textColor = .red
-                self.problem.text = exception.message ?? exception.failureReason
-            case .recoverable: self.problem.textColor = .systemOrange
-                self.problem.text = exception.message
-            case .notice: self.problem.textColor = .systemGreen
-                self.problem.text = exception.message
+            case .fatal: problem.textColor = .red
+                problem.text = exception.message ?? exception.failureReason
+            case .recoverable: problem.textColor = .systemOrange
+                problem.text = exception.message
                 DispatchQueue.global().async {
                     sleep(5)
                     DispatchQueue.main.async {
-                        self.problem.text = ""
+                        problem.text = ""
+                    }
+                }
+            case .notice: problem.textColor = .systemGreen
+                problem.text = exception.message
+                DispatchQueue.global().async {
+                    sleep(5)
+                    DispatchQueue.main.async {
+                        problem.text = ""
                     }
                 }
             @unknown default:
