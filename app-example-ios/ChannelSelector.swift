@@ -32,43 +32,45 @@ class ChannelSelector:
     let channels = ["c1", "c2", "c3"]
     let width:CGFloat = 50
     let height:CGFloat = 50
+    let font:UIFont
+    let setSelectedChannel:(String?) -> ()
 //    let view:UIPickerView
     
-    init(_ view:UIPickerView, frame: CGRect? = nil) {
+    init(_ view:UIPickerView, frame: CGRect? = nil, font:UIFont, onChannelSelected:@escaping (String?) -> () ) {
+        self.setSelectedChannel = onChannelSelected
 //        self.view = view
+        self.font = font
         super.init()
         view.delegate = self
         view.dataSource = self
         
         view.transform = CGAffineTransform(rotationAngle: -90 * (.pi/180))
 
-        view.layer.backgroundColor = UIColor.darkGray.cgColor
-        view.layer.borderColor = UIColor.blue.cgColor
-        view.layer.borderWidth = 1.5
+//        view.layer.backgroundColor = UIColor.black.cgColor
+        view.layer.borderColor = UIColor.purple.cgColor
+        view.layer.borderWidth = 0.5
         if let frame = frame {
             view.frame = frame
         }
     }
     
     
-//    init(frame: CGRect) {
-//        view = UIPickerView()
-//        super.init()
-//        view.delegate = self
-//        view.dataSource = self
-//
-//        view.transform = CGAffineTransform(rotationAngle: -90 * (.pi/180))
-//
-//        view.layer.backgroundColor = UIColor.darkGray.cgColor
-//        view.layer.borderColor = UIColor.blue.cgColor
-//        view.layer.borderWidth = 1.5
-//
-//        view.frame = frame
-//    }
-//
-//    required init?(coder: NSCoder) {
-//        super.init(coder: coder)
-//    }
+    /// on select station
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        let selected = channels[row]
+
+        if isValid {
+            setSelectedChannel(selected)
+        } else {
+            setSelectedChannel(nil)
+        }
+        
+    }
+    
+    var isValid:Bool { get {
+        return true
+    }}
+    
     
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         1
@@ -102,5 +104,9 @@ class ChannelSelector:
         view.transform = CGAffineTransform(rotationAngle: 90 * (.pi/180))
 
         return view
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
+        return NSAttributedString(string: channels[row], attributes: [NSAttributedString.Key.foregroundColor : UIColor.white])
     }
 }
