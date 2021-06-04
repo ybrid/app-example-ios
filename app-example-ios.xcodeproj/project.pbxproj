@@ -19,6 +19,7 @@
 		17587CC825027DC900951211 /* app_example_ios.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 17587CC625027DC900951211 /* app_example_ios.xcdatamodeld */; };
 		17587CCA25027DCC00951211 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 17587CC925027DCC00951211 /* Assets.xcassets */; };
 		1760460F25B0B38600C79BF8 /* UITestsHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1760460E25B0B38600C79BF8 /* UITestsHelper.swift */; };
+		17651DEF266A6957005D46BA /* ChannelSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17651DEE266A6957005D46BA /* ChannelSelector.swift */; };
 		176BDE84258CAD940038EE95 /* PlayerToggleStressTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 176BDE83258CAD940038EE95 /* PlayerToggleStressTest.swift */; };
 		176BDE95258CB1240038EE95 /* UseYbridPlayerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 176BDE94258CB1240038EE95 /* UseYbridPlayerTests.swift */; };
 		178347EF25C2DB7600A5F23B /* YbridPlayerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 178347EE25C2DB7600A5F23B /* YbridPlayerTests.swift */; };
@@ -49,6 +50,7 @@
 		17587CC925027DCC00951211 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		17587CCE25027DCC00951211 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1760460E25B0B38600C79BF8 /* UITestsHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UITestsHelper.swift; sourceTree = "<group>"; };
+		17651DEE266A6957005D46BA /* ChannelSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelSelector.swift; sourceTree = "<group>"; };
 		176BDE83258CAD940038EE95 /* PlayerToggleStressTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerToggleStressTest.swift; sourceTree = "<group>"; };
 		176BDE94258CB1240038EE95 /* UseYbridPlayerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UseYbridPlayerTests.swift; sourceTree = "<group>"; };
 		176EE867257002A300AC49DD /* app-example-iosUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "app-example-iosUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -114,6 +116,7 @@
 				172A4121263D9A7E0042ADA4 /* MediaSelector.swift */,
 				171449C82530F37500E76141 /* streams.txt */,
 				17587CC925027DCC00951211 /* Assets.xcassets */,
+				17651DEE266A6957005D46BA /* ChannelSelector.swift */,
 				17587CCE25027DCC00951211 /* Info.plist */,
 				17587CC625027DC900951211 /* app_example_ios.xcdatamodeld */,
 			);
@@ -344,6 +347,7 @@
 				172A4122263D9A7E0042ADA4 /* MediaSelector.swift in Sources */,
 				17587CBE25027DC900951211 /* AppDelegate.swift in Sources */,
 				17587CC825027DC900951211 /* app_example_ios.xcdatamodeld in Sources */,
+				17651DEF266A6957005D46BA /* ChannelSelector.swift in Sources */,
 				17587CC025027DC900951211 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

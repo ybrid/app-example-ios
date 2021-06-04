@@ -63,6 +63,8 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
     @IBOutlet weak var bufferCurrent: UILabel! { didSet { bufferCurrent.text = nil }}
     
     private var uriSelector:MediaSelector?
+    private var channelSelector:ChannelSelector?
+    private let channelPick = UIPickerView()
  
     // MARK: initialization
     
@@ -171,6 +173,7 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
         }
     }
 
+    @IBOutlet weak var channelPicker: UIPickerView!
     
     // MARK: main
     
@@ -185,6 +188,14 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
             self.endpoint = endpoint
         })
         
+//        let frame = channelSelectorPicker.frame
+//        let rect = CGRect(x: 10, y: 372, width: 140, height: 58)
+        let frame = channelPicker.frame
+                Logger.shared.notice("frame = \(frame)")
+        channelSelector = ChannelSelector(channelPicker, frame: nil)
+        channelPicker.frame = frame
+//        view.addSubview(channelPick)
+
         hideKeyboardWhenTappedAround()
         setStaticFieldAttributes()
         self.view.layoutIfNeeded()
