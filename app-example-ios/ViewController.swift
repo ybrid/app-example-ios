@@ -205,10 +205,15 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
                 Logger.shared.notice("frame = \(frame)")
         channelSelector = ChannelSelector(channelPicker, font: (urlField as UITextField).font!) { (channel) in
            Logger.shared.notice("channel \(channel ?? "(nil)") selected")
+            if let ybrid = self.currentControl as? YbridControl,
+               let service = channel {
+                ybrid.swapService(to: service)
+            }
         }
-        channelPicker.frame = frame
+        let frame2 = CGRect(x: frame.minX-20.0, y: frame.minY, width: frame.width+40.0, height: frame.height)
+        channelPicker.frame = frame2
         channelPicker.selectRow(0, inComponent: 0, animated: true)
-
+        
         
         resetMonitorings()
         timeshift(visible: false)
@@ -445,9 +450,14 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
                 self.broadcaster.text = ""
                 self.genre.text = ""
             }
+
             
             if let services = metadata.services {
                 self.channelSelector?.setChannels(ids: services)
+            }
+            
+            if let service = metadata.serviceId {
+                self.channelSelector?.select(service)
             }
         }
     }
