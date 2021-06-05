@@ -30,8 +30,7 @@ class ChannelSelector:
     NSObject, UIPickerViewDataSource, UIPickerViewDelegate {
     
     var channels:[String] = []
-    let width:CGFloat = 58
-    let height:CGFloat = 58
+    let componentsSize:CGSize
     let font:UIFont
     let setSelectedChannel:(String?) -> ()
     weak var view:UIPickerView?
@@ -46,6 +45,7 @@ class ChannelSelector:
     init(_ view:UIPickerView, font:UIFont, onChannelSelected:@escaping (String?) -> () ) {
         self.setSelectedChannel = onChannelSelected
         self.font = font
+        self.componentsSize = CGSize(width: 58, height: 58)
         super.init()
         self.view = view
         view.delegate = self
@@ -98,18 +98,18 @@ class ChannelSelector:
 //    }
     
     func pickerView(_ pickerView: UIPickerView, rowHeightForComponent component: Int) -> CGFloat {
-        return height
+        return componentsSize.height
     }
 
     func pickerView(_ pickerView: UIPickerView, widthForComponent component: Int) -> CGFloat {
-        return width
+        return componentsSize.width
     }
     func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
         let view = UIView()
-        view.frame = CGRect(x: 0, y: 0, width: width, height: height)
+        view.frame = CGRect(x: 0, y: 0, width: componentsSize.width, height: componentsSize.height)
 
         let label = UILabel()
-        label.frame = CGRect(x: 0, y: 0, width: width, height: height)
+        label.frame = CGRect(x: 0, y: 0, width: componentsSize.width, height: componentsSize.height)
 
 //        label.textRect(forBounds: CGRect(x: 0,y: 0,width: 56,height: 56), limitedToNumberOfLines: 3)
         

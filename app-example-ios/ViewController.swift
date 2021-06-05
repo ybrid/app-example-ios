@@ -210,10 +210,8 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
                 ybrid.swapService(to: service)
             }
         }
-        let frame2 = CGRect(x: frame.minX-20.0, y: frame.minY, width: frame.width+40.0, height: frame.height)
-        channelPicker.frame = frame2
+        channelPicker.frame = frame
         channelPicker.selectRow(0, inComponent: 0, animated: true)
-        
         
         resetMonitorings()
         timeshift(visible: false)
