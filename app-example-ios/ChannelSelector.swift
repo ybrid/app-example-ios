@@ -29,31 +29,25 @@ import UIKit
 class ChannelSelector:
     NSObject, UIPickerViewDataSource, UIPickerViewDelegate {
     
-    let channels = ["c1", "c2", "c3"]
+    var channels:[String] = []
     let width:CGFloat = 50
     let height:CGFloat = 50
     let font:UIFont
     let setSelectedChannel:(String?) -> ()
-//    let view:UIPickerView
+    weak var view:UIPickerView?
     
-    init(_ view:UIPickerView, frame: CGRect? = nil, font:UIFont, onChannelSelected:@escaping (String?) -> () ) {
+    init(_ view:UIPickerView, font:UIFont, onChannelSelected:@escaping (String?) -> () ) {
         self.setSelectedChannel = onChannelSelected
-//        self.view = view
         self.font = font
         super.init()
+        self.view = view
         view.delegate = self
         view.dataSource = self
-        
         view.transform = CGAffineTransform(rotationAngle: -90 * (.pi/180))
-
 //        view.layer.backgroundColor = UIColor.black.cgColor
         view.layer.borderColor = UIColor.purple.cgColor
         view.layer.borderWidth = 0.5
-        if let frame = frame {
-            view.frame = frame
-        }
     }
-    
     
     /// on select station
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
@@ -71,6 +65,11 @@ class ChannelSelector:
         return true
     }}
     
+    
+    func setChannels(ids:[String]) {
+        channels = ids
+        view?.reloadAllComponents()
+    }
     
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         1
@@ -97,8 +96,20 @@ class ChannelSelector:
 
         let label = UILabel()
         label.frame = CGRect(x: 0, y: 0, width: width, height: height)
-        label.text = channels[row]
+
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.lineSpacing = 0.0
+        paragraphStyle.lineHeightMultiple = 0.8
+        let font = UIFont(name: font.fontName, size: font.pointSize-2)!
+        label.attributedText =
+            NSAttributedString(string: channels[row], attributes: [
+                NSAttributedString.Key.foregroundColor : UIColor.white,
+                NSAttributedString.Key.font:font,
+                NSAttributedString.Key.paragraphStyle:paragraphStyle
+            ])
+        label.lineBreakMode =  NSLineBreakMode.byTruncatingHead
         label.textAlignment = .center
+        label.numberOfLines = 3
         view.addSubview(label)
 
         view.transform = CGAffineTransform(rotationAngle: 90 * (.pi/180))
@@ -106,7 +117,7 @@ class ChannelSelector:
         return view
     }
     
-    func pickerView(_ pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
-        return NSAttributedString(string: channels[row], attributes: [NSAttributedString.Key.foregroundColor : UIColor.white])
-    }
+//    func pickerView(_ pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
+//        return NSAttributedString(string: channels[row], attributes: [NSAttributedString.Key.foregroundColor : UIColor.white])
+//    }
 }

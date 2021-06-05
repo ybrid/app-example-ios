@@ -115,8 +115,8 @@
 				17587CC325027DC900951211 /* Main.storyboard */,
 				17587CC125027DC900951211 /* ViewController.swift */,
 				172A4121263D9A7E0042ADA4 /* MediaSelector.swift */,
-				17587CC925027DCC00951211 /* Assets.xcassets */,
 				17651DEE266A6957005D46BA /* ChannelSelector.swift */,
+				17587CC925027DCC00951211 /* Assets.xcassets */,
 				17587CCE25027DCC00951211 /* Info.plist */,
 				17587CC625027DC900951211 /* app_example_ios.xcdatamodeld */,
 			);

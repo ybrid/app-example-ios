@@ -179,28 +179,17 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
     override func viewDidLoad() {
         super.viewDidLoad()
         
-//                Logger.verbose = true
+        Logger.verbose = true
         Logger.shared.notice("using \(AudioPlayer.versionString)")
 
+        hideKeyboardWhenTappedAround()
+        setStaticFieldAttributes()
+        view.layoutIfNeeded()
         
         uriSelector = MediaSelector(urlPicker: urlPicker, urlField: urlField, endpoint: { (endpoint) in
             self.endpoint = endpoint
         })
-        
-//        let rect = CGRect(x: 10, y: 372, width: 140, height: 58)
-        let frame = channelPicker.frame
-                Logger.shared.notice("frame = \(frame)")
-        channelSelector = ChannelSelector(channelPicker, frame: nil, font: (urlField as UITextField).font!) { (channel) in
-               Logger.shared.notice("channel \(channel ?? "(nil)") selected")
-        }
-        channelPicker.frame = frame
-        channelPicker.selectRow(1, inComponent: 0, animated: true)
-//    channelPicker.reloadAllComponents()
-//        view.addSubview(channelPick)
 
-        hideKeyboardWhenTappedAround()
-        setStaticFieldAttributes()
-        self.view.layoutIfNeeded()
         
         urlPicker.delegate = uriSelector
         urlField.delegate = uriSelector
@@ -210,6 +199,16 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
         urlPicker.selectRow(initialSelectedRow, inComponent: 0, animated: true)
         uriSelector?.pickerView(urlPicker, didSelectRow: initialSelectedRow, inComponent: 0)
         
+        
+//        let rect = CGRect(x: 10, y: 372, width: 140, height: 58)
+        let frame = channelPicker.frame
+                Logger.shared.notice("frame = \(frame)")
+        channelSelector = ChannelSelector(channelPicker, font: (urlField as UITextField).font!) { (channel) in
+           Logger.shared.notice("channel \(channel ?? "(nil)") selected")
+        }
+        channelPicker.frame = frame
+        channelPicker.selectRow(0, inComponent: 0, animated: true)
+
         
         resetMonitorings()
         timeshift(visible: false)
@@ -318,6 +317,7 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
             self.itemBackwardButton.isEnabled = enable
             self.itemForwardButton.isEnabled = enable
             self.swapItemButton.isEnabled = enable
+
         }
     }
     
@@ -332,6 +332,7 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
             self.itemBackwardButton.isHidden = hidden
             self.itemForwardButton.isHidden = hidden
             self.swapItemButton.isHidden = hidden
+            self.channelPicker.isHidden = hidden
         }
     }
     
@@ -443,6 +444,10 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
             } else {
                 self.broadcaster.text = ""
                 self.genre.text = ""
+            }
+            
+            if let services = metadata.services {
+                self.channelSelector?.setChannels(ids: services)
             }
         }
     }
