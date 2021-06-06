@@ -45,6 +45,8 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
     @IBOutlet weak var playingTitle: UILabel!
     @IBOutlet weak var problem: UILabel! { didSet { problem.text = nil }}
     
+    @IBOutlet weak var channelPickerFrame: UIButton!
+    
     @IBOutlet weak var togglePlay: UIButton!
     @IBOutlet weak var swapItemButton: UIButton!
     
@@ -174,6 +176,8 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
 
     @IBOutlet weak var channelPicker: UIPickerView!
     
+    var channelPick = UIPickerView()
+    
     // MARK: main
     
     override func viewDidLoad() {
@@ -199,19 +203,16 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
         urlPicker.selectRow(initialSelectedRow, inComponent: 0, animated: true)
         uriSelector?.pickerView(urlPicker, didSelectRow: initialSelectedRow, inComponent: 0)
         
-        
-//        let rect = CGRect(x: 10, y: 372, width: 140, height: 58)
-        let frame = channelPicker.frame
-                Logger.shared.notice("frame = \(frame)")
-        channelSelector = ChannelSelector(channelPicker, font: (urlField as UITextField).font!) { (channel) in
+        channelSelector = ChannelSelector(channelPick, font: (urlField as UITextField).font!) { (channel) in
            Logger.shared.notice("channel \(channel ?? "(nil)") selected")
             if let ybrid = self.currentControl as? YbridControl,
                let service = channel {
                 ybrid.swapService(to: service)
             }
         }
-        channelPicker.frame = frame
-        channelPicker.selectRow(0, inComponent: 0, animated: true)
+        channelPick.frame = channelPickerFrame.frame
+        view.addSubview(channelPick)
+        channelPick.selectRow(0, inComponent: 0, animated: true)
         
         resetMonitorings()
         timeshift(visible: false)
@@ -233,6 +234,10 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
         }
     }
 
+    
+    override func didRotate(from fromInterfaceOrientation: UIInterfaceOrientation) {
+        channelPick.frame = channelPickerFrame.frame
+    }
     
     // MARK: user actions
     
@@ -335,7 +340,7 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
             self.itemBackwardButton.isHidden = hidden
             self.itemForwardButton.isHidden = hidden
             self.swapItemButton.isHidden = hidden
-            self.channelPicker.isHidden = hidden
+            self.channelPick.isHidden = hidden
         }
     }
     
