@@ -1,24 +1,27 @@
 PODS:
   - YbridOgg (0.7.4)
   - YbridOpus (0.7.1)
-  - YbridPlayerSDK (0.10.1):
+  - YbridPlayerSDK (0.11.0):
     - YbridOgg (= 0.7.4)
     - YbridOpus (= 0.7.1)
 
 DEPENDENCIES:
-  - YbridPlayerSDK (= 0.10.1)
+  - YbridPlayerSDK (from `~/github/player-sdk-swift`)
 
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
     - YbridOgg
     - YbridOpus
-    - YbridPlayerSDK
+
+EXTERNAL SOURCES:
+  YbridPlayerSDK:
+    :path: "~/github/player-sdk-swift"
 
 SPEC CHECKSUMS:
   YbridOgg: 10ad81cccae140351d2852aeacb39f45baa6d155
   YbridOpus: 76ef1ad9631b8128810bd894ff73ffd641d67cfb
-  YbridPlayerSDK: 6c3a7d324c5d80dffc82e92ac83e2bbb69bd316a
+  YbridPlayerSDK: 1a6dbed8a3641b3f7151c5cb792d2bbd690308cf
 
-PODFILE CHECKSUM: 484f36e412989339ebe98a379ad7a43025d4d837
+PODFILE CHECKSUM: a85c4505c2d93eb02e64febcedff383643e5e535
 
 COCOAPODS: 1.10.0
