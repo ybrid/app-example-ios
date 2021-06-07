@@ -51,14 +51,9 @@ class ChannelSelector:
         view.delegate = self
         view.dataSource = self
         view.transform = CGAffineTransform(rotationAngle: -90 * (.pi/180))
-
-
-        
-//        view.layer.borderColor = UIColor.purple.cgColor
-//        view.layer.borderWidth = 0.5
     }
     
-    /// on select station
+    /// on select channel
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
 
         if isValid {
@@ -93,10 +88,6 @@ class ChannelSelector:
         channels.count
     }
     
-//    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-//        return channels[row]
-//    }
-    
     func pickerView(_ pickerView: UIPickerView, rowHeightForComponent component: Int) -> CGFloat {
         return componentsSize.height
     }
@@ -110,8 +101,6 @@ class ChannelSelector:
 
         let label = UILabel()
         label.frame = CGRect(x: 0, y: 0, width: componentsSize.width, height: componentsSize.height)
-
-//        label.textRect(forBounds: CGRect(x: 0,y: 0,width: 56,height: 56), limitedToNumberOfLines: 3)
         
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineSpacing = 0.0

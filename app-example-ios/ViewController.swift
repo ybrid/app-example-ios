@@ -46,7 +46,6 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
     @IBOutlet weak var problem: UILabel! { didSet { problem.text = nil }}
     
     @IBOutlet weak var channelPickerFrame: UIButton!
-    
     @IBOutlet weak var togglePlay: UIButton!
     @IBOutlet weak var swapItemButton: UIButton!
     
@@ -65,8 +64,9 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
     @IBOutlet weak var bufferCurrent: UILabel! { didSet { bufferCurrent.text = nil }}
     
     private var uriSelector:MediaSelector?
+    var channelPicker = UIPickerView()
     private var channelSelector:ChannelSelector?
- 
+    
     // MARK: initialization
     
     private func setStaticFieldAttributes() {
@@ -161,7 +161,7 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
                     self.togglePlay.setTitle(nil, for: .normal)
                     self.togglePlay.setImage(self.playImage, for: UIControl.State.normal)
                     self.playbackControls(enable: false)
-                    self.timeshift(visible: false)
+                    self.ybridControls(visible: false)
                 }
                 return
             }
@@ -169,53 +169,47 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
             Logger.shared.debug("control changed to \(type(of: current))")
             DispatchQueue.main.async {
                 self.playbackControls(enable: true)
-                self.timeshift(visible: current is YbridControl)
+                self.ybridControls(visible: current is YbridControl)
             }
         }
     }
-
-    @IBOutlet weak var channelPicker: UIPickerView!
-    
-    var channelPick = UIPickerView()
     
     // MARK: main
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        Logger.verbose = true
+//        Logger.verbose = true
         Logger.shared.notice("using \(AudioPlayer.versionString)")
 
         hideKeyboardWhenTappedAround()
-        setStaticFieldAttributes()
         view.layoutIfNeeded()
         
-        uriSelector = MediaSelector(urlPicker: urlPicker, urlField: urlField, endpoint: { (endpoint) in
+        /// setting states of  fields
+        setStaticFieldAttributes()
+        resetMonitorings()
+        ybridControls(visible: false)
+        
+        /// picking preset media or custom url
+        uriSelector = MediaSelector(urlPicker: urlPicker, urlField: urlField) { (endpoint) in
             self.endpoint = endpoint
-        })
-
-        
-        urlPicker.delegate = uriSelector
-        urlField.delegate = uriSelector
-        
+        }
         let initialSelectedRow = 0
-        urlPicker.dataSource = uriSelector?.pickerData
         urlPicker.selectRow(initialSelectedRow, inComponent: 0, animated: true)
         uriSelector?.pickerView(urlPicker, didSelectRow: initialSelectedRow, inComponent: 0)
         
-        channelSelector = ChannelSelector(channelPick, font: (urlField as UITextField).font!) { (channel) in
-           Logger.shared.notice("channel \(channel ?? "(nil)") selected")
+        /// picking a service of ybrid bucket
+        channelSelector = ChannelSelector(channelPicker, font: (urlField as UITextField).font!) { (channel) in
+            Logger.shared.notice("channel \(channel ?? "(nil)") selected")
             if let ybrid = self.currentControl as? YbridControl,
                let service = channel {
                 ybrid.swapService(to: service)
             }
         }
-        channelPick.frame = channelPickerFrame.frame
-        view.addSubview(channelPick)
-        channelPick.selectRow(0, inComponent: 0, animated: true)
-        
-        resetMonitorings()
-        timeshift(visible: false)
+        channelPicker.frame = channelPickerFrame.frame
+        view.addSubview(channelPicker)
+        channelPicker.selectRow(0, inComponent: 0, animated: true)
+
     }
     
     override func didReceiveMemoryWarning() {
@@ -234,9 +228,8 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
         }
     }
 
-    
     override func didRotate(from fromInterfaceOrientation: UIInterfaceOrientation) {
-        channelPick.frame = channelPickerFrame.frame
+        channelPicker.frame = channelPickerFrame.frame
     }
     
     // MARK: user actions
@@ -325,11 +318,10 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
             self.itemBackwardButton.isEnabled = enable
             self.itemForwardButton.isEnabled = enable
             self.swapItemButton.isEnabled = enable
-
         }
     }
     
-    private func timeshift(visible:Bool) {
+    private func ybridControls(visible:Bool) {
         let hidden = !visible
         DispatchQueue.main.async {
             self.offsetS.isHidden = hidden
@@ -340,7 +332,7 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
             self.itemBackwardButton.isHidden = hidden
             self.itemForwardButton.isHidden = hidden
             self.swapItemButton.isHidden = hidden
-            self.channelPick.isHidden = hidden
+            self.channelPicker.isHidden = hidden
         }
     }
     

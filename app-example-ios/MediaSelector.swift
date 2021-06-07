@@ -44,6 +44,10 @@ class MediaSelector: NSObject, UIPickerViewDelegate, UITextFieldDelegate {
         self.urlPicker = urlPicker
         self.urlField = urlField
         self.setMediaEndpoint = endpoint
+        super.init()
+        urlPicker.delegate = self
+        urlField.delegate = self
+        urlPicker.dataSource = pickerData
     }
     
     // MARK: delegate methods
