@@ -388,6 +388,10 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
             }
         }
     }
+    
+    func servicesChanged(_ services: [Service]) {
+        self.channelSelector?.setChannels(ids: services.map{ $0.identifier })
+    }
 
     // MARK: AudioPlayerListener
     private let playImage = UIImage(named: "play")!
@@ -445,11 +449,6 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
                 self.genre.text = ""
             }
 
-            
-            if let services = metadata.services {
-                self.channelSelector?.setChannels(ids: services.map{ $0.identifier })
-            }
-            
             if let serviceId = metadata.activeService?.identifier {
                 self.channelSelector?.select(serviceId)
             }
@@ -493,7 +492,6 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
             self.playedSince.text = playedS.hmsS
         }
     }
-
     
     func durationReadyToPlay(_ seconds: TimeInterval?) {
         DispatchQueue.main.async {

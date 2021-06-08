@@ -71,12 +71,16 @@ class ChannelSelector:
     
     func setChannels(ids:[String]) {
         channels = ids
-        view?.reloadAllComponents()
+        DispatchQueue.main.async {
+            self.view?.reloadAllComponents()
+        }
     }
     
     func select(_ id:String) {
         if let index = channels.firstIndex(of: id) {
-            view?.selectRow(index, inComponent: 0, animated: true)
+            DispatchQueue.main.async {
+                self.view?.selectRow(index, inComponent: 0, animated: true)
+            }
         }
     }
     
