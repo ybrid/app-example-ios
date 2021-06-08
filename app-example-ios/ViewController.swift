@@ -198,7 +198,7 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
         urlPicker.selectRow(initialSelectedRow, inComponent: 0, animated: true)
         uriSelector?.pickerView(urlPicker, didSelectRow: initialSelectedRow, inComponent: 0)
         
-        /// picking a service of ybrid bucket
+        /// picking the first service of ybrid bucket
         channelSelector = ChannelSelector(channelPicker, font: (urlField as UITextField).font!) { (channel) in
             Logger.shared.notice("channel \(channel ?? "(nil)") selected")
             if let ybrid = self.currentControl as? YbridControl,
@@ -209,7 +209,6 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
         channelPicker.frame = channelPickerFrame.frame
         view.addSubview(channelPicker)
         channelPicker.selectRow(0, inComponent: 0, animated: true)
-
     }
     
     override func didReceiveMemoryWarning() {
@@ -448,11 +447,11 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
 
             
             if let services = metadata.services {
-                self.channelSelector?.setChannels(ids: services)
+                self.channelSelector?.setChannels(ids: services.map{ $0.identifier })
             }
             
-            if let service = metadata.serviceId {
-                self.channelSelector?.select(service)
+            if let serviceId = metadata.activeService?.identifier {
+                self.channelSelector?.select(serviceId)
             }
         }
     }
