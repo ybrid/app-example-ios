@@ -73,30 +73,30 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
     // MARK: initialization
     
     private func getBundleInfo(id:String) -> String {
-       guard let bundle = Bundle(identifier: id) else {
-           return ""
-       }
-       guard let info = bundle.infoDictionary else {
-           return ""
-       }
-       print("-- infoDictionary is '\(info)'")
-       
-       let version = info["CFBundleShortVersionString"] as! String
-
-       let name = info["CFBundleName"] as! String
-       
-       let build = info["CFBundleVersion"] as! String
-       print("-- version of \(name) is \(version) (build \(build))")
-       
-       return "\(version) (\(build))"
-   }
-
+        guard let bundle = Bundle(identifier: id) else {
+            Logger.shared.error("no bundle with id \(id)")
+            return "(no bundle)"
+        }
+        guard let info = bundle.infoDictionary else {
+            Logger.shared.error("no dictionary for bundle id \(id)")
+            return "(no info)"
+        }
+        Logger.shared.debug("infoDictionary is '\(info)'")
+        
+        let version = info["CFBundleShortVersionString"] as! String
+        let name = info["CFBundleName"] as! String
+        let build = info["CFBundleVersion"] as! String
+        Logger.shared.info("using \(name) \(version) (build \(build))")
+        
+        return "\(version) (\(build))"
+    }
     
     private func setStaticFieldAttributes() {
         DispatchQueue.main.async {
             
             self.sdkVersion.text = "sdk\n" + self.getBundleInfo(id:"io.ybrid.player-sdk-swift")
-            self.appVersion.text = "app\n" + self.getBundleInfo(id: "io.ybrid.example-player-ios")
+            
+            self.appVersion.text = "app\n" + self.getBundleInfo(id: Bundle.main.bundleIdentifier ?? "io.ybrid.example-player-ios")
             
             self.playingTitle.lineBreakMode = .byWordWrapping
             self.playingTitle.numberOfLines = 0
