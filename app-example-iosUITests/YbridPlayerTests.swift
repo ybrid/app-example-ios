@@ -48,11 +48,8 @@ class YbridPlayerTests: XCTestCase {
             Logger.testing.notice("-- running on real device")
         }
     }
-    var player:AudioPlayer?
 
-    override func tearDownWithError() throws {
-        player?.close()
-    }
+    override func tearDownWithError() throws {}
     
     func test01_VersionString() {
         Logger.verbose = true
@@ -61,37 +58,49 @@ class YbridPlayerTests: XCTestCase {
         XCTAssert(version.contains("YbridPlayerSDK"), "should contain 'YbridPlayerSDK'")
     }
     
-    func test02_Mp3() {
+    func test02_Mp3() throws {
         Logger.verbose = true
-        player = AudioPlayer.openSync(for: ybridDemoEndpoint, listener: nil)
-        player?.play()
-        _ = wait(until: .playing, maxSeconds: 10)
-        sleep(6)
-        player?.stop()
-        sleep(1)
+        let semaphore = DispatchSemaphore(value: 0)
+        try AudioPlayer.open(for: ybridDemoEndpoint, listener: nil) { (control) in
+            
+            control.play()
+            _ = self.wait(control, until: .playing, maxSeconds: 10)
+            sleep(6)
+            control.stop()
+            sleep(1)
+            
+            control.close()
+            semaphore.signal()
+        }
+        _ = semaphore.wait(timeout: .distantFuture)
     }
 
-    func test03_Opus() {
+    func test03_Opus() throws {
         Logger.verbose = true
+        let semaphore = DispatchSemaphore(value: 0)
         let playerListener = TestAudioPlayerListener()
-        player = AudioPlayer.openSync(for: opusDlfEndpoint, listener: playerListener)
-        player?.play()
-        _ = wait(until: .playing, maxSeconds: 10)
-        sleep(6)
-        player?.stop()
-        sleep(1)
+        try AudioPlayer.open(for: opusDlfEndpoint, listener: playerListener) { (control) in
+            control.play()
+            _ = self.wait(control, until: .playing, maxSeconds: 10)
+            sleep(6)
+            control.stop()
+            sleep(1)
+            
+            control.close()
+            semaphore.signal()
+        }
+        _ = semaphore.wait(timeout: .distantFuture)
     }
     
     
     
-    private func wait(until:PlaybackState, maxSeconds:Int) -> Int {
-        guard let player = player else { XCTFail("no player"); return -1 }
+    private func wait(_ control:PlaybackControl, until:PlaybackState, maxSeconds:Int) -> Int {
         var seconds = 0
-        while player.state != until && seconds < maxSeconds {
+        while control.state != until && seconds < maxSeconds {
             sleep(1)
             seconds += 1
         }
-        XCTAssertEqual(until, player.state, "not \(until) within \(maxSeconds) s")
+        XCTAssertEqual(until, control.state, "not \(until) within \(maxSeconds) s")
         return seconds
     }
 }

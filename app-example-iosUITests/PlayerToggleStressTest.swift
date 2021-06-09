@@ -60,10 +60,11 @@ class PlayerToggleStressTest: XCTestCase {
         return TimeInterval((stepDuration.us + restBetweenSteps.us) * stepsDecrease / 1_000_000) - restBetweenSteps
     }
     
-    var player:AudioPlayer?
+    var player:PlaybackControl?
     var playerListener = TogglePlayerListener()
     
     var waitingQueue = DispatchQueue(label: "waiting")
+    var semaphone:DispatchSemaphore?
     override func setUpWithError() throws {
         triggeredPlay = 0
         triggeredStop = 0
@@ -76,9 +77,13 @@ class PlayerToggleStressTest: XCTestCase {
         }else{
             Logger.testing.debug("-- executing set up in other thread")
         }
+        
+        semaphone = DispatchSemaphore(value: 0)
     }
     
     override func tearDownWithError() throws {
+        _ = semaphone?.wait(timeout: .distantFuture)
+        
         if Thread.isMainThread{
             Logger.testing.debug("-- executing tear down in main thread")
         }else{
@@ -94,49 +99,56 @@ class PlayerToggleStressTest: XCTestCase {
     }
     
     func test01_MP3PlayStop() throws {
-        player = AudioPlayer.openSync(for: icecastSwr3Endpoint, listener: playerListener)
+        try AudioPlayer.open(for: icecastSwr3Endpoint, listener: playerListener) { [self] (control) in
+            player = control
+            
+            stepDuration = 10
+            rangeFrom = 1 /// on first step
+            rangeTo = 3 /// on first step
+            restBetweenSteps = 5
+            stepsDecrease = 10
+            
+            execute()
+            
+            semaphone?.signal()
+        }
         
-        stepDuration = 10
-        rangeFrom = 1 /// on first step
-        rangeTo = 3 /// on first step
-        restBetweenSteps = 5
-        stepsDecrease = 10
-        
-        self.execute()
         
     }
     
     func test02_OpusPlayStop() throws {
-        player = AudioPlayer.openSync(for: opusDlfEndpoint, listener: playerListener)
+        try AudioPlayer.open(for: opusDlfEndpoint, listener: playerListener) { [self] (control) in
+            player = control
         
-        stepDuration = 10
-        rangeFrom = 1 /// on first step
-        rangeTo = 3 /// on first step
-        restBetweenSteps = 5
-        stepsDecrease = 10
-        
-        Logger.testing.notice("-- test will take ~\(testDuration.S)")
-        Logger.testing.notice("-- final rest after test ~\(finalRestDuration.S)")
-        
-        self.execute()
+            stepDuration = 10
+            rangeFrom = 1 /// on first step
+            rangeTo = 3 /// on first step
+            restBetweenSteps = 5
+            stepsDecrease = 10
+            
+            Logger.testing.notice("-- test will take ~\(testDuration.S)")
+            Logger.testing.notice("-- final rest after test ~\(finalRestDuration.S)")
+            
+            execute()
+            
+            semaphone?.signal()
+        }
     }
     
     func test03_OnDemmandPlayPause() throws {
-        player = AudioPlayer.openSync(for: onDemandMp3Endpoint, listener: playerListener)
+        try AudioPlayer.open(for: onDemandMp3Endpoint, listener: playerListener) { [self] (control) in
+            player = control
         
-        stepDuration = 10
-        rangeFrom = 1 /// on first step
-        rangeTo = 3 /// on first step
-        restBetweenSteps = 5
-        stepsDecrease = 10
-        
-        self.execute()
-    }
-    
-    
-    fileprivate func prepare(_ mediaUrl:String) {
-        let mediaEndpoint = MediaEndpoint(mediaUri: mediaUrl)
-        player = AudioPlayer.openSync(for: mediaEndpoint, listener: playerListener)
+            stepDuration = 10
+            rangeFrom = 1 /// on first step
+            rangeTo = 3 /// on first step
+            restBetweenSteps = 5
+            stepsDecrease = 10
+            
+            execute()
+            
+            semaphone?.signal()
+        }
     }
     
     func execute() {
