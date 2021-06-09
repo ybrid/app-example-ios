@@ -38,7 +38,6 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
 
     @IBOutlet weak var urlPicker: UIPickerView!
     @IBOutlet weak var urlField: UrlField!
-    
     @IBOutlet weak var broadcaster: UILabel!
     @IBOutlet weak var genre: UILabel!
 
@@ -63,14 +62,42 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
     @IBOutlet weak var bufferAveraged: UILabel! { didSet { bufferAveraged.text = nil }}
     @IBOutlet weak var bufferCurrent: UILabel! { didSet { bufferCurrent.text = nil }}
     
+    @IBOutlet weak var sdkVersion: UILabel!
+    @IBOutlet weak var appVersion: UILabel!
+    
+    
     private var uriSelector:MediaSelector?
     var channelPicker = UIPickerView()
     private var channelSelector:ChannelSelector?
     
     // MARK: initialization
     
+    private func getBundleInfo(id:String) -> String {
+       guard let bundle = Bundle(identifier: id) else {
+           return ""
+       }
+       guard let info = bundle.infoDictionary else {
+           return ""
+       }
+       print("-- infoDictionary is '\(info)'")
+       
+       let version = info["CFBundleShortVersionString"] as! String
+
+       let name = info["CFBundleName"] as! String
+       
+       let build = info["CFBundleVersion"] as! String
+       print("-- version of \(name) is \(version) (build \(build))")
+       
+       return "\(version) (\(build))"
+   }
+
+    
     private func setStaticFieldAttributes() {
         DispatchQueue.main.async {
+            
+            self.sdkVersion.text = "sdk\n" + self.getBundleInfo(id:"io.ybrid.player-sdk-swift")
+            self.appVersion.text = "app\n" + self.getBundleInfo(id: "io.ybrid.example-player-ios")
+            
             self.playingTitle.lineBreakMode = .byWordWrapping
             self.playingTitle.numberOfLines = 0
             
