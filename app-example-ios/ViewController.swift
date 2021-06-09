@@ -162,6 +162,7 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
                     self.togglePlay.setImage(self.playImage, for: UIControl.State.normal)
                     self.playbackControls(enable: false)
                     self.ybridControls(visible: false)
+                    
                 }
                 return
             }
@@ -169,7 +170,16 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
             Logger.shared.debug("control changed to \(type(of: current))")
             DispatchQueue.main.async {
                 self.playbackControls(enable: true)
-                self.ybridControls(visible: current is YbridControl)
+                if let ybridControl = current as? YbridControl {
+                    self.ybridControls(visible: true)
+                    ybridControl.select()
+//                    self.servicesChanged(ybridControl.services)
+//                    self.offsetToLiveChanged(ybridControl.offsetToLiveS)
+    
+                } else {
+                    self.ybridControls(visible: false)
+                }
+                    
             }
         }
     }
@@ -435,7 +445,8 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
     
     func metadataChanged(_ metadata:Metadata) {
         DispatchQueue.main.async {
-            if let title = metadata.displayTitle {
+            if self.currentControl?.state != .stopped,
+               let title = metadata.displayTitle {
                 self.playingTitle.text = title
             } else {
                 self.playingTitle.text = ""
