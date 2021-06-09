@@ -25,6 +25,7 @@
 
 import Foundation
 import UIKit
+import YbridPlayerSDK
 
 class ChannelSelector:
     NSObject, UIPickerViewDataSource, UIPickerViewDelegate {
@@ -37,9 +38,7 @@ class ChannelSelector:
     
     
     var selected:String? { didSet {
-        if selected != oldValue {
-            setSelectedChannel(selected)
-        }
+
     }}
     
     init(_ view:UIPickerView, font:UIFont, onChannelSelected:@escaping (String?) -> () ) {
@@ -56,18 +55,12 @@ class ChannelSelector:
     /// on select channel
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
 
-        if isValid {
-            selected = channels[row]
-        } else {
-            selected = nil
+        let oldValue = selected
+        selected = channels[row]
+        if selected != oldValue {
+            setSelectedChannel(selected)
         }
-        
     }
-    
-    var isValid:Bool { get {
-        return true
-    }}
-    
     
     func setChannels(ids:[String]) {
         channels = ids
@@ -76,11 +69,20 @@ class ChannelSelector:
         }
     }
     
-    func select(_ id:String) {
-        if let index = channels.firstIndex(of: id) {
-            DispatchQueue.main.async {
-                self.view?.selectRow(index, inComponent: 0, animated: true)
-            }
+    func set(_ id:String) {
+
+        guard let index = channels.firstIndex(of: id) else {
+            Logger.shared.error("unknown channel with id \(id)")
+            return
+        }
+        guard let view = view else {
+            Logger.shared.error("no channel selector view")
+            return
+        }
+        
+        self.selected = id
+        DispatchQueue.main.async {
+            view.selectRow(index, inComponent: 0, animated: true)
         }
     }
     

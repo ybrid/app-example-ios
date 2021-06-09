@@ -450,7 +450,7 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
             }
 
             if let serviceId = metadata.activeService?.identifier {
-                self.channelSelector?.select(serviceId)
+                self.channelSelector?.set(serviceId)
             }
         }
     }
