@@ -54,13 +54,13 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
     @IBOutlet weak var windToLiveButton: UIButton!
     @IBOutlet weak var itemForwardButton: UIButton!
     
-    @IBOutlet weak var offsetS: UILabel! { didSet { offsetS.text = nil }}
+    @IBOutlet weak var offsetS: UILabel!
     @IBOutlet weak var offsetLabel: UILabel!
-    @IBOutlet weak var playedSince: UILabel! { didSet { playedSince.text = nil }}
-    @IBOutlet weak var ready: UILabel! { didSet { ready.text = nil }}
-    @IBOutlet weak var connected: UILabel! { didSet { connected.text = nil }}
-    @IBOutlet weak var bufferAveraged: UILabel! { didSet { bufferAveraged.text = nil }}
-    @IBOutlet weak var bufferCurrent: UILabel! { didSet { bufferCurrent.text = nil }}
+    @IBOutlet weak var playedSince: UILabel!
+    @IBOutlet weak var ready: UILabel!
+    @IBOutlet weak var connected: UILabel!
+    @IBOutlet weak var bufferAveraged: UILabel!
+    @IBOutlet weak var bufferCurrent: UILabel!
     
     @IBOutlet weak var sdkVersion: UILabel!
     @IBOutlet weak var appVersion: UILabel!
@@ -92,48 +92,58 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
     }
     
     private func setStaticFieldAttributes() {
-        DispatchQueue.main.async {
+        DispatchQueue.main.async { [self] in
             
-            self.sdkVersion.text = "sdk\n" + self.getBundleInfo(id:"io.ybrid.player-sdk-swift")
+            sdkVersion.text = "sdk\n" + getBundleInfo(id:"io.ybrid.player-sdk-swift")
             
-            self.appVersion.text = "app\n" + self.getBundleInfo(id: Bundle.main.bundleIdentifier ?? "io.ybrid.example-player-ios")
+            appVersion.text = "app\n" + getBundleInfo(id: Bundle.main.bundleIdentifier ?? "io.ybrid.example-player-ios")
             
-            self.playingTitle.lineBreakMode = .byWordWrapping
-            self.playingTitle.numberOfLines = 0
+//            playingTitle.lineBreakMode = .byTruncatingMiddle
+//            playingTitle.numberOfLines = 3
+//            playingTitle.adjustsFontSizeToFitWidth = true
+//            playingTitle.minimumScaleFactor = 0.5
             
-            self.togglePlay.setTitle("", for: .disabled)
+            togglePlay.setTitle("", for: .disabled)
             
             let swapItemImage = UIImage(named: "swapItem")!.scale(factor: 0.5)
-            self.swapItemButton.setImage(swapItemImage, for: .normal)
+            swapItemButton.setImage(swapItemImage, for: .normal)
             let itemBackwardImage = UIImage(named: "itemBackward")!.scale(factor: 0.5)
-            self.itemBackwardButton.setImage(itemBackwardImage, for: .normal)
+            itemBackwardButton.setImage(itemBackwardImage, for: .normal)
             let windBackImage = UIImage(named: "windBack")!.scale(factor: 0.4)
-            self.windBackButton.setImage(windBackImage, for: .normal)
+            windBackButton.setImage(windBackImage, for: .normal)
             let windToLiveImage = UIImage(named: "windToLive")!.scale(factor: 0.9)
-            self.windToLiveButton.setImage(windToLiveImage, for: .normal)
+            windToLiveButton.setImage(windToLiveImage, for: .normal)
             let windForwardImage = UIImage(named: "windForward")!.scale(factor: 0.4)
-            self.windForwardButton.setImage(windForwardImage, for: .normal)
+            windForwardButton.setImage(windForwardImage, for: .normal)
             let itemForwardImage = UIImage(named: "itemForward")!.scale(factor: 0.5)
-            self.itemForwardButton.setImage(itemForwardImage, for: .normal)
+            itemForwardButton.setImage(itemForwardImage, for: .normal)
             
-            self.playedSince.font = self.playedSince.font.monospacedDigitFont
-            self.ready.font = self.ready.font.monospacedDigitFont
-            self.connected.font = self.connected.font.monospacedDigitFont
-            self.bufferAveraged.font = self.bufferAveraged.font.monospacedDigitFont
-            self.bufferCurrent.font = self.bufferCurrent.font.monospacedDigitFont
+            initialize(label: playedSince, monospaced: true)
+            initialize(label: ready, monospaced: true)
+            initialize(label: connected, monospaced: true)
+            initialize(label: bufferAveraged, monospaced: true)
+            initialize(label: bufferCurrent, monospaced: true)
+            initialize(label: offsetS, monospaced: true)
         }
     }
     
+    private func initialize(label: UILabel, monospaced:Bool = false) {
+        if monospaced {
+            label.font = label.font.monospacedDigitFont
+        }
+        label.text = nil
+    }
+    
     private func resetMonitorings() {
-        DispatchQueue.main.async {
-            self.broadcaster.text = nil
-            self.genre.text = nil
-            self.playingTitle.text = nil
-            self.problem.text = nil
-            self.playingSince(0)
-            self.durationReadyToPlay(nil)
-            self.durationConnected(nil)
-            self.bufferSize(averagedSeconds: nil, currentSeconds: nil)
+        DispatchQueue.main.async { [self] in
+            broadcaster.text = nil
+            genre.text = nil
+            playingTitle.text = nil
+            problem.text = nil
+            playingSince(0)
+            durationReadyToPlay(nil)
+            durationConnected(nil)
+            bufferSize(averagedSeconds: nil, currentSeconds: nil)
         }
     }
     
@@ -200,9 +210,6 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
                 if let ybridControl = current as? YbridControl {
                     self.ybridControls(visible: true)
                     ybridControl.select()
-//                    self.servicesChanged(ybridControl.services)
-//                    self.offsetToLiveChanged(ybridControl.offsetToLiveS)
-    
                 } else {
                     self.ybridControls(visible: false)
                 }
@@ -449,7 +456,7 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
                 self.togglePlay.setTitle(nil, for: .normal)
                 self.togglePlay.setImage(self.playImage, for: UIControl.State.normal)
 
-                self.playingTitle.text = ""
+                self.playingTitle.text = nil
             case .pausing:
                 self.togglePlay.setTitle(nil, for: .normal)
                 self.togglePlay.setImage(self.playImage, for: UIControl.State.normal)
@@ -476,15 +483,15 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
                let title = metadata.displayTitle {
                 self.playingTitle.text = title
             } else {
-                self.playingTitle.text = ""
+                self.playingTitle.text = nil
             }
             
             if let station = metadata.station {
                 self.broadcaster.text = station.name
                 self.genre.text = station.genre
             } else {
-                self.broadcaster.text = ""
-                self.genre.text = ""
+                self.broadcaster.text = nil
+                self.genre.text = nil
             }
 
             if let serviceId = metadata.activeService?.identifier {
@@ -503,7 +510,7 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
                 DispatchQueue.global().async {
                     sleep(5)
                     DispatchQueue.main.async {
-                        problem.text = ""
+                        problem.text = nil
                     }
                 }
             case .notice: problem.textColor = .systemGreen
@@ -511,7 +518,7 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
                 DispatchQueue.global().async {
                     sleep(5)
                     DispatchQueue.main.async {
-                        problem.text = ""
+                        problem.text = nil
                     }
                 }
             @unknown default:
@@ -524,7 +531,7 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
     func playingSince(_ seconds: TimeInterval?) {
         DispatchQueue.main.async {
             guard let playedS = seconds else {
-                self.playedSince.text = ""
+                self.playedSince.text = nil
                 return
             }
             self.playedSince.text = playedS.hmsS
@@ -536,7 +543,7 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
             if let readyS = seconds {
                 self.ready.text = readyS.sSSS
             } else {
-                self.ready.text = ""
+                self.ready.text = nil
             }
         }
     }
@@ -545,7 +552,7 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
             if let connectS = seconds {
                 self.connected.text = connectS.sSSS
             } else {
-                self.connected.text = ""
+                self.connected.text = nil
             }
         }
     }
@@ -554,12 +561,12 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
             if let averaged = averagedSeconds {
                 self.bufferAveraged.text = averaged.sS
             } else {
-                self.bufferAveraged.text = ""
+                self.bufferAveraged.text = nil
             }
             if let current = currentSeconds {
                 self.bufferCurrent.text = current.sSS
             } else {
-                self.bufferCurrent.text = ""
+                self.bufferCurrent.text = nil
             }
         }
     }

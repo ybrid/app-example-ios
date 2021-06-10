@@ -44,7 +44,7 @@ class ChannelSelector:
     init(_ view:UIPickerView, font:UIFont, onChannelSelected:@escaping (String?) -> () ) {
         self.setSelectedChannel = onChannelSelected
         self.font = font
-        self.componentsSize = CGSize(width: 58, height: 58)
+        self.componentsSize = CGSize(width: 54, height: 50)
         super.init()
         self.view = view
         view.delegate = self
@@ -103,14 +103,16 @@ class ChannelSelector:
     }
     func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
         let view = UIView()
-        view.frame = CGRect(x: 0, y: 0, width: componentsSize.width, height: componentsSize.height)
-
+        view.transform = CGAffineTransform(rotationAngle: 90 * (.pi/180))
+        view.frame = CGRect(x: 0, y: 0, width: componentsSize.width-2, height: componentsSize.height)
+        
         let label = UILabel()
-        label.frame = CGRect(x: 0, y: 0, width: componentsSize.width, height: componentsSize.height)
+        label.frame = CGRect(x: 0, y: 10, width: componentsSize.width - 2, height: componentsSize.height-12)
+        
         
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineSpacing = 0.0
-        paragraphStyle.lineHeightMultiple = 0.8
+        paragraphStyle.lineHeightMultiple = 0.6
         
         let font = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.footnote).withSize(font.pointSize)
         
@@ -122,12 +124,13 @@ class ChannelSelector:
                 NSAttributedString.Key.font:font,
                 NSAttributedString.Key.paragraphStyle:paragraphStyle
             ])
-        label.lineBreakMode =  NSLineBreakMode.byTruncatingHead
         label.textAlignment = .center
-        label.numberOfLines = 2
+        label.numberOfLines = 3
+        label.lineBreakMode = NSLineBreakMode.byTruncatingMiddle
+        label.adjustsFontSizeToFitWidth = true
+        label.minimumScaleFactor = 0.8
         view.addSubview(label)
 
-        view.transform = CGAffineTransform(rotationAngle: 90 * (.pi/180))
 
         return view
     }
