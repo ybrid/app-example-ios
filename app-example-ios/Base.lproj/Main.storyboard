@@ -181,6 +181,7 @@
                                 </state>
                                 <connections>
                                     <action selector="windToLive:" destination="BYZ-38-t0r" eventType="touchUpInside" id="79M-ub-Wc0"/>
+                                    <action selector="windToLiveTouchDown:" destination="BYZ-38-t0r" eventType="touchDown" id="x7X-jo-ig5"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rfV-dc-y0p" userLabel="Wind Back">
@@ -191,6 +192,7 @@
                                 </state>
                                 <connections>
                                     <action selector="windBack:" destination="BYZ-38-t0r" eventType="touchUpInside" id="LDo-Hi-T4v"/>
+                                    <action selector="windBackTouchDown:" destination="BYZ-38-t0r" eventType="touchDown" id="nka-AA-keV"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0YJ-69-Ho2" userLabel="Item Forward">
@@ -198,6 +200,7 @@
                                 <state key="normal" image="itemForward"/>
                                 <connections>
                                     <action selector="itemForward:" destination="BYZ-38-t0r" eventType="touchUpInside" id="wHp-ES-Gc4"/>
+                                    <action selector="itemForwardTouchDown:" destination="BYZ-38-t0r" eventType="touchDown" id="nc9-qA-05f"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="a4P-CE-qso" userLabel="Wind Forward">
@@ -208,12 +211,14 @@
                                 </state>
                                 <connections>
                                     <action selector="windForward:" destination="BYZ-38-t0r" eventType="touchUpInside" id="qDi-1S-x8O"/>
+                                    <action selector="windForwardTouchDown:" destination="BYZ-38-t0r" eventType="touchDown" id="Hgg-TU-nzf"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SFj-Ko-4Gc" userLabel="Item Backward">
                                 <rect key="frame" x="26" y="484" width="58" height="58"/>
                                 <state key="normal" image="itemBackward"/>
                                 <connections>
+                                    <action selector="itemBackTouchDown:" destination="BYZ-38-t0r" eventType="touchDown" id="r9t-N9-8bd"/>
                                     <action selector="itemBackward:" destination="BYZ-38-t0r" eventType="touchUpInside" id="ylR-iX-UVK"/>
                                 </connections>
                             </button>
@@ -222,6 +227,7 @@
                                 <state key="normal" image="swapItem"/>
                                 <connections>
                                     <action selector="swapItem:" destination="BYZ-38-t0r" eventType="touchUpInside" id="9wU-6u-OOx"/>
+                                    <action selector="swapItemTouchDown:" destination="BYZ-38-t0r" eventType="touchDown" id="1VE-uo-L4b"/>
                                 </connections>
                             </button>
                             <button hidden="YES" autoresizesSubviews="NO" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="U6z-Sr-MtJ">

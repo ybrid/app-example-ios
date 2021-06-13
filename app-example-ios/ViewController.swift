@@ -70,6 +70,8 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
     var channelPicker = UIPickerView()
     private var channelSelector:ChannelSelector?
     
+    private var feedback:UserFeedback?
+    
     // MARK: initialization
     
     private func getBundleInfo(id:String) -> String {
@@ -97,11 +99,6 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
             sdkVersion.text = "sdk\n" + getBundleInfo(id:"io.ybrid.player-sdk-swift")
             
             appVersion.text = "app\n" + getBundleInfo(id: Bundle.main.bundleIdentifier ?? "io.ybrid.example-player-ios")
-            
-//            playingTitle.lineBreakMode = .byTruncatingMiddle
-//            playingTitle.numberOfLines = 3
-//            playingTitle.adjustsFontSizeToFitWidth = true
-//            playingTitle.minimumScaleFactor = 0.5
             
             togglePlay.setTitle("", for: .disabled)
             
@@ -217,7 +214,7 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
             }
         }
     }
-    
+
     // MARK: main
     
     override func viewDidLoad() {
@@ -250,9 +247,16 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
                 ybrid.swapService(to: service)
             }
         }
+        channelPicker.
         channelPicker.frame = channelPickerFrame.frame
         view.addSubview(channelPicker)
         channelPicker.selectRow(0, inComponent: 0, animated: true)
+
+        if #available(iOS 10.0, *) {
+            feedback = UserFeedback()
+        }
+//        YbridAudioPlayer.acousticInteractionFeedback = true
+//        Ramp.active = true
     }
     
     override func didReceiveMemoryWarning() {
@@ -299,8 +303,30 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
         let valid = uriSelector?.urlEditChanged() ?? true
         playbackControls(enable: valid)
     }
+       
+    // touch down
     
-
+    @IBAction func swapItemTouchDown(_ sender: Any) {
+        feedback?.haptic()
+    }
+    @IBAction func itemBackTouchDown(_ sender: Any) {
+        feedback?.haptic()
+    }
+    @IBAction func windBackTouchDown(_ sender: Any) {
+        feedback?.haptic()
+    }
+    @IBAction func windToLiveTouchDown(_ sender: Any) {
+        feedback?.haptic()
+    }
+    @IBAction func windForwardTouchDown(_ sender: Any) {
+        feedback?.haptic()
+    }
+    @IBAction func itemForwardTouchDown(_ sender: Any) {
+        feedback?.haptic()
+    }
+    
+    // touch up
+    
     @IBAction func swapItem(_ sender: Any) {
         print("swap item called")
         guard let ybrid = currentControl as? YbridControl else {
@@ -308,7 +334,7 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
         }
         ybrid.swapItem()
     }
-    
+
     @IBAction func windBack(_ sender: Any) {
         print("wind back called")
         guard let ybrid = currentControl as? YbridControl else {

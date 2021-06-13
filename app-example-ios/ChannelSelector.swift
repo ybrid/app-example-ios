@@ -109,7 +109,6 @@ class ChannelSelector:
         let label = UILabel()
         label.frame = CGRect(x: 0, y: 10, width: componentsSize.width - 2, height: componentsSize.height-12)
         
-        
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineSpacing = 0.0
         paragraphStyle.lineHeightMultiple = 0.6
@@ -130,7 +129,6 @@ class ChannelSelector:
         label.adjustsFontSizeToFitWidth = true
         label.minimumScaleFactor = 0.8
         view.addSubview(label)
-
 
         return view
     }
