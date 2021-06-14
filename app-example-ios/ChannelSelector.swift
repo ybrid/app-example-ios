@@ -33,16 +33,15 @@ class ChannelSelector:
     var channels:[String] = []
     let componentsSize:CGSize
     let font:UIFont
-    let setSelectedChannel:(String?) -> ()
+    let userSelectedChannel:(String?) -> ()
     weak var view:UIPickerView?
     
     
     var selected:String? { didSet {
-
     }}
     
     init(_ view:UIPickerView, font:UIFont, onChannelSelected:@escaping (String?) -> () ) {
-        self.setSelectedChannel = onChannelSelected
+        self.userSelectedChannel = onChannelSelected
         self.font = font
         self.componentsSize = CGSize(width: 54, height: 50)
         super.init()
@@ -58,7 +57,7 @@ class ChannelSelector:
         let oldValue = selected
         selected = channels[row]
         if selected != oldValue {
-            setSelectedChannel(selected)
+            userSelectedChannel(selected)
         }
     }
     
@@ -69,7 +68,7 @@ class ChannelSelector:
         }
     }
     
-    func set(_ id:String) {
+    func setSelection(to id:String) {
 
         guard let index = channels.firstIndex(of: id) else {
             Logger.shared.error("unknown channel with id \(id)")
@@ -83,6 +82,12 @@ class ChannelSelector:
         self.selected = id
         DispatchQueue.main.async {
             view.selectRow(index, inComponent: 0, animated: true)
+        }
+    }
+    
+    func enable(_ enable:Bool) {
+        DispatchQueue.main.async {
+            self.view?.isUserInteractionEnabled = enable
         }
     }
     

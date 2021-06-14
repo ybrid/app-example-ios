@@ -241,10 +241,14 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
         
         /// picking the first service of ybrid bucket
         channelSelector = ChannelSelector(channelPicker, font: (urlField as UITextField).font!) { (channel) in
-            Logger.shared.notice("channel \(channel ?? "(nil)") selected")
+            Logger.shared.notice("service \(channel ?? "(nil)") selected")
             if let ybrid = self.currentControl as? YbridControl,
                let service = channel {
-                ybrid.swapService(to: service)
+                self.channelSelector?.enable(false)
+                ybrid.swapService(to: service) {
+                    Logger.shared.debug("service swapped")
+                    self.channelSelector?.enable(true)
+                }
             }
         }
         channelPicker.frame = channelPickerFrame.frame
@@ -331,7 +335,14 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
         guard let ybrid = currentControl as? YbridControl else {
             return
         }
-        ybrid.swapItem()
+        DispatchQueue.main.async {
+            self.swapItemButton.isEnabled = false
+        }
+        ybrid.swapItem( { Logger.shared.debug("item swapped")
+            DispatchQueue.main.async {
+                self.swapItemButton.isEnabled = true
+            }
+        } )
     }
 
     @IBAction func windBack(_ sender: Any) {
@@ -520,7 +531,7 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
             }
 
             if let serviceId = metadata.activeService?.identifier {
-                self.channelSelector?.set(serviceId)
+                self.channelSelector?.setSelection(to: serviceId)
             }
         }
     }
