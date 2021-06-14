@@ -247,7 +247,6 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
                 ybrid.swapService(to: service)
             }
         }
-        channelPicker.
         channelPicker.frame = channelPickerFrame.frame
         view.addSubview(channelPicker)
         channelPicker.selectRow(0, inComponent: 0, animated: true)
