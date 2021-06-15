@@ -87,6 +87,7 @@ class ChannelSelector:
     
     func enable(_ enable:Bool) {
         DispatchQueue.main.async {
+            self.view?.alpha = enable ? 1 : 0.6
             self.view?.isUserInteractionEnabled = enable
         }
     }

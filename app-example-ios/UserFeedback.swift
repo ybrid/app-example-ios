@@ -40,16 +40,14 @@ class UserFeedback {
     
     private func canHapticFeedback() -> Bool {
         guard let level = UIDevice.current.value(forKey: "_feedbackSupportLevel") as? Int else {
-            Logger.shared.notice("haptic feedback is not supported on this device")
+            Logger.shared.info("haptic feedback is not supported on this device")
             return false
         }
-        Logger.shared.info("haptic feedback support level is \(level)")
-        if level <= 1 {
-            Logger.shared.notice("haptic feedback is not supported on this device")
-            return false
-        }
-        return level > 1
+        let active = level > 1
+        Logger.shared.info("haptic feedback is \(active ? "":"in")active. Device supports level \(level).")
+        return active
     }
+
     
     func haptic() {
         if #available(iOS 10.0, *),
