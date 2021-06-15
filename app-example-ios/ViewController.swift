@@ -42,7 +42,7 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
     @IBOutlet weak var genre: UILabel!
 
     @IBOutlet weak var playingTitle: UILabel!
-    @IBOutlet weak var problem: UILabel! { didSet { problem.text = nil }}
+    @IBOutlet weak var problem: UILabel!
     
     @IBOutlet weak var channelPickerFrame: UIButton!
     @IBOutlet weak var togglePlay: UIButton!
@@ -67,12 +67,48 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
     
     
     private var uriSelector:MediaSelector?
-    var channelPicker = UIPickerView()
+    private var channelPicker = UIPickerView()
     private var channelSelector:ChannelSelector?
-    
     private var feedback:UserFeedback?
     
     // MARK: initialization
+    
+    private func initializeElements() {
+        DispatchQueue.main.async { [self] in
+            
+            togglePlay.setTitle("", for: .disabled)
+            
+            initialize(button: swapItemButton, image: "swapItem", scale: 0.5)
+            initialize(button: itemBackwardButton, image: "itemBackward", scale: 0.5)
+            initialize(button: windBackButton, image: "windBack", scale: 0.4)
+            initialize(button: windToLiveButton, image:  "windToLive", scale: 0.9)
+            initialize(button: windForwardButton, image: "windForward", scale: 0.4)
+            initialize(button: itemForwardButton, image: "itemForward", scale: 0.5)
+            
+            initialize(label: problem)
+            initialize(label: playedSince, monospaced: true)
+            initialize(label: ready, monospaced: true)
+            initialize(label: connected, monospaced: true)
+            initialize(label: bufferAveraged, monospaced: true)
+            initialize(label: bufferCurrent, monospaced: true)
+            initialize(label: offsetS, monospaced: true)
+            
+            appVersion.text = "demo-app\n" + getBundleInfo(id: Bundle.main.bundleIdentifier ?? "io.ybrid.example-player-ios")
+            sdkVersion.text = "player-sdk\n" + getBundleInfo(id:"io.ybrid.player-sdk-swift")
+        }
+    }
+    
+    private func initialize(label: UILabel, monospaced:Bool = false) {
+        if monospaced {
+            label.font = label.font.monospacedDigitFont
+        }
+        label.text = nil
+    }
+    
+    private func initialize(button: UIButton, image:String, scale:Float) {
+        let itemImage = UIImage(named: image)!.scale(factor: scale)
+        button.setImage(itemImage, for: .normal)
+    }
     
     private func getBundleInfo(id:String) -> String {
         guard let bundle = Bundle(identifier: id) else {
@@ -93,45 +129,7 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
         return "\(version) (\(build))"
     }
     
-    private func setStaticFieldAttributes() {
-        DispatchQueue.main.async { [self] in
-            
-            sdkVersion.text = "sdk\n" + getBundleInfo(id:"io.ybrid.player-sdk-swift")
-            
-            appVersion.text = "app\n" + getBundleInfo(id: Bundle.main.bundleIdentifier ?? "io.ybrid.example-player-ios")
-            
-            togglePlay.setTitle("", for: .disabled)
-            
-            let swapItemImage = UIImage(named: "swapItem")!.scale(factor: 0.5)
-            swapItemButton.setImage(swapItemImage, for: .normal)
-            let itemBackwardImage = UIImage(named: "itemBackward")!.scale(factor: 0.5)
-            itemBackwardButton.setImage(itemBackwardImage, for: .normal)
-            let windBackImage = UIImage(named: "windBack")!.scale(factor: 0.4)
-            windBackButton.setImage(windBackImage, for: .normal)
-            let windToLiveImage = UIImage(named: "windToLive")!.scale(factor: 0.9)
-            windToLiveButton.setImage(windToLiveImage, for: .normal)
-            let windForwardImage = UIImage(named: "windForward")!.scale(factor: 0.4)
-            windForwardButton.setImage(windForwardImage, for: .normal)
-            let itemForwardImage = UIImage(named: "itemForward")!.scale(factor: 0.5)
-            itemForwardButton.setImage(itemForwardImage, for: .normal)
-            
-            initialize(label: playedSince, monospaced: true)
-            initialize(label: ready, monospaced: true)
-            initialize(label: connected, monospaced: true)
-            initialize(label: bufferAveraged, monospaced: true)
-            initialize(label: bufferCurrent, monospaced: true)
-            initialize(label: offsetS, monospaced: true)
-        }
-    }
-    
-    private func initialize(label: UILabel, monospaced:Bool = false) {
-        if monospaced {
-            label.font = label.font.monospacedDigitFont
-        }
-        label.text = nil
-    }
-    
-    private func resetMonitorings() {
+    private func resetValues() {
         DispatchQueue.main.async { [self] in
             broadcaster.text = nil
             genre.text = nil
@@ -159,9 +157,9 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
                 oldPlaying = oldPlayer.state == .playing
                 oldPlayer.stop()
             }
-            currentControl = nil
             
             guard let endpoint = endpoint else {
+                currentControl = nil
                 return
             }
             
@@ -190,27 +188,20 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
         didSet {
             guard let current = currentControl else {
                 Logger.shared.notice("control changed to (nil)")
-                DispatchQueue.main.async {
-                    self.resetMonitorings()
-                    self.togglePlay.setTitle(nil, for: .normal)
-                    self.togglePlay.setImage(self.playImage, for: UIControl.State.normal)
-                    self.playbackControls(enable: false)
-                    self.ybridControls(visible: false)
-                    
-                }
+                self.setStopped()
+                self.resetValues()
+                self.playbackControls(enable: false)
+                self.ybridControls(visible: false)
                 return
             }
             
             Logger.shared.debug("control changed to \(type(of: current))")
-            DispatchQueue.main.async {
-                self.playbackControls(enable: true)
-                if let ybridControl = current as? YbridControl {
-                    self.ybridControls(visible: true)
-                    ybridControl.select()
-                } else {
-                    self.ybridControls(visible: false)
-                }
-                    
+            playbackControls(enable: true)
+            if let ybridControl = current as? YbridControl {
+                ybridControls(visible: true)
+                ybridControl.select()
+            } else {
+                ybridControls(visible: false)
             }
         }
     }
@@ -225,10 +216,10 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
 
         hideKeyboardWhenTappedAround()
         view.layoutIfNeeded()
+        initializeElements()
         
-        /// setting states of  fields
-        setStaticFieldAttributes()
-        resetMonitorings()
+        /// clearing values and states
+        resetValues()
         ybridControls(visible: false)
         
         /// picking preset media or custom url
@@ -385,7 +376,7 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
         ybrid.skipForward(nil)//ItemType.MUSIC)
     }
 
-    // MARK: helpers
+    // MARK: helpers acting on ui elements
     
     private func playbackControls(enable:Bool) {
 //        let running = (currentControl?.state == .playing || currentControl?.state == .buffering)
@@ -416,18 +407,31 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
     }
     
     fileprivate func newControl(_ endpoint:MediaEndpoint, callback: @escaping (PlaybackControl) -> ()) {
-        self.playbackControls(enable: false)
-        self.playingTitle.text = nil
+        playbackControls(enable: false)
+        ybridControls(visible: false)
+        resetValues()
         
         DispatchQueue.global().async {
         do {
             try AudioPlayer.open(for: endpoint, listener: self,
                playbackControl: { (control) in
+                if let existingControl = self.cachedControls[endpoint] {
+                    Logger.shared.notice("already created control for \(endpoint.uri)")
+                    control.close()
+                    callback(existingControl)
+                    return
+                }
                 self.cachedControls[endpoint] = control
                 self.currentControl = control
                 callback(control)
                },
                ybridControl: { (ybridControl) in
+                if let existingControl = self.cachedControls[endpoint] {
+                    Logger.shared.notice("already created control for \(endpoint.uri)")
+                    ybridControl.close()
+                    callback(existingControl)
+                    return
+                }
                 self.cachedControls[endpoint] = ybridControl
                 self.currentControl = ybridControl
                 callback(ybridControl)
@@ -474,43 +478,56 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
     }
 
     // MARK: AudioPlayerListener
-    private let playImage = UIImage(named: "play")!
-    private let pauseImage = UIImage(named: "pause")!.scale(factor: 0.9)
-    private let stopImage = UIImage(named: "stop")!.scale(factor: 0.8)
+
     func stateChanged(_ state: PlaybackState) {
         guard currentControl?.state == state else {
             /// ignore events from the last player
+            Logger.shared.notice("ignoring \(state), current control is \(currentControl?.state)")
             return
         }
 
-        DispatchQueue.main.sync {
-            Logger.shared.debug("state changed to \(state)")
-            self.playbackControls(enable: true)
-            
+        Logger.shared.debug("state changed to \(state)")
+//        self.playbackControls(enable: true)
+
+        DispatchQueue.main.sync { [self] in
             switch state {
             case .stopped:
-                self.togglePlay.setTitle(nil, for: .normal)
-                self.togglePlay.setImage(self.playImage, for: UIControl.State.normal)
-
+                setStopped()
                 self.playingTitle.text = nil
             case .pausing:
-                self.togglePlay.setTitle(nil, for: .normal)
-                self.togglePlay.setImage(self.playImage, for: UIControl.State.normal)
+                setPausing()
             case .buffering:
-                self.togglePlay.setTitle("● ● ●", for: .normal) // \u{25cf} Black Circle
-                self.togglePlay.setImage(nil, for: UIControl.State.normal)
+                setBuffering()
             case .playing:
-                self.togglePlay.setTitle(nil, for: .normal)
-                if let control = self.currentControl, control.canPause {
-                    self.togglePlay.setImage(self.pauseImage, for: UIControl.State.normal)
-                } else {
-                    self.togglePlay.setImage(self.stopImage, for: UIControl.State.normal)
-                }
+                setPlaying()
             @unknown default:
                 Logger.shared.error("state changed to unknown \(state)")
             }
 
         }
+    }
+    private let playImage = UIImage(named: "play")!
+    private func setStopped() {
+        self.togglePlay.setTitle(nil, for: .normal)
+        self.togglePlay.setImage(self.playImage, for: UIControl.State.normal)
+    }
+    private let pauseImage = UIImage(named: "pause")!.scale(factor: 0.9)
+    private let stopImage = UIImage(named: "stop")!.scale(factor: 0.8)
+    private func setPlaying() {
+        self.togglePlay.setTitle(nil, for: .normal)
+        if let control = self.currentControl, control.canPause {
+            self.togglePlay.setImage(self.pauseImage, for: UIControl.State.normal)
+        } else {
+            self.togglePlay.setImage(self.stopImage, for: UIControl.State.normal)
+        }
+    }
+    private func setBuffering() {
+        self.togglePlay.setTitle("● ● ●", for: .normal) // \u{25cf} Black Circle
+        self.togglePlay.setImage(nil, for: UIControl.State.normal)
+    }
+    private func setPausing() {
+        self.togglePlay.setTitle(nil, for: .normal)
+        self.togglePlay.setImage(self.playImage, for: UIControl.State.normal)
     }
     
     func metadataChanged(_ metadata:Metadata) {
