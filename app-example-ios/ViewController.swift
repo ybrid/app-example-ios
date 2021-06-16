@@ -153,9 +153,9 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
             Logger.shared.info("endpoint changed to \(endpoint?.uri ?? "(nil)")")
             
             var oldPlaying = false
-            if oldValue != nil, let oldPlayer = cachedControls[oldValue!], oldPlayer.state != .stopped {
-                oldPlaying = oldPlayer.state == .playing
-                oldPlayer.stop()
+            if oldValue != nil, let oldControl = cachedControls[oldValue!], oldControl.state != .stopped {
+                oldPlaying = oldControl.state == .playing
+                oldControl.stop()
             }
             
             guard let endpoint = endpoint else {
@@ -165,6 +165,11 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
             
             guard let control = cachedControls[endpoint] else {
                 newControl(endpoint) { (control) in
+                    guard control.mediaEndpoint == self.endpoint else {
+                        Logger.shared.notice("aborting \(control.mediaEndpoint.uri)")
+                        return
+                    }
+                    self.currentControl = control
                     if oldPlaying {
                         self.doToggle(control)
                     }
@@ -174,7 +179,7 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
             
             currentControl = control
             if oldPlaying {
-                self.doToggle(control)
+                doToggle(control)
             }
         }
     }
@@ -282,14 +287,19 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
             return
         }
         
-        guard let controller = cachedControls[endpoint] else {
-            newControl(endpoint) {(controller) in
-                self.doToggle(controller) // run it
+        guard let control = cachedControls[endpoint] else {
+            newControl(endpoint) {(control) in
+                guard control.mediaEndpoint == self.endpoint else {
+                    Logger.shared.notice("aborting \(control.mediaEndpoint.uri)")
+                    return
+                }
+                self.currentControl = control
+                self.doToggle(control) // run it
             }
             return
         }
         
-        doToggle(controller)
+        doToggle(control)
     }
     
     /// edit custom url
@@ -422,7 +432,6 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
                     return
                 }
                 self.cachedControls[endpoint] = control
-                self.currentControl = control
                 callback(control)
                },
                ybridControl: { (ybridControl) in
@@ -433,7 +442,6 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
                     return
                 }
                 self.cachedControls[endpoint] = ybridControl
-                self.currentControl = ybridControl
                 callback(ybridControl)
                })
         } catch {
@@ -487,7 +495,6 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
         }
 
         Logger.shared.debug("state changed to \(state)")
-//        self.playbackControls(enable: true)
 
         DispatchQueue.main.sync { [self] in
             switch state {
