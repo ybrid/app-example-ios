@@ -310,6 +310,9 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
        
     // touch down
     
+    @IBAction func togglePlayTouchDown(_ sender: Any) {
+        feedback?.haptic()
+    }
     @IBAction func swapItemTouchDown(_ sender: Any) {
         feedback?.haptic()
     }

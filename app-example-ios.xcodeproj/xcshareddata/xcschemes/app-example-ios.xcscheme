@@ -54,6 +54,9 @@
             </BuildableReference>
             <SkippedTests>
                <Test
+                  Identifier = "PlayerToggleStressTest">
+               </Test>
+               <Test
                   Identifier = "app_example_iosUITests">
                </Test>
             </SkippedTests>

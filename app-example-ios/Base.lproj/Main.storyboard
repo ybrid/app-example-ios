@@ -80,6 +80,7 @@
                                 </state>
                                 <connections>
                                     <action selector="toggle:" destination="BYZ-38-t0r" eventType="touchUpInside" id="0Zb-Ns-ReG"/>
+                                    <action selector="togglePlayTouchDown:" destination="BYZ-38-t0r" eventType="touchDown" id="MSy-uA-5Pl"/>
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="played s" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fSV-kl-ZJX" userLabel="PlayingSinceS">
