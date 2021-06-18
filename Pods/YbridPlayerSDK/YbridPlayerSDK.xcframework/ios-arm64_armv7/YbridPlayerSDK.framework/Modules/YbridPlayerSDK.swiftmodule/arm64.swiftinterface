@@ -1,0 +1,248 @@
+// swift-interface-format-version: 1.0
+// swift-compiler-version: Apple Swift version 5.3.2 effective-4.1.50 (swiftlang-1200.0.45 clang-1200.0.32.28)
+// swift-module-flags: -target arm64-apple-ios9.0 -enable-objc-interop -enable-library-evolution -swift-version 4 -enforce-exclusivity=checked -O -module-name YbridPlayerSDK
+import AVFoundation
+import CommonCrypto
+import Foundation
+import Network
+import Swift
+import SystemConfiguration
+import YbridOgg
+import YbridOpus
+import os.log
+import os
+public protocol SimpleControl {
+  var mediaEndpoint: YbridPlayerSDK.MediaEndpoint { get }
+  var mediaProtocol: YbridPlayerSDK.MediaProtocol? { get }
+  func play()
+  func stop()
+  var state: YbridPlayerSDK.PlaybackState { get }
+  func close()
+}
+public protocol PlaybackControl : YbridPlayerSDK.SimpleControl {
+  var canPause: Swift.Bool { get }
+  func pause()
+}
+public protocol YbridControl : YbridPlayerSDK.PlaybackControl {
+  func select()
+  var offsetToLiveS: Foundation.TimeInterval { get }
+  func wind(by: Foundation.TimeInterval)
+  func windToLive()
+  func wind(to: Foundation.Date)
+  func skipForward(_ type: YbridPlayerSDK.ItemType?)
+  func skipBackward(_ type: YbridPlayerSDK.ItemType?)
+  var swapsLeft: Swift.Int { get }
+  func swapItem(_ carriedOut: (() -> ())?)
+  var services: [YbridPlayerSDK.Service] { get }
+  func swapService(to id: Swift.String, _ carriedOut: (() -> ())?)
+}
+extension YbridControl {
+  public func swapItem()
+  public func swapService(to id: Swift.String)
+}
+public protocol YbridControlListener : YbridPlayerSDK.AudioPlayerListener {
+  func offsetToLiveChanged(_ offset: Foundation.TimeInterval?)
+  func servicesChanged(_ services: [YbridPlayerSDK.Service])
+}
+extension AudioPlayer {
+  public typealias PlaybackControllerCallback = (YbridPlayerSDK.PlaybackControl) -> ()
+  public typealias YbridControllerCallback = (YbridPlayerSDK.YbridControl) -> ()
+  public static func open(for endpoint: YbridPlayerSDK.MediaEndpoint, listener: YbridPlayerSDK.AudioPlayerListener?, playbackControl: YbridPlayerSDK.AudioPlayer.PlaybackControllerCallback? = nil, ybridControl: YbridPlayerSDK.AudioPlayer.YbridControllerCallback? = nil) throws
+  public static func open(for endpoint: YbridPlayerSDK.MediaEndpoint, listener: YbridPlayerSDK.AudioPlayerListener?, control: YbridPlayerSDK.AudioPlayer.PlaybackControllerCallback? = nil) throws
+}
+public enum ErrorSeverity {
+  case fatal
+  case recoverable
+  case notice
+  public static func == (a: YbridPlayerSDK.ErrorSeverity, b: YbridPlayerSDK.ErrorSeverity) -> Swift.Bool
+  public var hashValue: Swift.Int {
+    get
+  }
+  public func hash(into hasher: inout Swift.Hasher)
+}
+public typealias ErrorCode = Swift.Int32
+@_hasMissingDesignatedInitializers public class AudioPlayerError : Foundation.LocalizedError {
+  public var code: YbridPlayerSDK.ErrorCode {
+    get
+  }
+  public var message: Swift.String?
+  public var osstatus: Darwin.OSStatus?
+  public var errorDescription: Swift.String? {
+    get
+  }
+  public var failureReason: Swift.String? {
+    get
+  }
+  @objc deinit
+}
+public enum SubInfo {
+  case metadata
+  case bouquet
+  public static func == (a: YbridPlayerSDK.SubInfo, b: YbridPlayerSDK.SubInfo) -> Swift.Bool
+  public var hashValue: Swift.Int {
+    get
+  }
+  public func hash(into hasher: inout Swift.Hasher)
+}
+public protocol Metadata {
+  var displayTitle: Swift.String? { get }
+  var station: YbridPlayerSDK.Station? { get }
+  var current: YbridPlayerSDK.Item? { get }
+  var next: YbridPlayerSDK.Item? { get }
+  var activeService: YbridPlayerSDK.Service? { get }
+}
+public struct Item {
+  public let type: YbridPlayerSDK.ItemType
+  public let displayTitle: Swift.String
+  public let identifier: Swift.String?
+  public let title: Swift.String?
+  public let version: Swift.String?
+  public let artist: Swift.String?
+  public let album: Swift.String?
+  public let description: Swift.String?
+  public let durationMillis: Swift.Int64?
+}
+public enum ItemType : Swift.String {
+  case ADVERTISEMENT
+  case COMEDY
+  case JINGLE
+  case MUSIC
+  case NEWS
+  case TRAFFIC
+  case VOICE
+  case WEATHER
+  case UNKNOWN
+  public typealias RawValue = Swift.String
+  public init?(rawValue: Swift.String)
+  public var rawValue: Swift.String {
+    get
+  }
+}
+public struct Station {
+  public var name: Swift.String?
+  public var genre: Swift.String?
+}
+public struct Service {
+  public let identifier: Swift.String
+  public var displayName: Swift.String?
+  public var iconUri: Swift.String?
+}
+@_hasMissingDesignatedInitializers public class PlayerContext {
+  public static var memoryLimitMB: Swift.Float
+  public static func handleMemoryLimit() -> Swift.Bool
+  @objc deinit
+}
+public class MediaEndpoint : Swift.Equatable, Swift.Hashable {
+  public static func == (lhs: YbridPlayerSDK.MediaEndpoint, rhs: YbridPlayerSDK.MediaEndpoint) -> Swift.Bool
+  public var hashValue: Swift.Int {
+    get
+  }
+  public func hash(into hasher: inout Swift.Hasher)
+  final public let uri: Swift.String
+  public init(mediaUri: Swift.String!)
+  public func forceProtocol(_ mediaProtocol: YbridPlayerSDK.MediaProtocol) -> YbridPlayerSDK.MediaEndpoint
+  @objc deinit
+}
+@_hasMissingDesignatedInitializers public class MediaSession {
+  public var mediaProtocol: YbridPlayerSDK.MediaProtocol? {
+    get
+  }
+  public var playbackUri: Swift.String {
+    get
+  }
+  @objc deinit
+}
+@_hasMissingDesignatedInitializers public class Bouquet {
+  @objc deinit
+}
+@_hasMissingDesignatedInitializers public class LoadingError : YbridPlayerSDK.AudioPlayerError {
+  @objc deinit
+}
+public protocol AudioPlayerListener : AnyObject {
+  func stateChanged(_ state: YbridPlayerSDK.PlaybackState)
+  func metadataChanged(_ metadata: YbridPlayerSDK.Metadata)
+  func error(_ severity: YbridPlayerSDK.ErrorSeverity, _ exception: YbridPlayerSDK.AudioPlayerError)
+  func playingSince(_ seconds: Foundation.TimeInterval?)
+  func durationReadyToPlay(_ seconds: Foundation.TimeInterval?)
+  func durationConnected(_ seconds: Foundation.TimeInterval?)
+  func bufferSize(averagedSeconds: Foundation.TimeInterval?, currentSeconds: Foundation.TimeInterval?)
+}
+public enum PlaybackState {
+  case buffering
+  case playing
+  case stopped
+  case pausing
+  public static func == (a: YbridPlayerSDK.PlaybackState, b: YbridPlayerSDK.PlaybackState) -> Swift.Bool
+  public var hashValue: Swift.Int {
+    get
+  }
+  public func hash(into hasher: inout Swift.Hasher)
+}
+@_hasMissingDesignatedInitializers public class AudioPlayer : YbridPlayerSDK.PlaybackControl, Swift.Hashable {
+  public static func == (lhs: YbridPlayerSDK.AudioPlayer, rhs: YbridPlayerSDK.AudioPlayer) -> Swift.Bool
+  public var hashValue: Swift.Int {
+    get
+  }
+  public func hash(into hasher: inout Swift.Hasher)
+  public static var versionString: Swift.String {
+    get
+  }
+  @available(*, deprecated, message: "use asynchronous AudioPlayer.open instead")
+  public static func openSync(for endpoint: YbridPlayerSDK.MediaEndpoint, listener: YbridPlayerSDK.AudioPlayerListener?) -> YbridPlayerSDK.AudioPlayer?
+  public var state: YbridPlayerSDK.PlaybackState {
+    get
+  }
+  public var mediaProtocol: YbridPlayerSDK.MediaProtocol? {
+    get
+  }
+  public var mediaEndpoint: YbridPlayerSDK.MediaEndpoint {
+    get
+  }
+  public var canPause: Swift.Bool
+  @objc deinit
+  public func play()
+  public func stop()
+  public func pause()
+  public func close()
+}
+@_hasMissingDesignatedInitializers public class SessionError : YbridPlayerSDK.AudioPlayerError {
+  @objc deinit
+}
+public class Logger {
+  public static var verbose: Swift.Bool
+  public static let shared: YbridPlayerSDK.Logger
+  public init(category: Swift.String = "")
+  public func info(_ message: Swift.String = "", fullSourcePath: Swift.String = #file, functionWithParameters: Swift.String = #function, line: Swift.Int = #line)
+  public func notice(_ message: Swift.String = "", fullSourcePath: Swift.String = #file, functionWithParameters: Swift.String = #function, line: Swift.Int = #line)
+  public func debug(_ message: Swift.String = "", fullSourcePath: Swift.String = #file, functionWithParameters: Swift.String = #function, line: Swift.Int = #line)
+  public func error(_ message: Swift.String = "", fullSourcePath: Swift.String = #file, functionWithParameters: Swift.String = #function, line: Swift.Int = #line)
+  @objc deinit
+}
+@_hasMissingDesignatedInitializers public class AudioDataError : YbridPlayerSDK.AudioPlayerError {
+  @objc deinit
+}
+@_hasMissingDesignatedInitializers public class DecoderError : YbridPlayerSDK.AudioPlayerError {
+  @objc deinit
+}
+public enum MediaProtocol : Swift.String {
+  case plain
+  case icy
+  case ybridV2
+  public typealias RawValue = Swift.String
+  public init?(rawValue: Swift.String)
+  public var rawValue: Swift.String {
+    get
+  }
+}
+extension YbridPlayerSDK.ErrorSeverity : Swift.Equatable {}
+extension YbridPlayerSDK.ErrorSeverity : Swift.Hashable {}
+extension YbridPlayerSDK.SubInfo : Swift.Equatable {}
+extension YbridPlayerSDK.SubInfo : Swift.Hashable {}
+extension YbridPlayerSDK.ItemType : Swift.Equatable {}
+extension YbridPlayerSDK.ItemType : Swift.Hashable {}
+extension YbridPlayerSDK.ItemType : Swift.RawRepresentable {}
+extension YbridPlayerSDK.PlaybackState : Swift.Equatable {}
+extension YbridPlayerSDK.PlaybackState : Swift.Hashable {}
+extension YbridPlayerSDK.MediaProtocol : Swift.Equatable {}
+extension YbridPlayerSDK.MediaProtocol : Swift.Hashable {}
+extension YbridPlayerSDK.MediaProtocol : Swift.RawRepresentable {}
