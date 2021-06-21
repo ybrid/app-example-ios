@@ -28,13 +28,19 @@ import UIKit
 import YbridPlayerSDK
 
 class UserFeedback {
-
-    var generator:NSObject?
+    
+    static var soft = false
+    
+    var heavy:NSObject?
+    var medium:NSObject?
     init() {
         if canHapticFeedback(), #available(iOS 10.0, *) {
-            let generator = UIImpactFeedbackGenerator(style: .medium)
-            generator.prepare()
-            self.generator = generator
+            let generator1 = UIImpactFeedbackGenerator(style: .heavy)
+            generator1.prepare()
+            self.heavy = generator1
+            let generator2 = UIImpactFeedbackGenerator(style: .medium)
+            generator2.prepare()
+            self.medium = generator2
         }
     }
     
@@ -48,11 +54,16 @@ class UserFeedback {
         return active
     }
 
-    
     func haptic() {
-        if #available(iOS 10.0, *),
-           let generator = generator as? UIImpactFeedbackGenerator {
+        if #available(iOS 10.0, *) {
+            if UserFeedback.soft, let generator = medium as? UIImpactFeedbackGenerator {
                 generator.impactOccurred()
+            } else {
+                if let generator = heavy as? UIImpactFeedbackGenerator {
+                    generator.impactOccurred()
+                }
+            }
         }
     }
+
 }

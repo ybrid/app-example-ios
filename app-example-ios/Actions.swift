@@ -29,7 +29,9 @@ import YbridPlayerSDK
 
 
 class Action {
+
     let actionString:String
+
     let method:()-> ()
     init(_ name:String, _ method: @escaping ()->()) {
         self.actionString = name
@@ -40,8 +42,20 @@ class Action {
 
 class ActionButton : UIButton {
     
+    var onTouchDown = true { didSet {
+        if oldValue != onTouchDown {
+            removeTarget(self, action: #selector(execute), for: .allEvents)
+            addTarget(self, action: #selector(execute), for: onTouchDown ? .touchDown : .touchUpInside)
+        }
+    }}
+    
     let feedback = UserFeedback()    
     var action = Action("(no action)") {}
+    enum behaviour {
+        case single
+        case multi
+    }
+    var behave:behaviour?
     
     override init(frame: CGRect) {
          super.init(frame: frame)
@@ -55,9 +69,13 @@ class ActionButton : UIButton {
     
     func setup() {
         addTarget(self, action: #selector(shake), for: .touchDown)
-        addTarget(self, action: #selector(execute), for: .touchUpInside)
+        addTarget(self, action: #selector(execute), for: onTouchDown ? .touchDown : .touchUpInside)
     }
     
+    @objc func act() {
+        shake()
+        execute()
+    }
     
     @objc func shake() {
         feedback.haptic()
@@ -65,8 +83,10 @@ class ActionButton : UIButton {
     
     @objc func execute() {
         Logger.shared.debug("calling \(action.actionString)")
-        DispatchQueue.main.async {
-            self.isEnabled = false
+        if behave == .single {
+            DispatchQueue.main.async {
+                self.isEnabled = false
+            }
         }
         action.method()
     }

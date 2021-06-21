@@ -44,15 +44,23 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
     @IBOutlet weak var playingTitle: UILabel!
     @IBOutlet weak var problem: UILabel!
     
+    
+    @IBOutlet weak var hapticSwitch: UISwitch!
+    @IBAction func hapticSwitched(_ sender: Any) {
+        DispatchQueue.main.async {
+            UserFeedback.soft = !self.hapticSwitch.isOn
+        }
+    }
+    
     @IBOutlet weak var channelPickerFrame: UIButton!
-    @IBOutlet weak var togglePlay: UIButton!
+    @IBOutlet weak var togglePlay: ActionButton!
     @IBOutlet weak var swapItemButton: ActionButton!
     
-    @IBOutlet weak var itemBackwardButton: UIButton!
-    @IBOutlet weak var windBackButton: UIButton!
-    @IBOutlet weak var windForwardButton: UIButton!
+    @IBOutlet weak var itemBackwardButton: ActionButton!
+    @IBOutlet weak var windBackButton: ActionButton!
+    @IBOutlet weak var windForwardButton: ActionButton!
     @IBOutlet weak var windToLiveButton: ActionButton!
-    @IBOutlet weak var itemForwardButton: UIButton!
+    @IBOutlet weak var itemForwardButton: ActionButton!
     
     @IBOutlet weak var offsetS: UILabel!
     @IBOutlet weak var offsetLabel: UILabel!
@@ -81,23 +89,28 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
         DispatchQueue.main.async { [self] in
             
             togglePlay.setTitle("", for: .disabled)
+            togglePlay.action = Action("toggle", self.toggle)
             
-            initialize(button: swapItemButton, image: "swapItem", scale: 0.5)
-            swapItemButton.action = Action("swap item") {
+            initialize(button: swapItemButton, image: "swapItem", scale: 0.5, "swap item", behaviour: .single ) {
                 ybrid?.swapItem{ swapItemButton.carriedOut() }
             }
             
-            initialize(button: itemBackwardButton, image: "itemBackward", scale: 0.5)
-            initialize(button: windBackButton, image: "windBack", scale: 0.4)
-            
-            initialize(button: windToLiveButton, image:  "windToLive", scale: 0.9)
-            
-            windToLiveButton.action = Action( "wind to live" ) {
+            initialize(button: itemBackwardButton, image: "itemBackward", scale: 0.5, "item backward", behaviour: .multi ) {
+                ybrid?.skipBackward(nil)//ItemType.NEWS)
+            }
+            initialize(button: windBackButton, image: "windBack", scale: 0.4, "wind back", behaviour: .multi) {
+                ybrid?.wind(by: -15.0)
+            }
+            initialize(button: windToLiveButton, image:  "windToLive", scale: 0.9, "wind to live", behaviour: .single ) {
                 ybrid?.windToLive{ windToLiveButton.carriedOut() }
             }
             
-            initialize(button: windForwardButton, image: "windForward", scale: 0.4)
-            initialize(button: itemForwardButton, image: "itemForward", scale: 0.5)
+            initialize(button: windForwardButton, image: "windForward", scale: 0.4, "wind forward", behaviour: .multi) {
+                ybrid?.wind(by: +15.0)
+            }
+            initialize(button: itemForwardButton, image: "itemForward", scale: 0.5, "item forward", behaviour: .multi) {
+                ybrid?.skipForward(nil)//ItemType.MUSIC)
+            }
             
             initialize(label: problem)
             initialize(label: playedSince, monospaced: true)
@@ -119,9 +132,13 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
         label.text = nil
     }
     
-    private func initialize(button: UIButton, image:String, scale:Float) {
+    private func initialize(button: ActionButton, image:String, scale:Float, _ actionString:String, behaviour:ActionButton.behaviour, _ action: @escaping () -> () ) {
         let itemImage = UIImage(named: image)!.scale(factor: scale)
         button.setImage(itemImage, for: .normal)
+        button.behave = behaviour
+        button.action = Action(actionString) {
+            action()
+        }
     }
     
     private func getBundleInfo(id:String) -> String {
@@ -252,7 +269,7 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
         /// picking the first service of ybrid bucket
         channelSelector = ChannelSelector(channelPicker, font: (urlField as UITextField).font!) { (channel) in
             Logger.shared.notice("service \(channel ?? "(nil)") selected")
-            if let ybrid = self.currentControl as? YbridControl,
+            if let ybrid = self.ybrid,
                let service = channel {
                 self.channelSelector?.enable(false)
                 ybrid.swapService(to: service) {
@@ -293,7 +310,7 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
     // MARK: user actions
     
     /// toggle play or stop
-    @IBAction func toggle(_ sender: Any) {
+    func toggle() {
         print("toggle called")
         guard let endpoint = endpoint else {
             return
@@ -320,60 +337,7 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
         playbackControls(enable: valid)
     }
        
-    // touch down
-    
-    @IBAction func togglePlayTouchDown(_ sender: Any) {
-        feedback?.haptic()
-    }
-
-    @IBAction func itemBackTouchDown(_ sender: Any) {
-        feedback?.haptic()
-    }
-    @IBAction func windBackTouchDown(_ sender: Any) {
-        feedback?.haptic()
-    }
-
-    @IBAction func windForwardTouchDown(_ sender: Any) {
-        feedback?.haptic()
-    }
-    @IBAction func itemForwardTouchDown(_ sender: Any) {
-        feedback?.haptic()
-    }
-    
-    // touch up
-
-    @IBAction func windBack(_ sender: Any) {
-        print("wind back called")
-        guard let ybrid = currentControl as? YbridControl else {
-            return
-        }
-        ybrid.wind(by: -15.0)
-    }
-    
-    @IBAction func windForward(_ sender: Any) {
-        print("wind forward called")
-        guard let ybrid = currentControl as? YbridControl else {
-            return
-        }
-        ybrid.wind(by: 15.0)
-    }
-
-
-    @IBAction func itemBackward(_ sender: Any) {
-        print("item backward called")
-        guard let ybrid = currentControl as? YbridControl else {
-            return
-        }
-        ybrid.skipBackward(nil)//ItemType.NEWS)
-    }
-    @IBAction func itemForward(_ sender: Any) {
-        print("item forward called")
-        guard let ybrid = currentControl as? YbridControl else {
-            return
-        }
-        ybrid.skipForward(nil)//ItemType.MUSIC)
-    }
-
+ 
     // MARK: helpers acting on ui elements
     
     private func playbackControls(enable:Bool) {

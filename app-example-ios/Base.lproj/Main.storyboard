@@ -72,16 +72,12 @@
                                 <nil key="highlightedColor"/>
                                 <size key="shadowOffset" width="2" height="-1"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="weW-fG-4s2">
+                            <button opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="weW-fG-4s2" customClass="ActionButton" customModule="app_example_ios" customModuleProvider="target">
                                 <rect key="frame" x="181" y="419" width="52" height="58"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                 <state key="normal" image="play">
                                     <color key="titleColor" red="0.91764705882352937" green="0.20000000000000001" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 </state>
-                                <connections>
-                                    <action selector="toggle:" destination="BYZ-38-t0r" eventType="touchUpInside" id="0Zb-Ns-ReG"/>
-                                    <action selector="togglePlayTouchDown:" destination="BYZ-38-t0r" eventType="touchDown" id="MSy-uA-5Pl"/>
-                                </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="played s" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fSV-kl-ZJX" userLabel="PlayingSinceS">
                                 <rect key="frame" x="172" y="598" width="70" height="23"/>
@@ -181,43 +177,27 @@
                                     <color key="titleColor" red="0.9179020524" green="0.19964426760000001" blue="0.96868473290000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 </state>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rfV-dc-y0p" userLabel="Wind Back">
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rfV-dc-y0p" userLabel="Wind Back" customClass="ActionButton" customModule="app_example_ios" customModuleProvider="target">
                                 <rect key="frame" x="101" y="484" width="58" height="58"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                 <state key="normal" image="windBack">
                                     <color key="titleColor" red="0.9179020524" green="0.19964426760000001" blue="0.96868473290000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 </state>
-                                <connections>
-                                    <action selector="windBack:" destination="BYZ-38-t0r" eventType="touchUpInside" id="LDo-Hi-T4v"/>
-                                    <action selector="windBackTouchDown:" destination="BYZ-38-t0r" eventType="touchDown" id="nka-AA-keV"/>
-                                </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0YJ-69-Ho2" userLabel="Item Forward">
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0YJ-69-Ho2" userLabel="Item Forward" customClass="ActionButton" customModule="app_example_ios" customModuleProvider="target">
                                 <rect key="frame" x="336" y="484" width="58" height="58"/>
                                 <state key="normal" image="itemForward"/>
-                                <connections>
-                                    <action selector="itemForward:" destination="BYZ-38-t0r" eventType="touchUpInside" id="wHp-ES-Gc4"/>
-                                    <action selector="itemForwardTouchDown:" destination="BYZ-38-t0r" eventType="touchDown" id="nc9-qA-05f"/>
-                                </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="a4P-CE-qso" userLabel="Wind Forward">
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="a4P-CE-qso" userLabel="Wind Forward" customClass="ActionButton" customModule="app_example_ios" customModuleProvider="target">
                                 <rect key="frame" x="261" y="484" width="58" height="58"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                 <state key="normal" image="windForward">
                                     <color key="titleColor" red="0.9179020524" green="0.19964426760000001" blue="0.96868473290000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 </state>
-                                <connections>
-                                    <action selector="windForward:" destination="BYZ-38-t0r" eventType="touchUpInside" id="qDi-1S-x8O"/>
-                                    <action selector="windForwardTouchDown:" destination="BYZ-38-t0r" eventType="touchDown" id="Hgg-TU-nzf"/>
-                                </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SFj-Ko-4Gc" userLabel="Item Backward">
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SFj-Ko-4Gc" userLabel="Item Backward" customClass="ActionButton" customModule="app_example_ios" customModuleProvider="target">
                                 <rect key="frame" x="26" y="484" width="58" height="58"/>
                                 <state key="normal" image="itemBackward"/>
-                                <connections>
-                                    <action selector="itemBackTouchDown:" destination="BYZ-38-t0r" eventType="touchDown" id="r9t-N9-8bd"/>
-                                    <action selector="itemBackward:" destination="BYZ-38-t0r" eventType="touchUpInside" id="ylR-iX-UVK"/>
-                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xvv-zn-uJk" customClass="ActionButton" customModule="app_example_ios" customModuleProvider="target">
                                 <rect key="frame" x="286" y="419" width="90" height="58"/>
@@ -242,11 +222,25 @@
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" title="heavy" translatesAutoresizingMaskIntoConstraints="NO" id="kYR-rH-rQk" userLabel="haptic">
+                                <rect key="frame" x="62" y="325" width="51" height="31"/>
+                                <connections>
+                                    <action selector="hapticSwitched:" destination="BYZ-38-t0r" eventType="valueChanged" id="1EK-iG-Sdk"/>
+                                </connections>
+                            </switch>
+                            <label opaque="NO" userInteractionEnabled="NO" alpha="0.75" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="heavy haptic" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8Gx-Rs-SBp">
+                                <rect key="frame" x="121" y="330" width="92" height="20"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                <color key="textColor" red="0.45817720890000002" green="0.98520225289999996" blue="0.29782712459999999" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="xvv-zn-uJk" secondAttribute="trailing" constant="10" id="0It-bE-dQt"/>
+                            <constraint firstItem="kYR-rH-rQk" firstAttribute="leading" secondItem="vIB-Zb-9qf" secondAttribute="leading" priority="980" id="0Xz-y6-083"/>
+                            <constraint firstItem="kYR-rH-rQk" firstAttribute="centerY" relation="lessThanOrEqual" secondItem="vIB-Zb-9qf" secondAttribute="centerY" priority="950" constant="40" id="3la-bg-6lH"/>
                             <constraint firstItem="fSV-kl-ZJX" firstAttribute="top" secondItem="XAX-JF-8k1" secondAttribute="centerY" priority="900" constant="-30" id="4Eu-BD-smy"/>
                             <constraint firstItem="weW-fG-4s2" firstAttribute="centerY" relation="lessThanOrEqual" secondItem="vIB-Zb-9qf" secondAttribute="centerY" priority="900" constant="150" id="4Ks-yl-Xjf"/>
                             <constraint firstItem="wCK-0O-Wvu" firstAttribute="centerY" secondItem="Hh0-PX-fsf" secondAttribute="centerY" constant="20" id="4gn-6a-Lgp"/>
@@ -318,11 +312,13 @@
                             <constraint firstItem="7QN-Kw-pvi" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="15" id="n1m-rS-yeU"/>
                             <constraint firstItem="Ltq-1m-jqR" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="jIK-AS-qbk" secondAttribute="trailing" constant="20" id="n9i-9a-hF4"/>
                             <constraint firstItem="2fM-w0-pgB" firstAttribute="centerY" secondItem="jIK-AS-qbk" secondAttribute="centerY" priority="800" constant="-20" id="nBD-5U-2FM"/>
+                            <constraint firstItem="8Gx-Rs-SBp" firstAttribute="centerY" secondItem="kYR-rH-rQk" secondAttribute="centerY" priority="980" id="npS-9v-YC4"/>
                             <constraint firstItem="Hh0-PX-fsf" firstAttribute="centerY" secondItem="Ltq-1m-jqR" secondAttribute="bottom" constant="65" id="nwb-dU-vZz"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="Ml7-EU-1Wn" secondAttribute="trailing" constant="10" id="oe4-qG-n9F"/>
                             <constraint firstItem="DyK-RF-1Wl" firstAttribute="centerY" secondItem="bFj-vD-VTg" secondAttribute="bottom" constant="65" id="ord-0y-lyc"/>
                             <constraint firstItem="a4P-CE-qso" firstAttribute="centerX" secondItem="TDH-yJ-Bni" secondAttribute="centerX" priority="950" constant="70" id="s8K-bY-EOZ"/>
                             <constraint firstItem="Ml7-EU-1Wn" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="tZK-He-K4t"/>
+                            <constraint firstItem="8Gx-Rs-SBp" firstAttribute="leading" secondItem="kYR-rH-rQk" secondAttribute="trailing" constant="10" id="u7x-5c-ond"/>
                             <constraint firstItem="udR-tg-S7A" firstAttribute="trailing" secondItem="Ltq-1m-jqR" secondAttribute="trailing" id="ulh-kS-GWq"/>
                             <constraint firstItem="xvv-zn-uJk" firstAttribute="centerX" secondItem="weW-fG-4s2" secondAttribute="centerX" priority="950" constant="110" id="wDB-gg-LAP"/>
                             <constraint firstItem="A7F-yx-e4d" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="10" id="xBS-yX-BsF"/>
@@ -347,6 +343,7 @@
                         <outlet property="channelPickerFrame" destination="U6z-Sr-MtJ" id="kPc-hP-VDL"/>
                         <outlet property="connected" destination="DyK-RF-1Wl" id="9Qn-2Z-CKq"/>
                         <outlet property="genre" destination="08c-fV-PIe" id="fob-4M-LXM"/>
+                        <outlet property="hapticSwitch" destination="kYR-rH-rQk" id="g1s-Aq-87G"/>
                         <outlet property="itemBackwardButton" destination="SFj-Ko-4Gc" id="qC3-sO-tPs"/>
                         <outlet property="itemForwardButton" destination="0YJ-69-Ho2" id="r8m-sQ-dNs"/>
                         <outlet property="offsetLabel" destination="jIK-AS-qbk" id="WpT-2a-URO"/>
