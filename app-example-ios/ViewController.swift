@@ -45,13 +45,13 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
     @IBOutlet weak var problem: UILabel!
     
     @IBOutlet weak var channelPickerFrame: UIButton!
-    @IBOutlet weak var togglePlay: UIButton!
-    @IBOutlet weak var swapItemButton: UIButton!
+    @IBOutlet weak var togglePlay: ActionButton!
+    @IBOutlet weak var swapItemButton: ActionButton!
     
     @IBOutlet weak var itemBackwardButton: UIButton!
     @IBOutlet weak var windBackButton: UIButton!
     @IBOutlet weak var windForwardButton: UIButton!
-    @IBOutlet weak var windToLiveButton: UIButton!
+    @IBOutlet weak var windToLiveButton: ActionButton!
     @IBOutlet weak var itemForwardButton: UIButton!
     
     @IBOutlet weak var offsetS: UILabel!
@@ -79,9 +79,25 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
             togglePlay.setTitle("", for: .disabled)
             
             initialize(button: swapItemButton, image: "swapItem", scale: 0.5)
+            swapItemButton.action = Action("swap item") {
+                guard let ybrid = currentControl as? YbridControl else {
+                    return
+                }
+                ybrid.swapItem{ swapItemButton.carriedOut() }
+            }
+            
             initialize(button: itemBackwardButton, image: "itemBackward", scale: 0.5)
             initialize(button: windBackButton, image: "windBack", scale: 0.4)
+            
             initialize(button: windToLiveButton, image:  "windToLive", scale: 0.9)
+            
+            windToLiveButton.action = Action( "wind to live" ) {
+                guard let ybrid = self.currentControl as? YbridControl else {
+                    return
+                }
+                ybrid.windToLive()
+            }
+            
             initialize(button: windForwardButton, image: "windForward", scale: 0.4)
             initialize(button: itemForwardButton, image: "itemForward", scale: 0.5)
             
@@ -254,8 +270,6 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
         if #available(iOS 10.0, *) {
             feedback = UserFeedback()
         }
-//        YbridAudioPlayer.acousticInteractionFeedback = true
-//        Ramp.active = true
     }
     
     override func didReceiveMemoryWarning() {
@@ -313,18 +327,14 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
     @IBAction func togglePlayTouchDown(_ sender: Any) {
         feedback?.haptic()
     }
-    @IBAction func swapItemTouchDown(_ sender: Any) {
-        feedback?.haptic()
-    }
+
     @IBAction func itemBackTouchDown(_ sender: Any) {
         feedback?.haptic()
     }
     @IBAction func windBackTouchDown(_ sender: Any) {
         feedback?.haptic()
     }
-    @IBAction func windToLiveTouchDown(_ sender: Any) {
-        feedback?.haptic()
-    }
+
     @IBAction func windForwardTouchDown(_ sender: Any) {
         feedback?.haptic()
     }
@@ -333,21 +343,6 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
     }
     
     // touch up
-    
-    @IBAction func swapItem(_ sender: Any) {
-        print("swap item called")
-        guard let ybrid = currentControl as? YbridControl else {
-            return
-        }
-        DispatchQueue.main.async {
-            self.swapItemButton.isEnabled = false
-        }
-        ybrid.swapItem( { Logger.shared.debug("item swapped")
-            DispatchQueue.main.async {
-                self.swapItemButton.isEnabled = true
-            }
-        } )
-    }
 
     @IBAction func windBack(_ sender: Any) {
         print("wind back called")
@@ -365,14 +360,6 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
         ybrid.wind(by: 15.0)
     }
 
-    
-    @IBAction func windToLive(_ sender: Any) {
-        print("wind to live called")
-        guard let ybrid = currentControl as? YbridControl else {
-            return
-        }
-        ybrid.windToLive()
-    }
 
     @IBAction func itemBackward(_ sender: Any) {
         print("item backward called")

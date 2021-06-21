@@ -23,6 +23,7 @@
 		17651DEF266A6957005D46BA /* ChannelSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17651DEE266A6957005D46BA /* ChannelSelector.swift */; };
 		176BDE84258CAD940038EE95 /* PlayerToggleStressTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 176BDE83258CAD940038EE95 /* PlayerToggleStressTest.swift */; };
 		176BDE95258CB1240038EE95 /* UseYbridPlayerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 176BDE94258CB1240038EE95 /* UseYbridPlayerTests.swift */; };
+		177182CB267FEB870061DB8D /* Actions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 177182CA267FEB870061DB8D /* Actions.swift */; };
 		178347EF25C2DB7600A5F23B /* YbridPlayerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 178347EE25C2DB7600A5F23B /* YbridPlayerTests.swift */; };
 		17F5E354267C9DF700BCE656 /* YbridSwapTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F5E352267C9DF600BCE656 /* YbridSwapTests.swift */; };
 		17F5E355267C9DF700BCE656 /* YbridTimeshiftTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F5E353267C9DF600BCE656 /* YbridTimeshiftTests.swift */; };
@@ -59,6 +60,7 @@
 		176BDE94258CB1240038EE95 /* UseYbridPlayerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UseYbridPlayerTests.swift; sourceTree = "<group>"; };
 		176EE867257002A300AC49DD /* app-example-iosUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "app-example-iosUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		176EE86B257002A300AC49DD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		177182CA267FEB870061DB8D /* Actions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Actions.swift; sourceTree = "<group>"; };
 		178347EE25C2DB7600A5F23B /* YbridPlayerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YbridPlayerTests.swift; sourceTree = "<group>"; };
 		17D3A0332507D29700859BF9 /* app-example-ios.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "app-example-ios.entitlements"; sourceTree = "<group>"; };
 		17F5E352267C9DF600BCE656 /* YbridSwapTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YbridSwapTests.swift; sourceTree = "<group>"; };
@@ -123,6 +125,7 @@
 				172A4121263D9A7E0042ADA4 /* MediaSelector.swift */,
 				17651DEE266A6957005D46BA /* ChannelSelector.swift */,
 				1759CE14267669270040ED0A /* UserFeedback.swift */,
+				177182CA267FEB870061DB8D /* Actions.swift */,
 				17587CC925027DCC00951211 /* Assets.xcassets */,
 				17587CCE25027DCC00951211 /* Info.plist */,
 				17587CC625027DC900951211 /* app_example_ios.xcdatamodeld */,
@@ -353,6 +356,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				17587CC225027DC900951211 /* ViewController.swift in Sources */,
+				177182CB267FEB870061DB8D /* Actions.swift in Sources */,
 				172A4122263D9A7E0042ADA4 /* MediaSelector.swift in Sources */,
 				17587CBE25027DC900951211 /* AppDelegate.swift in Sources */,
 				1759CE15267669270040ED0A /* UserFeedback.swift in Sources */,

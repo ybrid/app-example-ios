@@ -72,7 +72,7 @@
                                 <nil key="highlightedColor"/>
                                 <size key="shadowOffset" width="2" height="-1"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="weW-fG-4s2">
+                            <button opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="weW-fG-4s2" customClass="ActionButton" customModule="app_example_ios" customModuleProvider="target">
                                 <rect key="frame" x="181" y="419" width="52" height="58"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                 <state key="normal" image="play">
@@ -174,16 +174,12 @@
                                     <constraint firstAttribute="height" constant="40" id="al0-Ze-BGU"/>
                                 </constraints>
                             </imageView>
-                            <button opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="749" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TDH-yJ-Bni" userLabel="Wind To Live">
+                            <button opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="749" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TDH-yJ-Bni" userLabel="Wind To Live" customClass="ActionButton" customModule="app_example_ios" customModuleProvider="target">
                                 <rect key="frame" x="181" y="484" width="58" height="58"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                 <state key="normal" image="windToLive">
                                     <color key="titleColor" red="0.9179020524" green="0.19964426760000001" blue="0.96868473290000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 </state>
-                                <connections>
-                                    <action selector="windToLive:" destination="BYZ-38-t0r" eventType="touchUpInside" id="79M-ub-Wc0"/>
-                                    <action selector="windToLiveTouchDown:" destination="BYZ-38-t0r" eventType="touchDown" id="x7X-jo-ig5"/>
-                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rfV-dc-y0p" userLabel="Wind Back">
                                 <rect key="frame" x="101" y="484" width="58" height="58"/>
@@ -223,13 +219,9 @@
                                     <action selector="itemBackward:" destination="BYZ-38-t0r" eventType="touchUpInside" id="ylR-iX-UVK"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xvv-zn-uJk">
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xvv-zn-uJk" customClass="ActionButton" customModule="app_example_ios" customModuleProvider="target">
                                 <rect key="frame" x="286" y="419" width="90" height="58"/>
                                 <state key="normal" image="swapItem"/>
-                                <connections>
-                                    <action selector="swapItem:" destination="BYZ-38-t0r" eventType="touchUpInside" id="9wU-6u-OOx"/>
-                                    <action selector="swapItemTouchDown:" destination="BYZ-38-t0r" eventType="touchDown" id="1VE-uo-L4b"/>
-                                </connections>
                             </button>
                             <button hidden="YES" autoresizesSubviews="NO" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="U6z-Sr-MtJ">
                                 <rect key="frame" x="0.0" y="419" width="180" height="60"/>
@@ -370,7 +362,7 @@
                         <outlet property="urlPicker" destination="vWV-Ob-c7C" id="Ye2-2g-vyZ"/>
                         <outlet property="windBackButton" destination="rfV-dc-y0p" id="6cl-kZ-SiD"/>
                         <outlet property="windForwardButton" destination="a4P-CE-qso" id="ZGI-KQ-Tb6"/>
-                        <outlet property="windToLiveButton" destination="TDH-yJ-Bni" id="zBq-NF-Lf9"/>
+                        <outlet property="windToLiveButton" destination="TDH-yJ-Bni" id="Osg-Fm-wAD"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
