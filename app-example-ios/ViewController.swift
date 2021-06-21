@@ -45,7 +45,7 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
     @IBOutlet weak var problem: UILabel!
     
     @IBOutlet weak var channelPickerFrame: UIButton!
-    @IBOutlet weak var togglePlay: ActionButton!
+    @IBOutlet weak var togglePlay: UIButton!
     @IBOutlet weak var swapItemButton: ActionButton!
     
     @IBOutlet weak var itemBackwardButton: UIButton!
@@ -73,6 +73,10 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
     
     // MARK: initialization
     
+    private var ybrid:YbridControl? { get {
+        currentControl as? YbridControl
+    }}
+    
     private func initializeElements() {
         DispatchQueue.main.async { [self] in
             
@@ -80,10 +84,7 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
             
             initialize(button: swapItemButton, image: "swapItem", scale: 0.5)
             swapItemButton.action = Action("swap item") {
-                guard let ybrid = currentControl as? YbridControl else {
-                    return
-                }
-                ybrid.swapItem{ swapItemButton.carriedOut() }
+                ybrid?.swapItem{ swapItemButton.carriedOut() }
             }
             
             initialize(button: itemBackwardButton, image: "itemBackward", scale: 0.5)
@@ -92,10 +93,7 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
             initialize(button: windToLiveButton, image:  "windToLive", scale: 0.9)
             
             windToLiveButton.action = Action( "wind to live" ) {
-                guard let ybrid = self.currentControl as? YbridControl else {
-                    return
-                }
-                ybrid.windToLive()
+                ybrid?.windToLive{ windToLiveButton.carriedOut() }
             }
             
             initialize(button: windForwardButton, image: "windForward", scale: 0.4)
