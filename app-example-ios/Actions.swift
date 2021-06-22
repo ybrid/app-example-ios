@@ -44,8 +44,8 @@ class ActionButton : UIButton {
     
     var onTouchDown = true { didSet {
         if oldValue != onTouchDown {
-            removeTarget(self, action: #selector(execute), for: .allEvents)
-            addTarget(self, action: #selector(execute), for: onTouchDown ? .touchDown : .touchUpInside)
+            removeTarget(self, action: #selector(execute), for: .allTouchEvents)
+           setup()
         }
     }}
     
@@ -70,11 +70,6 @@ class ActionButton : UIButton {
     func setup() {
         addTarget(self, action: #selector(shake), for: .touchDown)
         addTarget(self, action: #selector(execute), for: onTouchDown ? .touchDown : .touchUpInside)
-    }
-    
-    @objc func act() {
-        shake()
-        execute()
     }
     
     @objc func shake() {
