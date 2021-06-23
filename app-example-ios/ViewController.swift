@@ -450,13 +450,20 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
     func servicesChanged(_ services: [Service]) {
         self.channelSelector?.setChannels(ids: services.map{ $0.identifier })
     }
+    
+    func swapsChanged(_ swapsLeft: Int) {
+        DispatchQueue.main.async {
+            self.swapItemButton.isEnabled = swapsLeft != 0
+        }
+    }
+
 
     // MARK: AudioPlayerListener
 
     func stateChanged(_ state: PlaybackState) {
         guard currentControl?.state == state else {
             /// ignore events from the last player
-            Logger.shared.notice("ignoring \(state), current control is \(currentControl?.state)")
+            Logger.shared.notice("ignoring \(state), current control is \(String(describing: currentControl?.state))")
             return
         }
 
