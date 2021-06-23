@@ -15,7 +15,7 @@
 # ybrid streams
 adaptive-demo (ybrid)       | https://democast.ybrid.io/adaptive-demo
 ad-injection-demo (ybrid)   | https://democast.ybrid.io/ad-injection-demo
-#swr3 (ybrid)                | https://swr-swr3.cast.ybrid.io/swr/swr3/ybrid | v2
+swr3 (ybrid)                | https://swr-swr3.cast.ybrid.io/swr/swr3/ybrid | v2
 swr3 (ybrid stage)          | https://stagecast.ybrid.io/swr3/mp3/mid | v2
 
 # icecast streams
