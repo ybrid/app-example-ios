@@ -44,28 +44,6 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
     @IBOutlet weak var playingTitle: UILabel!
     @IBOutlet weak var problem: UILabel!
     
-    
-    @IBOutlet weak var hapticSwitch: UISwitch!
-    @IBAction func hapticSwitched(_ sender: Any) {
-        DispatchQueue.main.async {
-            UserFeedback.soft = !self.hapticSwitch.isOn
-        }
-    }
-    
-    @IBOutlet weak var actionSwich: UISwitch!
-    
-    @IBAction func actionSwitched(_ sender: Any) {
-        DispatchQueue.main.async {
-            let touchDown = self.actionSwich.isOn
-            self.togglePlay.onTouchDown = touchDown
-            self.windBackButton.onTouchDown = touchDown
-            self.windForwardButton.onTouchDown = touchDown
-            self.windToLiveButton.onTouchDown = touchDown
-            self.itemBackwardButton.onTouchDown = touchDown
-            self.itemForwardButton.onTouchDown = touchDown
-            self.swapItemButton.onTouchDown = touchDown
-        }
-    }
     @IBOutlet weak var channelPickerFrame: UIButton!
     @IBOutlet weak var togglePlay: ActionButton!
     @IBOutlet weak var swapItemButton: ActionButton!
@@ -295,10 +273,6 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
         channelPicker.frame = channelPickerFrame.frame
         view.addSubview(channelPicker)
         channelPicker.selectRow(0, inComponent: 0, animated: true)
-
-        if #available(iOS 10.0, *) {
-            feedback = UserFeedback()
-        }
     }
     
     override func didReceiveMemoryWarning() {

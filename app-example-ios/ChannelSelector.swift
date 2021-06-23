@@ -50,14 +50,14 @@ class ChannelSelector:
         view.dataSource = self
         view.transform = CGAffineTransform(rotationAngle: -90 * (.pi/180))
     }
-    let feedback = UserFeedback()
+
     /// on select channel
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
 
         let oldValue = selected
         selected = channels[row]
         if selected != oldValue {
-            feedback.haptic()
+            UserFeedback.haptic.medium()
             userSelectedChannel(selected)
         }
     }

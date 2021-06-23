@@ -42,14 +42,6 @@ class Action {
 
 class ActionButton : UIButton {
     
-    var onTouchDown = true { didSet {
-        if oldValue != onTouchDown {
-            removeTarget(self, action: #selector(execute), for: .allTouchEvents)
-           setup()
-        }
-    }}
-    
-    let feedback = UserFeedback()    
     var action = Action("(no action)") {}
     enum behaviour {
         case single
@@ -69,11 +61,11 @@ class ActionButton : UIButton {
     
     func setup() {
         addTarget(self, action: #selector(shake), for: .touchDown)
-        addTarget(self, action: #selector(execute), for: onTouchDown ? .touchDown : .touchUpInside)
+        addTarget(self, action: #selector(execute), for: .touchUpInside)
     }
     
     @objc func shake() {
-        feedback.haptic()
+        UserFeedback.haptic.medium()
     }
     
     @objc func execute() {
