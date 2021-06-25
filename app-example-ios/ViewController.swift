@@ -227,7 +227,7 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
             playbackControls(enable: true)
             if let ybridControl = current as? YbridControl {
                 ybridControls(visible: true)
-                ybridControl.select()
+                ybridControl.refresh()
             } else {
                 ybridControls(visible: false)
             }
