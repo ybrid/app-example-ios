@@ -302,7 +302,6 @@ class UseYbridPlayerTests: XCTestCase {
                 sleep(2)
                 control.skipBackward(ItemType.NEWS)
                 sleep(8)
-                print("offset to live is \(control.offsetToLiveS)")
                 control.stop()
                 
                 self.semaphore?.signal()

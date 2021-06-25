@@ -52,8 +52,8 @@ class YbridSwapTests: XCTestCase {
                     XCTFail("ybridControl expected");semaphore?.signal()
                 },
                 ybridControl: { [self] (ybridControl) in
-                
-                XCTAssertEqual(0, ybridControl.swapsLeft, "\(ybridControl.swapsLeft) swaps are left.")
+                    sleep(1) // the listener is notified asynchronously
+                    XCTAssertEqual(0, ybridPlayerListener.swapsLeft, "\(String(describing: ybridPlayerListener.swapsLeft)) swaps are left.")
                     
                 semaphore?.signal()
                })
@@ -80,10 +80,10 @@ class YbridSwapTests: XCTestCase {
                 ybridControl.play()
                 poller.wait(ybridControl, until: PlaybackState.playing, maxSeconds: 10)
                     
-                guard ybridControl.swapsLeft != 0 else {
+                guard let swaps = ybridPlayerListener.swapsLeft, swaps != 0 else {
                     XCTFail("currently no swaps left. Execute test later"); return
                 }
-                print("\(ybridControl.swapsLeft) swaps are left")
+                print("\(swaps) swaps are left")
                     
                 guard let titleMain = ybridPlayerListener.metadatas.last?.displayTitle else {
                     XCTFail("must have recieved metadata"); return
@@ -134,11 +134,11 @@ class YbridSwapTests: XCTestCase {
                 ybridControl.play()
                 poller.wait(ybridControl, until: PlaybackState.playing, maxSeconds: 10)
               
-                guard ybridControl.swapsLeft != 0 else {
+                guard let swaps = ybridPlayerListener.swapsLeft, swaps != 0 else {
                     XCTFail("currently no swaps left. Execute test later")
                     return
                 }
-                print("\(ybridControl.swapsLeft) swaps are left")
+                print("\(swaps) swaps are left")
                     
                 var carriedOut = false
                 ybridControl.swapItem {
@@ -163,6 +163,7 @@ class YbridSwapTests: XCTestCase {
         
         XCTAssertTrue((2...3).contains(ybridPlayerListener.metadatas.count), "should be 2 (3 if item changed) metadata changes, but were \(ybridPlayerListener.metadatas.count)")
     }
+
     
     func test04_AvailableServices_BeforePlay() throws {
         XCTAssertEqual(0,ybridPlayerListener.services.count)
@@ -171,6 +172,7 @@ class YbridSwapTests: XCTestCase {
                     XCTFail("ybridControl expected"); semaphore?.signal()
                },
                ybridControl: { [self] (ybridControl) in
+                    sleep(1) // the listener is notified asynchronously
                     semaphore?.signal()
                })
         _ = semaphore?.wait(timeout: .distantFuture)
@@ -197,8 +199,7 @@ class YbridSwapTests: XCTestCase {
                     carriedOut == true
                 }
                 XCTAssertTrue(carriedOut, "swap was not carried out")
-                
-
+            
                 semaphore?.signal()
                })
         _ = semaphore?.wait(timeout: .distantFuture)
@@ -354,9 +355,4 @@ class Poller {
         XCTAssertTrue(until(), "condition not satisfied within \(maxSeconds) s")
         return seconds
     }
-
-    
-    
 }
-
-
