@@ -31,11 +31,17 @@ import YbridPlayerSDK
 class Action {
 
     let actionString:String
-
-    let method:()-> ()
-    init(_ name:String, _ method: @escaping ()->()) {
+    let audioChange:()->()
+    enum behaviour {
+        case always
+        case single
+        case multi
+    }
+    let behave:behaviour
+    init(_ name:String, _ behave:behaviour = .always, _ method: @escaping ()->()) {
         self.actionString = name
-        self.method = method
+        self.behave = behave
+        self.audioChange = method
     }
 }
 
@@ -43,12 +49,6 @@ class Action {
 class ActionButton : UIButton {
     
     var action = Action("(no action)") {}
-    enum behaviour {
-        case single
-        case multi
-    }
-    var behave:behaviour?
-    
     override init(frame: CGRect) {
          super.init(frame: frame)
          setup()
@@ -61,27 +61,30 @@ class ActionButton : UIButton {
     
     func setup() {
         addTarget(self, action: #selector(shake), for: .touchDown)
-        addTarget(self, action: #selector(execute), for: .touchUpInside)
+        addTarget(self, action: #selector(trigger), for: .touchUpInside)
     }
     
     @objc func shake() {
         UserFeedback.haptic.medium()
     }
     
-    @objc func execute() {
-        Logger.shared.debug("calling \(action.actionString)")
-        if behave == .single {
+    @objc func trigger() {
+        if action.behave == .single {
             DispatchQueue.main.async {
                 self.isEnabled = false
             }
         }
-        action.method()
+
+        Logger.shared.debug("\(action.actionString) triggered")
+        action.audioChange()
     }
 
-    func carriedOut() {
-        Logger.shared.debug("\(action.actionString) carried out")
-        DispatchQueue.main.async {
-            self.isEnabled = true
+    func completed() {
+        Logger.shared.debug("\(action.actionString) completed")
+        if action.behave == .single {
+            DispatchQueue.main.async {
+                self.isEnabled = true
+            }
         }
     }
     

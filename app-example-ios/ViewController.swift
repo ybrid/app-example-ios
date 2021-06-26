@@ -81,12 +81,13 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
         DispatchQueue.main.async { [self] in
             
             togglePlay.setTitle("", for: .disabled)
-            togglePlay.action = Action("toggle", self.toggle)
+            togglePlay.action = Action("toggle", .always, self.toggle)
             
-            initialize(button: swapItemButton, image: "swapItem", scale: 0.5, "swap item", behaviour: .single ) {
-                ybrid?.swapItem{ swapItemButton.carriedOut() }
+            initialize(button: swapItemButton, image: "swapItem", scale: 0.5, "swap item", behaviour: .single) {
+                ybrid?.swapItem{ _ in swapItemButton.completed() }
             }
             
+
             initialize(button: itemBackwardButton, image: "itemBackward", scale: 0.5, "item backward", behaviour: .multi ) {
                 ybrid?.skipBackward(nil)//ItemType.NEWS)
             }
@@ -94,7 +95,7 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
                 ybrid?.wind(by: -15.0)
             }
             initialize(button: windToLiveButton, image:  "windToLive", scale: 0.9, "wind to live", behaviour: .single ) {
-                ybrid?.windToLive{ windToLiveButton.carriedOut() }
+                ybrid?.windToLive{ _ in windToLiveButton.completed() }
             }
             
             initialize(button: windForwardButton, image: "windForward", scale: 0.4, "wind forward", behaviour: .multi) {
@@ -124,13 +125,10 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
         label.text = nil
     }
     
-    private func initialize(button: ActionButton, image:String, scale:Float, _ actionString:String, behaviour:ActionButton.behaviour, _ action: @escaping () -> () ) {
+    private func initialize(button: ActionButton, image:String, scale:Float, _ actionString:String, behaviour:Action.behaviour, _ action: @escaping () -> () ) {
         let itemImage = UIImage(named: image)!.scale(factor: scale)
         button.setImage(itemImage, for: .normal)
-        button.behave = behaviour
-        button.action = Action(actionString) {
-            action()
-        }
+        button.action = Action(actionString, behaviour, action)
     }
     
     private func getBundleInfo(id:String) -> String {
@@ -264,8 +262,8 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
             if let ybrid = self.ybrid,
                let service = channel {
                 self.channelSelector?.enable(false)
-                ybrid.swapService(to: service) {
-                    Logger.shared.debug("service swapped")
+                ybrid.swapService(to: service) { (changed) in
+                    Logger.shared.debug("service did \(changed ? "" : "not") swap")
                     self.channelSelector?.enable(true)
                 }
             }
