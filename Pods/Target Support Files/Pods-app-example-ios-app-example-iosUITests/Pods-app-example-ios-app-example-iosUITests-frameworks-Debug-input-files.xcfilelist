@@ -1,4 +1,4 @@
 ${PODS_ROOT}/Target Support Files/Pods-app-example-ios-app-example-iosUITests/Pods-app-example-ios-app-example-iosUITests-frameworks.sh
+${BUILT_PRODUCTS_DIR}/YbridPlayerSDK/YbridPlayerSDK.framework
 ${PODS_XCFRAMEWORKS_BUILD_DIR}/YbridOgg/YbridOgg.framework/YbridOgg
 ${PODS_XCFRAMEWORKS_BUILD_DIR}/YbridOpus/YbridOpus.framework/YbridOpus
-${PODS_XCFRAMEWORKS_BUILD_DIR}/YbridPlayerSDK/YbridPlayerSDK.framework/YbridPlayerSDK

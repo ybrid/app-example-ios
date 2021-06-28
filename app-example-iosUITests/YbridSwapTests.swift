@@ -141,8 +141,8 @@ class YbridSwapTests: XCTestCase {
                 print("\(swaps) swaps are left")
                     
                 var carriedOut = false
-                ybridControl.swapItem {
-                    carriedOut = true
+                ybridControl.swapItem { (audioChanged) in
+                    carriedOut = audioChanged
                 }
                 _ = poller.wait(max: 10) {
                     carriedOut == true
@@ -192,8 +192,8 @@ class YbridSwapTests: XCTestCase {
                ybridControl: { [self] (ybridControl) in
 
                 var carriedOut = false
-                ybridControl.swapService(to: "ad-injection-demo") {
-                    carriedOut = true
+                ybridControl.swapService(to: "ad-injection-demo") { (audioChanged) in
+                    carriedOut = audioChanged
                 }
                 _ = poller.wait(max: 10) {
                     carriedOut == true
@@ -222,8 +222,8 @@ class YbridSwapTests: XCTestCase {
                ybridControl: { [self] (ybridControl) in
 
                 var carriedOut = false
-                ybridControl.swapService(to: "ad-injection-demo") {
-                    carriedOut = true
+                ybridControl.swapService(to: "ad-injection-demo") { (audioChanged) in
+                    carriedOut = audioChanged
                 }
                 _ = poller.wait(max: 10) {
                     carriedOut == true
@@ -303,8 +303,8 @@ class YbridSwapTests: XCTestCase {
                 poller.wait(ybridControl, until: PlaybackState.stopped, maxSeconds: 2)
                 
                 var carriedOut = false
-                ybridControl.swapService(to: "ad-injection-demo") {
-                    carriedOut = true
+                ybridControl.swapService(to: "ad-injection-demo") { (audioChanged) in
+                    carriedOut = audioChanged
                 }
                 _ = poller.wait(max: 10) {
                     carriedOut == true

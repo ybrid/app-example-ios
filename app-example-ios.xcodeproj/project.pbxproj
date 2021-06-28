@@ -22,7 +22,7 @@
 		1760460F25B0B38600C79BF8 /* UITestsHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1760460E25B0B38600C79BF8 /* UITestsHelper.swift */; };
 		17651DEF266A6957005D46BA /* ChannelSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17651DEE266A6957005D46BA /* ChannelSelector.swift */; };
 		176BDE84258CAD940038EE95 /* PlayerToggleStressTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 176BDE83258CAD940038EE95 /* PlayerToggleStressTest.swift */; };
-		176BDE95258CB1240038EE95 /* UseYbridPlayerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 176BDE94258CB1240038EE95 /* UseYbridPlayerTests.swift */; };
+		176BDE95258CB1240038EE95 /* UseAudioPlayerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 176BDE94258CB1240038EE95 /* UseAudioPlayerTests.swift */; };
 		177182CB267FEB870061DB8D /* Actions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 177182CA267FEB870061DB8D /* Actions.swift */; };
 		178347EF25C2DB7600A5F23B /* YbridPlayerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 178347EE25C2DB7600A5F23B /* YbridPlayerTests.swift */; };
 		17F5E354267C9DF700BCE656 /* YbridSwapTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F5E352267C9DF600BCE656 /* YbridSwapTests.swift */; };
@@ -57,7 +57,7 @@
 		1760460E25B0B38600C79BF8 /* UITestsHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UITestsHelper.swift; sourceTree = "<group>"; };
 		17651DEE266A6957005D46BA /* ChannelSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelSelector.swift; sourceTree = "<group>"; };
 		176BDE83258CAD940038EE95 /* PlayerToggleStressTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerToggleStressTest.swift; sourceTree = "<group>"; };
-		176BDE94258CB1240038EE95 /* UseYbridPlayerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UseYbridPlayerTests.swift; sourceTree = "<group>"; };
+		176BDE94258CB1240038EE95 /* UseAudioPlayerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UseAudioPlayerTests.swift; sourceTree = "<group>"; };
 		176EE867257002A300AC49DD /* app-example-iosUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "app-example-iosUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		176EE86B257002A300AC49DD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		177182CA267FEB870061DB8D /* Actions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Actions.swift; sourceTree = "<group>"; };
@@ -141,7 +141,7 @@
 				1714DA13263848D400DD17B8 /* ConsumeMetadataTests.swift */,
 				178347EE25C2DB7600A5F23B /* YbridPlayerTests.swift */,
 				1760460E25B0B38600C79BF8 /* UITestsHelper.swift */,
-				176BDE94258CB1240038EE95 /* UseYbridPlayerTests.swift */,
+				176BDE94258CB1240038EE95 /* UseAudioPlayerTests.swift */,
 				176BDE83258CAD940038EE95 /* PlayerToggleStressTest.swift */,
 				176EE86B257002A300AC49DD /* Info.plist */,
 				175849F0264E86680071FEE6 /* UITestsEndpoints.swift */,
@@ -371,7 +371,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				176BDE84258CAD940038EE95 /* PlayerToggleStressTest.swift in Sources */,
-				176BDE95258CB1240038EE95 /* UseYbridPlayerTests.swift in Sources */,
+				176BDE95258CB1240038EE95 /* UseAudioPlayerTests.swift in Sources */,
 				175849F1264E86680071FEE6 /* UITestsEndpoints.swift in Sources */,
 				1760460F25B0B38600C79BF8 /* UITestsHelper.swift in Sources */,
 				17F5E354267C9DF700BCE656 /* YbridSwapTests.swift in Sources */,

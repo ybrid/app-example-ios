@@ -1,5 +1,5 @@
 //
-// UseYbridPlayerTests.swift
+// UseAudioPlayerTests.swift
 // app-example-sdk-swiftUITests
 //
 // Copyright (c) 2020 nacamar GmbH - Ybrid®, a Hybrid Dynamic Live Audio Technology
@@ -30,7 +30,7 @@
 import XCTest
 import YbridPlayerSDK
 
-class UseYbridPlayerTests: XCTestCase {
+class UseAudioPlayerTests: XCTestCase {
 
     var semaphore:DispatchSemaphore?
     override func setUpWithError() throws {
@@ -145,7 +145,8 @@ class UseYbridPlayerTests: XCTestCase {
             XCTAssertTrue(error is SessionError, "AudioPlayerError of type SessionError expected. There is a problem establishing a session with the endpoint")
         }
         
-        /// AudioPlayerListener.error(...) recieves errors as well
+        /// AudioPlayerListener.error(...) recieves errors as well, asynchroinously
+        sleep(1)
         XCTAssertEqual(playerListener.errors.count, 1)
         guard let lastError = playerListener.errors.last else {
             XCTFail(); return
@@ -263,7 +264,7 @@ class UseYbridPlayerTests: XCTestCase {
     func test07_ListenToMetadata() {
 
         do {
-            try AudioPlayer.open(for: myEndpoint, listener: playerListener) {
+            try AudioPlayer.open(for: ybridSwr3Endpoint, listener: playerListener) {
                 [self] (control) in
                 
                 control.play()
@@ -273,7 +274,8 @@ class UseYbridPlayerTests: XCTestCase {
                 
                 XCTAssertGreaterThan(playerListener.metadatas.count, 0)
                 guard playerListener.metadatas.count > 0 else {
-                    XCTFail("expected at least one metadata called"); return
+                    XCTFail("expected at least one metadata called");
+                    self.semaphore?.signal(); return
                 }
                 let metadata = playerListener.metadatas[0]
                 XCTAssertNotNil(metadata.current?.displayTitle)
@@ -285,25 +287,26 @@ class UseYbridPlayerTests: XCTestCase {
             semaphore?.signal(); return
         }
     }
-    
+
     
     /*
      Use an endpoint that supports ybridV2 and implement the ybridControl callback.
-     Here you can access all audio content interaction features of ybrid interactive radio.
+     YbridControl's methods can shift time and alter the streamed audio content.
      */
     func test10_UseYbridControl() {
 
         do {
             try AudioPlayer.open(for: ybridSwr3Endpoint, listener: nil, playbackControl: { _ in XCTFail("ybridControl should be called back");                   self.semaphore?.signal() },
              ybridControl: {
-                [self] (control) in
+                [self] (control) in /// called asychronously
                
                 control.play()
                 sleep(2)
                 control.skipBackward(ItemType.NEWS)
-                sleep(8)
-                control.stop()
+                sleep(8) /// listen to the news
                 
+                control.stop()
+                sleep(1)
                 self.semaphore?.signal()
             })
         } catch {
@@ -311,12 +314,11 @@ class UseYbridPlayerTests: XCTestCase {
             semaphore?.signal(); return
         }
     }
-    
-    
+
     /*
-     The YbridControlListener extends AudioPlayerListener.
-     The consumer is notified of ybrid states in the beginning of the session.
-     Later the methods are called when the specific state changes or
+     YbridControlListener extends AudioPlayerListener.
+     The listener is notified of ybrid states in the beginning of the session.
+     The listeners methods are called when the specific state changes or
      when refresh() is called.
      */
     func test11_YbridControlListener_Refresh() {
@@ -325,6 +327,7 @@ class UseYbridPlayerTests: XCTestCase {
             try AudioPlayer.open(for: ybridSwr3Endpoint, listener: ybridPlayerListener, playbackControl: { _ in XCTFail("ybridControl should be called back");                   self.semaphore?.signal() })  {
                 [self] (control) in
                
+                sleep(1)
                 control.refresh()
                 
                 control.close()
@@ -340,12 +343,10 @@ class UseYbridPlayerTests: XCTestCase {
         
         XCTAssertEqual(2, ybridPlayerListener.services.count, "YbridControlListener.serviceChanged(...) should have been called twice, but was \(ybridPlayerListener.services.count)")
         
-        XCTAssertEqual(2, ybridPlayerListener.offsets.count, "YbridControlListener.offsetToLiveChanged(...) should have been called twice, but was \(ybridPlayerListener.offsets.count)")
+        XCTAssertTrue((2...3).contains(ybridPlayerListener.offsets.count), "YbridControlListener.offsetToLiveChanged(...) should have been called \(2...3), but was \(ybridPlayerListener.offsets.count), \(ybridPlayerListener.offsets)")
         
-        XCTAssertEqual(2, ybridPlayerListener.swaps.count, "YbridControlListener.swapsChanged(...) should not have been called, twice, but was \(ybridPlayerListener.swaps.count)")
+        XCTAssertEqual(2, ybridPlayerListener.swaps.count, "YbridControlListener.swapsChanged(...) should have been called twice, but was \(ybridPlayerListener.swaps.count)")
         
         semaphore?.signal()
     }
-
 }
-
