@@ -163,7 +163,7 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
         }
     }
     
-    // MARK: media selection
+    // MARK: endpoint selection
     
     var endpoint:MediaEndpoint? {
         didSet {
@@ -205,9 +205,6 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
         }
     }
     
-    
-   // MARK: media controls
-    
     private var cachedControls:[MediaEndpoint:PlaybackControl] = [:]
     
     private var currentControl:PlaybackControl? {
@@ -216,13 +213,13 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
                 Logger.shared.notice("control changed to (nil)")
                 self.setStopped()
                 self.resetValues()
-                self.playbackControls(enable: false)
+                self.controls(enable: false)
                 self.ybridControls(visible: false)
                 return
             }
             
             Logger.shared.debug("control changed to \(type(of: current))")
-            playbackControls(enable: true)
+            controls(enable: true)
             if let ybridControl = current as? YbridControl {
                 ybridControls(visible: true)
                 ybridControl.refresh()
@@ -261,9 +258,10 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
             Logger.shared.notice("service \(channel ?? "(nil)") selected")
             if let ybrid = self.ybrid,
                let service = channel {
+                Logger.shared.debug("swap service to \(service) triggered")
                 self.channelSelector?.enable(false)
                 ybrid.swapService(to: service) { (changed) in
-                    Logger.shared.debug("service did \(changed ? "" : "not") swap")
+                    Logger.shared.debug("swap service \(changed ? "" : "not ")completed")
                     self.channelSelector?.enable(true)
                 }
             }
@@ -320,22 +318,22 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
     /// edit custom url
     @IBAction func urlEditChanged(_ sender: Any) {
         let valid = uriSelector?.urlEditChanged() ?? true
-        playbackControls(enable: valid)
+        controls(enable: valid)
     }
        
  
     // MARK: helpers acting on ui elements
     
-    private func playbackControls(enable:Bool) {
-//        let running = (currentControl?.state == .playing || currentControl?.state == .buffering)
+    private func controls(enable:Bool) {
         DispatchQueue.main.async {
             self.togglePlay.isEnabled = enable
-            self.windBackButton.isEnabled = enable //&& running
-            self.windForwardButton.isEnabled = enable //&& running
-            self.windToLiveButton.isEnabled = enable //&& running
+            self.windBackButton.isEnabled = enable
+            self.windForwardButton.isEnabled = enable
+            self.windToLiveButton.isEnabled = enable
             self.itemBackwardButton.isEnabled = enable
             self.itemForwardButton.isEnabled = enable
             self.swapItemButton.isEnabled = enable
+            self.channelSelector?.enable(enable)
         }
     }
     
@@ -355,7 +353,7 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
     }
     
     fileprivate func newControl(_ endpoint:MediaEndpoint, callback: @escaping (PlaybackControl) -> ()) {
-        playbackControls(enable: false)
+        controls(enable: false)
         ybridControls(visible: false)
         resetValues()
         
@@ -384,7 +382,7 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
                })
         } catch {
             Logger.shared.error("no player for \(endpoint.uri)")
-            self.playbackControls(enable: false)
+            self.controls(enable: false)
             return
         }}
     }
