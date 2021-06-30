@@ -89,7 +89,7 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
             
 
             initialize(button: itemBackwardButton, image: "itemBackward", scale: 0.5, "item backward", behaviour: .multi ) {
-                ybrid?.skipBackward(nil)//ItemType.NEWS)
+                ybrid?.skipBackward()//ItemType.NEWS)
             }
             initialize(button: windBackButton, image: "windBack", scale: 0.4, "wind back", behaviour: .multi) {
                 ybrid?.wind(by: -15.0)
@@ -102,7 +102,7 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
                 ybrid?.wind(by: +15.0)
             }
             initialize(button: itemForwardButton, image: "itemForward", scale: 0.5, "item forward", behaviour: .multi) {
-                ybrid?.skipForward(nil)//ItemType.MUSIC)
+                ybrid?.skipForward()//ItemType.MUSIC)
             }
             
             initialize(label: problem)
