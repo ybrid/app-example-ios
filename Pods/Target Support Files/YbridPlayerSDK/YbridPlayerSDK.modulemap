@@ -1,0 +1,6 @@
+framework module YbridPlayerSDK {
+  umbrella header "YbridPlayerSDK-umbrella.h"
+
+  export *
+  module * { export * }
+}
