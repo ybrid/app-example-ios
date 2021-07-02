@@ -33,7 +33,7 @@ class UserFeedback {
     
     var generator:NSObject?
     private init() {
-        if canHapticFeedback(), #available(iOS 10.0, *) {
+        if #available(iOS 10.0, *), canHapticFeedback() {
             let generator = UIImpactFeedbackGenerator(style: .medium)
             generator.prepare()
             self.generator = generator
