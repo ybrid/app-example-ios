@@ -175,14 +175,14 @@ code_sign_if_enabled() {
 }
 
 if [[ "$CONFIGURATION" == "Debug" ]]; then
-  install_framework "${BUILT_PRODUCTS_DIR}/YbridPlayerSDK/YbridPlayerSDK.framework"
   install_framework "${PODS_XCFRAMEWORKS_BUILD_DIR}/YbridOgg/YbridOgg.framework"
   install_framework "${PODS_XCFRAMEWORKS_BUILD_DIR}/YbridOpus/YbridOpus.framework"
+  install_framework "${PODS_XCFRAMEWORKS_BUILD_DIR}/YbridPlayerSDK/YbridPlayerSDK.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
-  install_framework "${BUILT_PRODUCTS_DIR}/YbridPlayerSDK/YbridPlayerSDK.framework"
   install_framework "${PODS_XCFRAMEWORKS_BUILD_DIR}/YbridOgg/YbridOgg.framework"
   install_framework "${PODS_XCFRAMEWORKS_BUILD_DIR}/YbridOpus/YbridOpus.framework"
+  install_framework "${PODS_XCFRAMEWORKS_BUILD_DIR}/YbridPlayerSDK/YbridPlayerSDK.framework"
 fi
 if [ "${COCOAPODS_PARALLEL_CODE_SIGN}" == "true" ]; then
   wait

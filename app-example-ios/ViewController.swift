@@ -221,8 +221,8 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
             Logger.shared.debug("control changed to \(type(of: current))")
             controls(enable: true)
             if let ybridControl = current as? YbridControl {
-                ybridControls(visible: true)
                 ybridControl.refresh()
+                ybridControls(visible: true)
             } else {
                 ybridControls(visible: false)
             }
