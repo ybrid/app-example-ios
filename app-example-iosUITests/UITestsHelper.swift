@@ -222,18 +222,16 @@ class TestYbridPlayerListener : AbstractAudioPlayerListener, YbridControlListene
 }
 
 class TestYbridControl {
+    
     let poller = Poller()
     let endpoint:MediaEndpoint
     let listener:YbridControlListener
     let semaphore:DispatchSemaphore
-    init(_ endpoint:MediaEndpoint, listener:YbridControlListener, whenClosed extSemaphore:DispatchSemaphore? = nil) {
+    
+    init(_ endpoint:MediaEndpoint, listener:YbridControlListener) {
         self.endpoint = endpoint
         self.listener = listener
-        if let semaphore = extSemaphore {
-            self.semaphore = semaphore
-        } else {
-            self.semaphore = DispatchSemaphore(value: 0)
-        }
+        self.semaphore = DispatchSemaphore(value: 0)
     }
     
     func playing( action: @escaping (YbridControl)->() ) {
