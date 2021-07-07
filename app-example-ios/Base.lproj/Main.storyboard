@@ -56,18 +56,6 @@
                                 <nil key="highlightedColor"/>
                                 <size key="shadowOffset" width="2" height="-1"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="500" ambiguous="YES" text="current title" textAlignment="center" lineBreakMode="middleTruncation" numberOfLines="3" minimumScaleFactor="0.5" adjustsLetterSpacingToFitWidth="YES" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="BTB-qz-aRk">
-                                <rect key="frame" x="158.5" y="333" width="97.5" height="40"/>
-                                <color key="tintColor" systemColor="darkTextColor"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="40" id="D8z-mz-4DK"/>
-                                    <constraint firstAttribute="height" relation="lessThanOrEqual" priority="980" constant="70" id="Vm9-4f-uYf"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" style="UICTFontTextStyleTitle2"/>
-                                <color key="textColor" red="0.9179020524" green="0.19964426760000001" blue="0.96868473290000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                <nil key="highlightedColor"/>
-                                <size key="shadowOffset" width="2" height="-1"/>
-                            </label>
                             <button opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="weW-fG-4s2" customClass="ActionButton" customModule="app_example_ios" customModuleProvider="target">
                                 <rect key="frame" x="181" y="419" width="52" height="58"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="18"/>
@@ -226,6 +214,18 @@
                                 <nil key="highlightedColor"/>
                                 <size key="shadowOffset" width="2" height="-1"/>
                             </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="500" ambiguous="YES" misplaced="YES" text="current title" textAlignment="center" lineBreakMode="middleTruncation" numberOfLines="3" minimumScaleFactor="0.5" adjustsLetterSpacingToFitWidth="YES" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="BTB-qz-aRk">
+                                <rect key="frame" x="159" y="345" width="97.5" height="40"/>
+                                <color key="tintColor" systemColor="darkTextColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="40" id="D8z-mz-4DK"/>
+                                    <constraint firstAttribute="height" relation="lessThanOrEqual" priority="980" constant="70" id="Vm9-4f-uYf"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleTitle2"/>
+                                <color key="textColor" red="0.9179020524" green="0.19964426760000001" blue="0.96868473290000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <nil key="highlightedColor"/>
+                                <size key="shadowOffset" width="2" height="-1"/>
+                            </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -246,6 +246,7 @@
                             <constraint firstItem="jIK-AS-qbk" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="D3H-he-nhD"/>
                             <constraint firstItem="7QN-Kw-pvi" firstAttribute="leading" secondItem="wop-Ut-BsE" secondAttribute="leading" id="DRc-ot-53B"/>
                             <constraint firstItem="T1X-Xs-cjv" firstAttribute="centerY" secondItem="DyK-RF-1Wl" secondAttribute="centerY" priority="800" constant="20" id="EQP-re-jVJ"/>
+                            <constraint firstItem="BTB-qz-aRk" firstAttribute="top" relation="greaterThanOrEqual" secondItem="vIB-Zb-9qf" secondAttribute="bottom" priority="950" constant="10" id="Et3-dm-gpy"/>
                             <constraint firstItem="a4P-CE-qso" firstAttribute="centerY" secondItem="TDH-yJ-Bni" secondAttribute="centerY" id="H6L-8C-6FD"/>
                             <constraint firstItem="Hh0-PX-fsf" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="7QN-Kw-pvi" secondAttribute="trailing" priority="500" constant="155" id="Hcr-n3-dxh"/>
                             <constraint firstItem="weW-fG-4s2" firstAttribute="centerX" secondItem="XAX-JF-8k1" secondAttribute="centerX" priority="980" id="IFQ-jS-Pmv"/>
@@ -274,7 +275,6 @@
                             <constraint firstItem="T1X-Xs-cjv" firstAttribute="bottom" relation="lessThanOrEqual" secondItem="8bC-Xf-vdC" secondAttribute="baseline" constant="-20" id="WDP-sa-2Lu"/>
                             <constraint firstItem="a4P-CE-qso" firstAttribute="centerY" secondItem="TDH-yJ-Bni" secondAttribute="centerY" priority="980" id="WaT-Op-e5U"/>
                             <constraint firstItem="weW-fG-4s2" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="XEB-Xt-fMX"/>
-                            <constraint firstItem="BTB-qz-aRk" firstAttribute="top" relation="greaterThanOrEqual" secondItem="vIB-Zb-9qf" secondAttribute="bottom" priority="980" id="YWP-eM-cPD"/>
                             <constraint firstItem="Hh0-PX-fsf" firstAttribute="trailing" secondItem="wCK-0O-Wvu" secondAttribute="trailing" id="Yhw-6g-Ffz"/>
                             <constraint firstItem="A7F-yx-e4d" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="ZaN-YL-w0S"/>
                             <constraint firstItem="xvv-zn-uJk" firstAttribute="centerY" secondItem="weW-fG-4s2" secondAttribute="centerY" priority="950" id="aCx-tC-Ji1"/>

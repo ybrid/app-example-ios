@@ -71,7 +71,8 @@ class YbridSwapItemTests: XCTestCase {
                 }
                     
                 ybridControl.play()
-                poller.wait(ybridControl, until: PlaybackState.playing, maxSeconds: 10)
+                    poller.wait(ybridControl, until: PlaybackState.playing, maxSeconds: Int(YbridSwapItemTests.maxAudioComplete))
+                sleep(2)
                     
                 guard let swaps = listener.swapsLeft, swaps != 0 else {
                     XCTFail("currently no swaps left. Execute test later"); return
@@ -93,7 +94,8 @@ class YbridSwapItemTests: XCTestCase {
                     Logger.testing.info("title swapped =\(titleSwapped!)")
                     return titleMain != titleSwapped!
                 }
-                
+                sleep(2)
+                    
                 ybridControl.swapItem()
                 _ = poller.wait(max: 10) {
                     guard let titleSwapped2 = listener.metadatas.last?.displayTitle else {
@@ -102,6 +104,7 @@ class YbridSwapItemTests: XCTestCase {
                     Logger.testing.info("title swapped =\(titleSwapped2)")
                     return titleSwapped2 != titleSwapped
                 }
+                sleep(2)
 
                })
         _ = semaphore?.wait(timeout: .distantFuture)
@@ -125,8 +128,8 @@ class YbridSwapItemTests: XCTestCase {
                     semaphore?.signal()
                 }
                 ybridControl.play()
-                poller.wait(ybridControl, until: PlaybackState.playing, maxSeconds: 10)
-              
+                poller.wait(ybridControl, until: PlaybackState.playing, maxSeconds: Int(YbridSwapItemTests.maxAudioComplete))
+                    
                 guard let swaps = listener.swapsLeft, swaps != 0 else {
                     XCTFail("currently no swaps left. Execute test later")
                     return
@@ -141,7 +144,6 @@ class YbridSwapItemTests: XCTestCase {
                     carriedOut == true
                 }
                 XCTAssertTrue(carriedOut, "swap was not carried out")
-                sleep(2)
                     
                })
         _ = semaphore?.wait(timeout: .distantFuture)
@@ -160,37 +162,48 @@ class YbridSwapItemTests: XCTestCase {
     // MARK: using audio complete
     
     func test11_SwapItemComplete_Demo() throws {
-        let actionTraces = try playAndSwapItem(ybridDemoEndpoint)
+        
+        let actionTraces = ActionsTrace()
+        TestYbridControl(ybridDemoEndpoint, listener: listener).playing{ [self] (ybrid) in
+            actionTraces.append( swapItem(ybrid) )
+        }
+        
         checkErrors(expectedErrors: 0)
         actionTraces.check(expectedActions: 1, maxDuration: YbridSwapItemTests.maxAudioComplete)
     }
     
     func test12_SwapItemComplete_AdDemo() throws {
-        let actionTraces = try playAndSwapItem(ybridAdDemoEndpoint)
+        
+        let actionTraces = ActionsTrace()
+        TestYbridControl(ybridAdDemoEndpoint, listener: listener).playing{ [self] (ybrid) in
+            actionTraces.append( swapItem(ybrid) )
+        }
+        
         checkErrors(expectedErrors: 1)
         actionTraces.check(expectedActions: 1, maxDuration: 1.0)
     }
-    
-    private func playAndSwapItem(_ endpoint:MediaEndpoint) throws -> ActionsTrace {
-        
-        let actions = ActionsTrace()
-     
-        TestYbridControl(endpoint, listener: listener).playing{ (ybridControl) in
-            let actionSemaphore = DispatchSemaphore(value: 0)
-            
-            let trace = actions.newTrace("swap item")
-            ybridControl.swapItem() { (changed) in
-                trace.complete(changed)
-                Logger.testing.info( "***** audio complete ***** did \(changed ? "":"not ")\(trace.name)")
-                sleep(3)
-                
-                actionSemaphore.signal()
-            }
-            _ = actionSemaphore.wait(timeout: .distantFuture)
+  
+    func swapItem( _ ybrid:YbridControl, maxWait:TimeInterval? = nil) -> (Trace) {
+        let mySema = DispatchSemaphore(value: 0)
+        let trace = Trace("swap item")
+        ybrid.swapItem() { (changed) in
+            self.actionComplete(changed, trace)
+            mySema.signal()
         }
-        return actions
+        if let maxWait = maxWait {
+            _ = mySema.wait(timeout: .now() + maxWait)
+        } else {
+            _ = mySema.wait(timeout: .distantFuture)
+        }
+        return trace
     }
     
+    private func actionComplete(_ changed:Bool,_ trace:Trace) {
+       trace.complete(changed)
+       Logger.testing.notice( "***** audio complete ***** did \(changed ? "":"not ")\(trace.name)")
+       sleep(3)
+   }
+
     private func checkErrors(expectedErrors:Int)  {
         guard listener.errors.count == expectedErrors else {
             XCTFail("\(expectedErrors) errors expected, but were \(listener.errors.count)")

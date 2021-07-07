@@ -29,7 +29,7 @@ import YbridPlayerSDK
 class YbridTimeshiftTests: XCTestCase {
 
     static let maxWindComplete = 4.0
-    let maxWindResponseS = 3
+    let maxWindResponseS = 2
     let liveOffsetRange_LostSign = TimeInterval(0.0) ..< TimeInterval(10.0)
 
     let ybridPlayerListener = TestYbridPlayerListener()
@@ -51,7 +51,7 @@ class YbridTimeshiftTests: XCTestCase {
         try AudioPlayer.open(for: ybridSwr3Endpoint, listener: ybridPlayerListener,
                ybridControl: { [self] (ybridControl) in
 
-//                sleep(1)
+//                usleep(200_000)
 
                 semaphore?.signal()
                })
@@ -90,11 +90,11 @@ class YbridTimeshiftTests: XCTestCase {
                 sleep(2)
         
                 ybridControl.wind(by: -120.0)
-                wait(ybridPlayerListener, shifted: -120.0, maxSeconds: 4)
+                wait(ybridPlayerListener, shifted: -120.0, maxSeconds: maxWindResponseS)
                 sleep(4)
                 
                 ybridControl.wind(by: 60.0)
-                wait(ybridPlayerListener, shifted: -60.0, maxSeconds: 4)
+                wait(ybridPlayerListener, shifted: -60.0, maxSeconds: maxWindResponseS)
                 sleep(4)
                 
                 ybridControl.stop()
@@ -182,7 +182,7 @@ class YbridTimeshiftTests: XCTestCase {
         
                 let date = lastFullHour(secondsBefore:15)
                 ybridControl.wind(to:date)
-                wait(ybridControl, type: ItemType.ADVERTISEMENT, maxSeconds: 6)
+                wait(ybridControl, type: ItemType.ADVERTISEMENT, maxSeconds: Int(YbridTimeshiftTests.maxWindComplete))
                 sleep(4)
 
                 ybridControl.stop()
@@ -203,11 +203,11 @@ class YbridTimeshiftTests: XCTestCase {
                 sleep(2)
         
                 ybridControl.skipBackward(ItemType.NEWS)
-                wait(ybridControl, type: ItemType.NEWS, maxSeconds: 4)
+                wait(ybridControl, type: ItemType.NEWS, maxSeconds: Int(YbridTimeshiftTests.maxWindComplete))
                 sleep(8)
   
                 ybridControl.skipForward(ItemType.MUSIC)
-                wait(ybridControl, type: ItemType.MUSIC, maxSeconds: 4)
+                wait(ybridControl, type: ItemType.MUSIC, maxSeconds: Int(YbridTimeshiftTests.maxWindComplete))
                 sleep(6)
                 
                 ybridControl.stop()
@@ -269,7 +269,7 @@ class YbridTimeshiftTests: XCTestCase {
         let took = wait(max: maxSeconds) {
             return ybridPlayerListener.isItem(type)
         }
-        XCTAssertLessThanOrEqual(took, maxSeconds, "item type is \(ybridPlayerListener.metadatas.last?.current?.type), not \(type)")
+        XCTAssertLessThanOrEqual(took, maxSeconds, "item type is \(String(describing: ybridPlayerListener.metadatas.last?.current?.type)), not \(type)")
     }
     
     
@@ -300,106 +300,205 @@ class YbridTimeshiftTests: XCTestCase {
     // MARK: using audio callback
     
     func test11_WindBackWindLive_Swr3() throws {
-        
-        let actionTraces = try playWindByWindToLive(ybridSwr3Endpoint, windBy: -300)
+
+        let actionTraces = ActionsTrace()
+        TestYbridControl(ybridSwr3Endpoint, listener: ybridPlayerListener).playing{ [self] (ybrid) in
+            actionTraces.append( wind(by:-300, ybrid) )
+            actionTraces.append( wind(to:nil, ybrid) )
+        }
+
         checkErrors(expectedErrors: 0)
         actionTraces.check(expectedActions: 2, maxDuration: YbridTimeshiftTests.maxWindComplete)
     }
     
     func test12_WindToWindForward_Swr3() throws {
-        let actionTraces = try playWindToLastFullHourWindForward(ybridSwr3Endpoint, windBy: 30)
+
+        let actionTraces = ActionsTrace()
+        TestYbridControl(ybridSwr3Endpoint, listener: ybridPlayerListener).playing{ [self] (ybrid) in
+            let date = lastFullHour(secondsBefore:-4)
+            actionTraces.append( wind(to:date, ybrid) )
+            actionTraces.append( wind(by:30, ybrid) )
+        }
+
         checkErrors(expectedErrors: 0)
         actionTraces.check(expectedActions: 2, maxDuration: YbridTimeshiftTests.maxWindComplete)
     }
     
     func test13_SkipBackNewsSkipMusic_Swr3() throws {
-        let actionTraces = try playSkipBackNewsSkipForward(ybridSwr3Endpoint)
+
+        let actionTraces = ActionsTrace()
+        TestYbridControl(ybridSwr3Endpoint, listener: ybridPlayerListener).playing{ [self] (ybrid) in
+            actionTraces.append(skip(-1, ItemType.NEWS, ybrid))
+            actionTraces.append(skip(+1, ItemType.MUSIC, ybrid))
+        }
+
         checkErrors(expectedErrors: 0)
         actionTraces.check(expectedActions: 2, maxDuration: YbridTimeshiftTests.maxWindComplete)
     }
     
-    private func playWindByWindToLive(_ endpoint:MediaEndpoint, windBy:TimeInterval) throws -> ActionsTrace {
-        
-        let actions = ActionsTrace()
-        TestYbridControl(endpoint, listener: ybridPlayerListener).playing{ (ybridControl) in
-            let actionSemaphore = DispatchSemaphore(value: 0)
-            
-            var trace = actions.newTrace("wind by \(windBy.S)")
-            ybridControl.wind(by: windBy) { (changed) in
-                trace.complete(changed)
-                Logger.testing.notice( "***** audio complete ***** did \(changed ? "":"not ")\(trace.name)")
-                sleep(3)
-                
-                trace = actions.newTrace("wind to live")
-                ybridControl.windToLive() { (changed) in
-                    trace.complete(changed)
-                    Logger.testing.notice( "***** audio complete ***** did \(changed ? "":"not ")\(trace.name)")
-                    sleep(3)
-                    
-                    actionSemaphore.signal()
-                }
-            }
-            _ = actionSemaphore.wait(timeout: .distantFuture)
+    func test13b_SkipBack_Swr3() throws {
+
+        let actionTraces = ActionsTrace()
+        TestYbridControl(ybridSwr3Endpoint, listener: ybridPlayerListener).playing{ [self] (ybrid) in
+            actionTraces.append( skip(-1, nil, ybrid) )
         }
-        return actions
+
+        checkErrors(expectedErrors: 0)
+        actionTraces.check(expectedActions: 1, maxDuration: YbridTimeshiftTests.maxWindComplete)
+    }
+    
+    func test14_windLiveWhenLive() throws {
+
+        let traces = ActionsTrace()
+        TestYbridControl(ybridSwr3Endpoint, listener: ybridPlayerListener).playing{ [self] (ybrid) in
+            traces.append( wind(to:nil, ybrid) )
+        }
+
+        checkErrors(expectedErrors: 0)
+        traces.check(expectedActions: 1, maxDuration: YbridTimeshiftTests.maxWindComplete)
+    }
+    
+    
+    func test21_windBack10Times() throws {
+
+        let traces = ActionsTrace()
+        TestYbridControl(ybridSwr3Endpoint, listener: ybridPlayerListener).playing{ [self] (ybrid) in
+            traces.append( wind(by:-201, ybrid) )
+            traces.append( wind(by:-202, ybrid) )
+            traces.append( wind(by:-203, ybrid) )
+            traces.append( wind(by:-204, ybrid) )
+            traces.append( wind(by:-205, ybrid) )
+            traces.append( wind(by:-206, ybrid) )
+            traces.append( wind(by:-207, ybrid) )
+            traces.append( wind(by:-208, ybrid) )
+            traces.append( wind(by:-209, ybrid) )
+            traces.append( wind(by:-210, ybrid) )
+        }
+
+        checkErrors(expectedErrors: 0)
+        traces.check(expectedActions: 10, maxDuration: YbridTimeshiftTests.maxWindComplete)
     }
 
-    private func playWindToLastFullHourWindForward(_ endpoint:MediaEndpoint, windBy:TimeInterval) throws -> ActionsTrace {
+    func test22_windForward10Times() throws {
+
+        let traces = ActionsTrace()
+        TestYbridControl(ybridSwr3Endpoint, listener: ybridPlayerListener).playing{ [self] (ybrid) in
+            traces.append( wind(by:-3600, ybrid) )
+            traces.append( wind(by:101, ybrid) )
+            traces.append( wind(by:102, ybrid) )
+            traces.append( wind(by:103, ybrid) )
+            traces.append( wind(by:104, ybrid) )
+            traces.append( wind(by:105, ybrid) )
+            traces.append( wind(by:106, ybrid) )
+            traces.append( wind(by:107, ybrid) )
+            traces.append( wind(by:108, ybrid) )
+            traces.append( wind(by:109, ybrid) )
+            traces.append( wind(by:110, ybrid) )
+        }
+
+        checkErrors(expectedErrors: 0)
+        traces.check(expectedActions: 11, maxDuration: YbridTimeshiftTests.maxWindComplete)
+    }
+    
+    func test23_skip5Back5Forward() throws {
+
+        let traces = ActionsTrace()
+        TestYbridControl(ybridSwr3Endpoint, listener: ybridPlayerListener).playing{ [self] (ybrid) in
+            traces.append( wind(by:-3600, ybrid) )
+            traces.append( skip(-1, nil, ybrid) )
+            traces.append( skip(-1, nil, ybrid) )
+            traces.append( skip(-1, nil, ybrid) )
+            traces.append( skip(-1, nil, ybrid) )
+            traces.append( skip(-1, nil, ybrid) )
+            traces.append( skip(+1, nil, ybrid) )
+            traces.append( skip(+1, nil, ybrid) )
+            traces.append( skip(+1, nil, ybrid) )
+            traces.append( skip(+1, nil, ybrid) )
+            traces.append( skip(+1, nil, ybrid) )
+        }
         
-        let actions = ActionsTrace()
-        TestYbridControl(endpoint, listener: ybridPlayerListener).playing{ (ybridControl) in
-            let actionSemaphore = DispatchSemaphore(value: 0)
-            
-            let date = self.lastFullHour(secondsBefore:-4)
-            var trace = actions.newTrace("wind to \(date)")
-            ybridControl.wind(to:date) { (changed) in
-                trace.complete(changed)
-                
-                Logger.testing.notice( "***** audio complete ***** did \(changed ? "":"not ")\(trace.name)")
-                sleep(3)
-                
-                trace = actions.newTrace("wind by \(windBy.S)")
-                ybridControl.wind(by:windBy) { (changed) in
-                    trace.complete(changed)
-                    Logger.testing.notice( "***** audio complete ***** did \(changed ? "":"not ")\(trace.name)")
-                    sleep(3)
-                    
-                    actionSemaphore.signal()
-                }
-            }
-            _ = actionSemaphore.wait(timeout: .distantFuture)
-        }
-        return actions
+        checkErrors(expectedErrors: 0)
+        traces.check(expectedActions: 11, maxDuration: YbridTimeshiftTests.maxWindComplete)
     }
-  
-    private func playSkipBackNewsSkipForward(_ endpoint:MediaEndpoint) throws -> ActionsTrace {
-        let actions = ActionsTrace()
-        TestYbridControl(endpoint, listener: ybridPlayerListener).playing{ (ybridControl) in
-            let actionSemaphore = DispatchSemaphore(value: 0)
-            
-            var trace = actions.newTrace("skip back to news")
-            ybridControl.skipBackward(ItemType.NEWS) { (changed) in
-                trace.complete(changed)
-                Logger.testing.notice( "***** audio complete ***** did \(changed ? "":"not ")\(trace.name)")
-                sleep(8)
-                
-                trace = actions.newTrace("skip item forward")
-                ybridControl.skipForward() { (changed) in
-                    trace.complete(changed)
-                    Logger.testing.notice( "***** audio complete ***** did \(changed ? "":"not ")\(trace.name)")
-                    sleep(8)
-                    
-                    actionSemaphore.signal()
-                }
-            }
-            _ = actionSemaphore.wait(timeout: .distantFuture)
+
+
+    // MARK: test helpers
+    
+    func wind(by:TimeInterval, _ ybrid:YbridControl) -> (Trace) {
+        let mySema = DispatchSemaphore(value: 0)
+        let trace = Trace("wind by \(by.S)")
+        ybrid.wind(by: by ) { (changed) in
+            self.actionComplete(changed, trace)
+            mySema.signal()
         }
-        return actions
+        _ = mySema.wait(timeout: .distantFuture)
+        return trace
     }
     
+    func wind(to:Date?, _ ybrid:YbridControl) -> (Trace) {
+        let mySema = DispatchSemaphore(value: 0)
+        let trace:Trace
+        if let date = to {
+            trace = Trace("wind to \(date)")
+            ybrid.wind(to: date ) { (changed) in
+                self.actionComplete(changed, trace)
+                mySema.signal()
+            }
+        } else {
+            trace = Trace("wind live")
+            ybrid.windToLive() { (changed) in
+                self.actionComplete(changed, trace)
+                mySema.signal()
+            }
+        }
+        _ = mySema.wait(timeout: .distantFuture)
+        return trace
+    }
     
-    // MARK: helpers
- 
+    func skip(_ count:Int,_ type:ItemType? = nil, _ ybrid:YbridControl) -> Trace {
+        guard count == 1 || count == -1 else {
+            Logger.testing.error("skip \(count) not supported")
+            return Trace("denied skipping \(count) to \(String(describing: type))")
+        }
+        let mySema = DispatchSemaphore(value: 0)
+        let trace:Trace
+        if count == 1 {
+            if let type = type {
+                trace = Trace("skip forward to \(type)")
+                ybrid.skipForward(type) { (changed) in
+                    self.actionComplete(changed, trace)
+                    mySema.signal()
+                }
+            } else {
+                trace = Trace("skip forward to item")
+                ybrid.skipForward() { (changed) in
+                    self.actionComplete(changed, trace)
+                    mySema.signal()
+                }
+        }} else {
+            if let type = type {
+                trace = Trace("skip backward to \(type)")
+                ybrid.skipBackward(type) { (changed) in
+                    self.actionComplete(changed, trace)
+                    mySema.signal()
+                }
+            } else {
+                trace = Trace("skip backward to item")
+                ybrid.skipBackward() { (changed) in
+                    self.actionComplete(changed, trace)
+                    mySema.signal()
+                }
+        }}
+        _ = mySema.wait(timeout: .distantFuture)
+        return trace
+    }
+
+    private func actionComplete(_ changed:Bool,_ trace:Trace) {
+       trace.complete(changed)
+       Logger.testing.notice( "***** audio complete ***** did \(changed ? "":"not ")\(trace.name)")
+       sleep(3)
+   }
+    
     func lastFullHour(secondsBefore:Int) -> Date {
         let date = Date()
         var components = Calendar.current.dateComponents([.minute, .second], from: date)
