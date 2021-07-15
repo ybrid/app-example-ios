@@ -89,20 +89,25 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
             
 
             initialize(button: itemBackwardButton, image: "itemBackward", scale: 0.5, "item backward", behaviour: .multi ) {
-                ybrid?.skipBackward()//ItemType.NEWS)
+                enableOffset(false)
+                ybrid?.skipBackward() { _ in enableOffset(true) }
             }
             initialize(button: windBackButton, image: "windBack", scale: 0.4, "wind back", behaviour: .multi) {
-                ybrid?.wind(by: -15.0)
+                enableOffset(false)
+                ybrid?.wind(by: -15.0) { _ in enableOffset(true) }
             }
             initialize(button: windToLiveButton, image:  "windToLive", scale: 0.9, "wind to live", behaviour: .single ) {
-                ybrid?.windToLive{ _ in windToLiveButton.completed() }
+                enableOffset(false)
+                ybrid?.windToLive{ _ in windToLiveButton.completed(); enableOffset(true) }
             }
             
             initialize(button: windForwardButton, image: "windForward", scale: 0.4, "wind forward", behaviour: .multi) {
-                ybrid?.wind(by: +15.0)
+                enableOffset(false)
+                ybrid?.wind(by: +15.0) { _ in self.enableOffset(true) }
             }
             initialize(button: itemForwardButton, image: "itemForward", scale: 0.5, "item forward", behaviour: .multi) {
-                ybrid?.skipForward()//ItemType.MUSIC)
+                enableOffset(false)
+                ybrid?.skipForward() { _ in self.enableOffset(true) }
             }
             
             initialize(label: problem)
@@ -401,6 +406,12 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
             player.stop()
         @unknown default:
             fatalError("unknown player state \(player.state )")
+        }
+    }
+    
+    func enableOffset(_ enable:Bool) {
+        DispatchQueue.main.async {
+            self.offsetS.alpha = enable ? 1.0 : 0.5
         }
     }
     
