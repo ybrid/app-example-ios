@@ -57,6 +57,15 @@
                   Identifier = "PlayerToggleStressTest">
                </Test>
                <Test
+                  Identifier = "YbridTimeshiftTests/test21_windBack10Times()">
+               </Test>
+               <Test
+                  Identifier = "YbridTimeshiftTests/test22_windForward10Times()">
+               </Test>
+               <Test
+                  Identifier = "YbridTimeshiftTests/test23_skip5Back5Forward()">
+               </Test>
+               <Test
                   Identifier = "app_example_iosUITests">
                </Test>
             </SkippedTests>

@@ -56,7 +56,10 @@ class ConsumeMetadataTests: XCTestCase {
         }
         _ = semaphore?.wait(timeout: .distantFuture)
         
-        let metadata = consumer.metadatas[0]
+        guard let metadata = consumer.metadatas.first else {
+            XCTFail("metadatas[0] expected")
+            return
+        }
         guard let current = metadata.current else { XCTFail("current expected"); return }
         XCTAssertTrue(checkIsDemoItem(current))
         
@@ -105,7 +108,9 @@ class ConsumeMetadataTests: XCTestCase {
         
         let currentItems = consumer.metadatas.filter{ return $0.current != nil }.map{ $0.current! }
         XCTAssertGreaterThan(currentItems.count, 0, "must be at least one current item")
-        currentItems.map{ $0.type }.forEach{ (type) in
+        currentItems.forEach{ (item) in
+            let type = item.type
+            print("\(item)")
             XCTAssertNotEqual(ItemType.UNKNOWN, type, "\(type) not expected")
         }
         
@@ -146,10 +151,13 @@ class ConsumeMetadataTests: XCTestCase {
         currentItems.map{ $0.displayTitle }.forEach{ (displayTitle) in
             XCTAssertNotNil(displayTitle, "\(displayTitle) expected")
         }
+        guard let firstMetadata = consumer.metadatas.first else {
+            XCTFail("expected metadatas.first")
+            return
+        }
+        XCTAssertNil(firstMetadata.next, "icy usually doesn't include next item")
         
-        XCTAssertNil(consumer.metadatas[0].next, "icy usually doesn't include next item")
-        
-        guard let station = consumer.metadatas[0].station else {
+        guard let station = firstMetadata.station else {
             XCTFail("icy usually uses http-header 'icy-name'"); return
         }
         XCTAssertEqual("hr2", station.name)
@@ -258,14 +266,11 @@ class ConsumeMetadataTests: XCTestCase {
         XCTAssertNil(station, "This server does not support icy-fields")
     }
     
-     
-       
-    
-
     
     private func playCheckPlayingCheckStopPlayPlayingCheck(fistCheck: () -> (), secondCheck: () -> (), thirdCheck: () -> () ) {
         guard let player = player else { XCTFail("no player"); return }
         player.play()
+        usleep(20_000)  /// because the listener is notified asyncronously it *may* take some millis on old devices
         fistCheck()
         var seconds = wait(until: .playing, maxSeconds: 10)
         Logger.testing.debug("took \(seconds) second\(seconds == 1 ? "" : "s") until \(player.state)")
@@ -312,25 +317,26 @@ class ConsumeMetadataTests: XCTestCase {
     class TestMetadataCallsConsumer : AbstractAudioPlayerListener {
         
         var metadatas:[Metadata] = []
-        
+        let queue = DispatchQueue(label: "io.ybrid.testing.metadata.calls")
         override func metadataChanged(_ metadata: Metadata) {
-            metadatas.append(metadata)
             Logger.testing.info("-- metadata changed, display title is \(metadata.displayTitle ?? "(nil)")")
             XCTAssertNotNil(metadata.displayTitle)
+            queue.async {
+                self.metadatas.append(metadata)
+            }
         }
         
         func checkMetadataCalls(equal expectedCalls: Int) {
-            let calls = metadatas.count
+            let calls = queue.sync { metadatas.count }
             XCTAssertTrue( calls == expectedCalls,  "expected == \(expectedCalls) calls, but was \(calls)")
         }
         
         /// tolerating one more is necessary because metadata can change while testing
         func checkMetadataCalls(min expectedMinCalls: Int, tolerateMore:Int = 1) {
-            let calls = metadatas.count
+            let calls = queue.sync { metadatas.count }
             let expectedMaxCalls = expectedMinCalls + tolerateMore
             let range = (expectedMinCalls...expectedMaxCalls)
             XCTAssertTrue( range.contains(calls), "expected \(range) calls, but was \(calls)")
         }
     }
 }
-

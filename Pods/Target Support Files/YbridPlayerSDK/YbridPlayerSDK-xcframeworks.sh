@@ -149,5 +149,5 @@ install_xcframework() {
   echo "Copied $source to $destination"
 }
 
-install_xcframework "${PODS_ROOT}/../../player-sdk-swift/YbridPlayerSDK.xcframework" "YbridPlayerSDK" "framework" "ios-i386_x86_64-simulator" "ios-arm64_armv7"
+install_xcframework "${PODS_ROOT}/../../player-sdk-swift/YbridPlayerSDK.xcframework" "YbridPlayerSDK" "framework" "ios-arm64_armv7" "ios-i386_x86_64-simulator"
 

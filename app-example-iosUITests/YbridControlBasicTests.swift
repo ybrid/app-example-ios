@@ -32,7 +32,7 @@ class YbridControlBasicTests: XCTestCase {
     var ybridControl:TestYbridControl?
     override func setUpWithError() throws {
         listener.reset()
-        ybridControl = TestYbridControl(ybridSwr3Endpoint, listener: listener)
+        ybridControl = TestYbridControl(ybridDemoEndpoint, listener: listener)
     }
     override func tearDownWithError() throws {
         Logger.testing.debug("-- consumed offsets \(listener.offsets)")
@@ -54,7 +54,7 @@ class YbridControlBasicTests: XCTestCase {
         }
         
         ybridControl.stopped() { (ybridControl) in
-//            usleep(10_000) /// because the listener notifies asyncronously it *may* take some millis
+            usleep(20_000) /// because the listener notifies asyncronously it *may* take some millis
         }
         
         XCTAssertEqual(listener.services.count, 1, "YbridControlListener.serviceChanged(...) should have been called once, but was \(listener.services.count)")
@@ -67,7 +67,7 @@ class YbridControlBasicTests: XCTestCase {
     }
     
     /*
-     The listeners methods are called when the specific state changes or
+     The listener's methods are called when the specific state changes or
      when refresh() is called.
      */
     func test02_Stopped_Refresh() {
@@ -113,10 +113,11 @@ class YbridControlBasicTests: XCTestCase {
         
         XCTAssertEqual(2, listener.services.count, "YbridControlListener.serviceChanged(...) should have been called twice, but was \(listener.services.count)")
         
-        let expectedRange = 2...5
-        XCTAssertTrue(expectedRange.contains(listener.offsets.count), "YbridControlListener.offsetToLiveChanged(...) should have been called \(expectedRange), but was \(listener.offsets.count), \(listener.offsets)")
+        let expectedOffsets = 2...4
+        XCTAssertTrue(expectedOffsets.contains(listener.offsets.count), "YbridControlListener.offsetToLiveChanged(...) should have been called \(expectedOffsets), but was \(listener.offsets.count), \(listener.offsets)")
         
-        XCTAssertEqual(2, listener.swaps.count, "YbridControlListener.swapsChanged(...) should have been called twice, but was \(listener.swaps.count)")
+        let expectedSwapCalls = 2...3
+        XCTAssertTrue(expectedSwapCalls.contains(listener.swaps.count), "YbridControlListener.swapsChanged(...) should have been called \(expectedSwapCalls) times, but was \(listener.swaps.count)")
         
         XCTAssertGreaterThanOrEqual( listener.metadatas.count, 2, "YbridControlListener.metadataChanged(...) should be called at least twice, but was \(listener.metadatas.count)")
     }
