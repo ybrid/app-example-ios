@@ -17,6 +17,7 @@ adaptive-demo (ybrid)       | https://democast.ybrid.io/adaptive-demo
 ad-injection-demo (ybrid)   | https://democast.ybrid.io/ad-injection-demo
 swr3 (ybrid)                | https://swr-swr3.cast.ybrid.io/swr/swr3/ybrid | v2
 #swr3 (ybrid stage)          | https://stagecast.ybrid.io/swr3/mp3/mid | v2
+radio24.ch (ybrid)          |https://stagecast.ybrid.io/chmedia/radio24/ybrid | v2
 
 # icecast streams
 swr3 (icecast)          | http://swr-swr3-live.cast.addradio.de/swr/swr3/live/mp3/128/stream.mp3
@@ -29,8 +30,8 @@ dlf-live (opus)     | https://dradio-dlf-live.cast.addradio.de/dradio/dlf/live/o
 TheRadio.CC (opus)  | http://theradio.cc:8000/trcc-stream.opus
 
 # AAC
-radio13.ru (aac)        | http://play.radio13.ru:8000/96
-1Live (aac-v2, mono)    | https://wdr-1live-live.cast.addradio.de/wdr/1live/live/aac/low
+radio13.ru (he-aac)  | http://play.radio13.ru:8000/96
+1Live (he-aac_v2)    | https://wdr-1live-live.cast.addradio.de/wdr/1live/live/aac/low
 
 # on demand files
 organ sound (mp3, short)    | https://github.com/ybrid/test-files/blob/main/mpeg-audio/music/organ.mp3?raw=true

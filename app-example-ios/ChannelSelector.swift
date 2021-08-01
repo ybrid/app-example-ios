@@ -55,6 +55,9 @@ class ChannelSelector:
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
 
         let oldValue = selected
+        guard channels.count > 0 else {
+            return
+        }
         selected = channels[row]
         if selected != oldValue {
             UserFeedback.haptic.medium()
