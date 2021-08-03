@@ -53,6 +53,7 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
     @IBOutlet weak var windForwardButton: ActionButton!
     @IBOutlet weak var windToLiveButton: ActionButton!
     @IBOutlet weak var itemForwardButton: ActionButton!
+    @IBOutlet weak var bitRateSlider: UISlider!
     
     @IBOutlet weak var offsetS: UILabel!
     @IBOutlet weak var offsetLabel: UILabel!
@@ -331,7 +332,21 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
         controls(enable: valid)
     }
        
- 
+    
+    @IBAction func bitRateChanged(_ sender: Any) {
+        let steps:Int = BitRate.allCases.count - 1
+        let val:Float = bitRateSlider.value
+        let index:Int = Int((val * Float(steps)).rounded())
+        let newValue = Float(index) / Float(steps)
+        bitRateSlider.setValue(newValue, animated: false)
+        
+        let bitRate = BitRate.allCases[index]
+        Logger.shared.info("+ bit rate new value \(newValue) -> \(bitRate)")
+        if let ybrid = currentControl as? YbridControl {
+            ybrid.maxBitRate(to: bitRate)
+        }
+    }
+    
     // MARK: helpers acting on ui elements
     
     private func controls(enable:Bool) {
@@ -451,6 +466,16 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
                 return
             }
             self.bitRate.text = "\(rate/1000) kbps"
+            
+            guard let index:Int = BitRate.allCases.firstIndex(where: { return $0.rawValue == rate }) else {
+                return
+            }
+
+            let steps:Int = BitRate.allCases.count - 1
+        
+            let newValue = Float(index) / Float(steps)
+            self.bitRateSlider.setValue(newValue, animated: false)
+
         }
     }
 

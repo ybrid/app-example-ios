@@ -220,13 +220,16 @@
                                 <nil key="highlightedColor"/>
                                 <size key="shadowOffset" width="2" height="-1"/>
                             </label>
-                            <slider opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="QRs-gy-Apj" userLabel="quality">
+                            <slider opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" continuous="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QRs-gy-Apj" userLabel="quality">
                                 <rect key="frame" x="20" y="556.5" width="124.5" height="24"/>
                                 <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="80" id="dbs-8f-47R"/>
                                 </constraints>
                                 <color key="thumbTintColor" red="0.45817720890000002" green="0.98520225289999996" blue="0.29782712459999999" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <connections>
+                                    <action selector="bitRateChanged:" destination="BYZ-38-t0r" eventType="valueChanged" id="t4c-yL-Cbe"/>
+                                </connections>
                             </slider>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="kbps" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="w6U-oJ-hRJ">
                                 <rect key="frame" x="45" y="583.5" width="75" height="19.5"/>
@@ -346,6 +349,7 @@
                     <connections>
                         <outlet property="appVersion" destination="ws0-6p-CFg" id="gHk-GS-Pe4"/>
                         <outlet property="bitRate" destination="w6U-oJ-hRJ" id="Px0-Zo-i2h"/>
+                        <outlet property="bitRateSlider" destination="QRs-gy-Apj" id="xHh-pj-uST"/>
                         <outlet property="broadcaster" destination="vIB-Zb-9qf" id="HV0-x2-uaO"/>
                         <outlet property="bufferAveraged" destination="of3-5X-iLa" id="MIi-0b-Hsh"/>
                         <outlet property="bufferCurrent" destination="Hh0-PX-fsf" id="cVA-cq-2Sx"/>
