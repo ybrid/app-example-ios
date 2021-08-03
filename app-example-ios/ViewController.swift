@@ -375,6 +375,7 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
             self.swapItemButton.isHidden = hidden
             self.channelPicker.isHidden = hidden
             self.bitRate.isHidden = hidden
+            self.bitRateSlider.isHidden = hidden
         }
     }
     
@@ -462,7 +463,7 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
     func bitRateChanged(_ rate: Int32) {
         DispatchQueue.main.async {
             guard rate > 1000 else {
-                self.bitRate.text = nil
+                self.bitRate.text = "max bit rate"
                 return
             }
             self.bitRate.text = "\(rate/1000) kbps"
