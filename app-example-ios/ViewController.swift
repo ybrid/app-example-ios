@@ -57,8 +57,11 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
     @IBOutlet weak var offsetS: UILabel!
     @IBOutlet weak var offsetLabel: UILabel!
     @IBOutlet weak var playedSince: UILabel!
+    
+    @IBOutlet weak var bitRate: UILabel!
     @IBOutlet weak var ready: UILabel!
     @IBOutlet weak var connected: UILabel!
+    
     @IBOutlet weak var bufferAveraged: UILabel!
     @IBOutlet weak var bufferCurrent: UILabel!
     
@@ -112,6 +115,7 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
             
             initialize(label: problem)
             initialize(label: playedSince, monospaced: true)
+            initialize(label: bitRate)
             initialize(label: ready, monospaced: true)
             initialize(label: connected, monospaced: true)
             initialize(label: bufferAveraged, monospaced: true)
@@ -162,6 +166,7 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
             playingTitle.text = nil
             problem.text = nil
             playingSince(0)
+            bitRate.text = nil
             durationReadyToPlay(nil)
             durationConnected(nil)
             bufferSize(averagedSeconds: nil, currentSeconds: nil)
@@ -354,6 +359,7 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
             self.itemForwardButton.isHidden = hidden
             self.swapItemButton.isHidden = hidden
             self.channelPicker.isHidden = hidden
+            self.bitRate.isHidden = hidden
         }
     }
     
@@ -438,6 +444,15 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
         }
     }
 
+    func bitRateChanged(_ rate: Int32) {
+        DispatchQueue.main.async {
+            guard rate > 1000 else {
+                self.bitRate.text = nil
+                return
+            }
+            self.bitRate.text = "\(rate/1000) kbps"
+        }
+    }
 
     // MARK: AudioPlayerListener
 
