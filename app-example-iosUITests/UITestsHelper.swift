@@ -140,6 +140,7 @@ class Poller {
 }
 
 class TestYbridPlayerListener : AbstractAudioPlayerListener, YbridControlListener {
+
     
     let queue = DispatchQueue.init(label: "io.ybrid.tests.ui.listener")
     
@@ -149,6 +150,8 @@ class TestYbridPlayerListener : AbstractAudioPlayerListener, YbridControlListene
             errors.removeAll()
             metadatas.removeAll()
             services.removeAll()
+            swaps.removeAll()
+            bitrates.removeAll()
         }
     }
     
@@ -157,6 +160,7 @@ class TestYbridPlayerListener : AbstractAudioPlayerListener, YbridControlListene
     var errors:[AudioPlayerError] = []
     var services:[[Service]] = []
     var swaps:[Int] = []
+    var bitrates:[Int32] = []
     
     
     // the latest recieved value for offset
@@ -173,6 +177,12 @@ class TestYbridPlayerListener : AbstractAudioPlayerListener, YbridControlListene
         }
     }}
     
+    // the latest value for max bit rate
+    var maxBitRate:Int32? { get {
+        queue.sync {
+            return bitrates.last
+        }
+    }}
     
     func isItem(_ type:ItemType) -> Bool {
         queue.sync {
@@ -183,6 +193,14 @@ class TestYbridPlayerListener : AbstractAudioPlayerListener, YbridControlListene
         }
     }
     
+    func isItem(of types:[ItemType]) -> Bool {
+        queue.sync {
+            if let currentType = metadatas.last?.current?.type {
+                return types.contains(currentType)
+            }
+            return false
+        }
+    }
     func offsetToLiveChanged(_ offset:TimeInterval?) {
         guard let offset = offset else { XCTFail(); return }
         Logger.testing.info("-- offset is \(offset.S)")
@@ -205,6 +223,13 @@ class TestYbridPlayerListener : AbstractAudioPlayerListener, YbridControlListene
         }
     }
     
+    func bitRateChanged(_ maxBitRate: Int32) {
+        Logger.testing.info("-- max bit rate \(maxBitRate)")
+        queue.async {
+            self.bitrates.append(maxBitRate)
+        }
+    }
+    
     override func metadataChanged(_ metadata: Metadata) {
         Logger.testing.notice("-- metadata: display title \(String(describing: metadata.displayTitle)), service \(String(describing: metadata.activeService?.identifier))")
         queue.async {
@@ -221,109 +246,6 @@ class TestYbridPlayerListener : AbstractAudioPlayerListener, YbridControlListene
 
 }
 
-class TestYbridControl {
-    
-    let poller = Poller()
-    let endpoint:MediaEndpoint
-    let listener:YbridControlListener
-    let semaphore:DispatchSemaphore
-    
-    init(_ endpoint:MediaEndpoint, listener:YbridControlListener) {
-        self.endpoint = endpoint
-        self.listener = listener
-        self.semaphore = DispatchSemaphore(value: 0)
-    }
-    
-    func playing( action: @escaping (YbridControl)->() ) {
-        do {
-            try AudioPlayer.open(for: endpoint, listener: listener,
-                 playbackControl: { (ctrl) in self.semaphore.signal()
-                    XCTFail(); return },
-                 ybridControl: { [self] (ybridControl) in
-                    
-                    ybridControl.play()
-                    poller.wait(ybridControl, until:PlaybackState.playing, maxSeconds:10)
-                    
-                    action(ybridControl)
-                    
-                    ybridControl.stop()
-                    poller.wait(ybridControl, until:PlaybackState.stopped, maxSeconds:2)
-                    ybridControl.close()
-                    semaphore.signal()
-                 })
-        } catch {
-            XCTFail("no player. Something went wrong");
-            semaphore.signal(); return
-        }
-        _ = semaphore.wait(timeout: .distantFuture)
-    }
-    
-    func stopped( action: @escaping (YbridControl)->() ) {
-        do {
-            try AudioPlayer.open(for: endpoint, listener: listener,
-                 playbackControl: { (ctrl) in self.semaphore.signal()
-                    XCTFail(); return },
-                 ybridControl: { [self] (ybridControl) in
-                    
-                    action(ybridControl)
-                    
-                    ybridControl.close()
-                    semaphore.signal()
-                 })
-        } catch {
-            XCTFail("no player. Something went wrong");
-            semaphore.signal(); return
-        }
-        _ = semaphore.wait(timeout: .distantFuture)
-    }
-}
-
-
-class ActionsTrace {
-    private var actions:[Trace] = []
-    
-    init() {}
-    func reset() { actions.removeAll() }
-    func append(_ trace:Trace) { actions.append(trace) }
-    func newTrace(_ name:String) -> Trace {
-        let trace = Trace(name)
-        actions.append(trace)
-        return trace
-    }
-    
-    func checkTraces(expectedActions:Int) -> [(String,TimeInterval)] {
-          
-        guard actions.count == expectedActions else {
-            XCTFail("expecting \(expectedActions) completed actions, but were \(actions.count)")
-            return []
-        }
-        
-        let actionsTook:[(String,TimeInterval)] = actions.filter{
-             return $0.valid
-        }.map{
-            let actionTookS = $0.tookS
-            Logger.testing.debug("\($0.changed ? "" : "not ")\($0.name) took \(actionTookS.S)")
-            return ($0.name,actionTookS)
-        }
-        return actionsTook
-    }
-
-    func check(expectedActions:Int, mustBeCompleted:Bool = true, maxDuration:TimeInterval) {
-          
-        XCTAssertEqual(actions.count,expectedActions, "expecting \(expectedActions) completed actions, but were \(actions.count)")
-        
-        actions.filter{
-            if mustBeCompleted {
-                XCTAssertTrue($0.valid, "expected valid, but was \($0) ")
-            }
-             return $0.valid
-        }.forEach{
-            Logger.testing.debug("\($0.changed ? "" : "not ")\($0.name) took \($0.tookS.S)")
-            XCTAssertLessThan($0.tookS, maxDuration, "\($0.name) should take less than \(maxDuration.S), took \($0.tookS.S)")
-        }
-    }
-    
-}
 
 class Trace {
     let name:String
@@ -348,3 +270,43 @@ class Trace {
         self.changed = changed
     }
 }
+class ActionsTrace {
+    private var actions:[Trace] = []
+    
+    init() {}
+    func reset() { actions.removeAll() }
+    func append(_ trace:Trace) { actions.append(trace) }
+    
+    func checkTraces(expectedActions:Int) -> [(String,TimeInterval)] {
+          
+        guard actions.count == expectedActions else {
+            XCTFail("expecting \(expectedActions) completed actions, but were \(actions.count)")
+            return []
+        }
+        
+        let actionsTook:[(String,TimeInterval)] = actions.filter{
+             return $0.valid
+        }.map{
+            let actionTookS = $0.tookS
+            Logger.testing.debug("\($0.changed ? "" : "not ")\($0.name) took \(actionTookS.S)")
+            return ($0.name,actionTookS)
+        }
+        return actionsTook
+    }
+
+    func check(confirm:Int, mustBeCompleted:Bool = true, maxDuration:TimeInterval) {
+          
+        XCTAssertEqual(actions.count,confirm, "expecting \(confirm) completed actions, but were \(actions.count)")
+        
+        actions.filter{
+            if mustBeCompleted {
+                XCTAssertTrue($0.valid, "expected valid, but was \($0) ")
+            }
+             return $0.valid
+        }.forEach{
+            Logger.testing.debug("\($0.changed ? "" : "not ")\($0.name) took \($0.tookS.S)")
+            XCTAssertLessThan($0.tookS, maxDuration, "\($0.name) should take less than \(maxDuration.S), took \($0.tookS.S)")
+        }
+    }
+}
+

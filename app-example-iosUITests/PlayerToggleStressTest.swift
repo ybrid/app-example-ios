@@ -43,7 +43,7 @@
 import XCTest
 import YbridPlayerSDK
 
-class PlayerToggleStressTest: XCTestCase {
+class PlayerToggleStressTest: XCTestCase, AudioPlayerListener {
     
     var triggeredPlay:Int = 0
     var triggeredStop:Int = 0
@@ -60,15 +60,12 @@ class PlayerToggleStressTest: XCTestCase {
         return TimeInterval((stepDuration.us + restBetweenSteps.us) * stepsDecrease / 1_000_000) - restBetweenSteps
     }
     
-    var player:PlaybackControl?
-    var playerListener = TogglePlayerListener()
+    var player:AudioPlayer?
     
     var waitingQueue = DispatchQueue(label: "waiting")
-    var semaphone:DispatchSemaphore?
     override func setUpWithError() throws {
         triggeredPlay = 0
         triggeredStop = 0
-        triggeredPause = 0
         
         Logger.testing.notice("------------------")
         Logger.testing.notice("-- start test of toggling play and stop")
@@ -77,13 +74,9 @@ class PlayerToggleStressTest: XCTestCase {
         }else{
             Logger.testing.debug("-- executing set up in other thread")
         }
-        
-        semaphone = DispatchSemaphore(value: 0)
     }
     
     override func tearDownWithError() throws {
-        _ = semaphone?.wait(timeout: .distantFuture)
-        
         if Thread.isMainThread{
             Logger.testing.debug("-- executing tear down in main thread")
         }else{
@@ -99,58 +92,57 @@ class PlayerToggleStressTest: XCTestCase {
     }
     
     func test01_MP3PlayStop() throws {
-        try AudioPlayer.open(for: icecastSwr3Endpoint, listener: playerListener) { [self] (control) in
-            player = control
-            
-            stepDuration = 10
-            rangeFrom = 1 /// on first step
-            rangeTo = 3 /// on first step
-            restBetweenSteps = 5
-            stepsDecrease = 10
-            
-            execute()
-            
-            semaphone?.signal()
-        }
+        player = AudioPlayer.openSync(for: icecastSwr3Endpoint, listener: self)
         
+        stepDuration = 10
+        rangeFrom = 1 /// on first step
+        rangeTo = 3 /// on first step
+        restBetweenSteps = 5
+        stepsDecrease = 10
         
+        self.execute()
     }
     
     func test02_OpusPlayStop() throws {
-        try AudioPlayer.open(for: opusDlfEndpoint, listener: playerListener) { [self] (control) in
-            player = control
+        player = AudioPlayer.openSync(for: opusDlfEndpoint, listener: self)
         
-            stepDuration = 10
-            rangeFrom = 1 /// on first step
-            rangeTo = 3 /// on first step
-            restBetweenSteps = 5
-            stepsDecrease = 10
-            
-            Logger.testing.notice("-- test will take ~\(testDuration.S)")
-            Logger.testing.notice("-- final rest after test ~\(finalRestDuration.S)")
-            
-            execute()
-            
-            semaphone?.signal()
-        }
+        stepDuration = 10
+        rangeFrom = 1 /// on first step
+        rangeTo = 3 /// on first step
+        restBetweenSteps = 5
+        stepsDecrease = 10
+        
+        Logger.testing.notice("-- test will take ~\(testDuration.S)")
+        Logger.testing.notice("-- final rest after test ~\(finalRestDuration.S)")
+        
+        self.execute()
     }
     
-    func test03_OnDemmandPlayPause() throws {
-        try AudioPlayer.open(for: onDemandMp3Endpoint, listener: playerListener) { [self] (control) in
-            player = control
-        
-            stepDuration = 10
-            rangeFrom = 1 /// on first step
-            rangeTo = 3 /// on first step
-            restBetweenSteps = 5
-            stepsDecrease = 10
-            
-            execute()
-            
-            semaphone?.signal()
-        }
-    }
+
     
+    func test03_OnDemandPlayPause() throws {
+        player = AudioPlayer.openSync(for: onDemandMp3Endpoint, listener: self)
+
+        stepDuration = 10
+        rangeFrom = 1 /// on first step
+        rangeTo = 3 /// on first step
+        restBetweenSteps = 5
+        stepsDecrease = 10
+        
+        self.execute()
+    }
+
+    func test04_AACPlayStop() throws {
+        player = AudioPlayer.openSync(for: aacHEv2Endpoint, listener: self)
+        
+        stepDuration = 10
+        rangeFrom = 1 /// on first step
+        rangeTo = 3 /// on first step
+        restBetweenSteps = 5
+        stepsDecrease = 10
+        
+        self.execute()
+    }
     func execute() {
         if Thread.isMainThread{
             Logger.testing.debug("-- executing test in main thread")
@@ -214,29 +206,35 @@ class PlayerToggleStressTest: XCTestCase {
     }
     
     
-    // MARK: audio player listener
-    class TogglePlayerListener : AbstractAudioPlayerListener {
-        
-        override func playingSince(_ seconds: TimeInterval?) {
-            if let since = seconds {
-                Logger.testing.debug("-- + playing since \(since.S)")
-            }
-        }
-        override func durationConnected(_ seconds: TimeInterval?) {
-            if let connected = seconds {
-                Logger.testing.notice("-- + connected after \(connected.S)")
-            }
-        }
-        override func durationReadyToPlay(_ seconds: TimeInterval?) {
-            if let ready = seconds {
-                Logger.testing.notice("-- + ready after \(ready.S)")
-            }
-        }
-        override func bufferSize(averagedSeconds: TimeInterval?, currentSeconds: TimeInterval?) {
-            if let buffer = currentSeconds {
-                Logger.testing.debug("-- + buffer \(buffer.S)")
-            }
+    // MARK: radio player delegate
+    
+    func stateChanged(_ to: PlaybackState) {}
+    func metadataChanged(_ metadata: Metadata) {}
+
+    func error(_ severity:ErrorSeverity, _ exception: AudioPlayerError) {
+        Logger.testing.notice("-- \(severity) is \(exception.localizedDescription)")
+    }
+    func playingSince(_ seconds: TimeInterval?) {
+        if let since = seconds {
+            Logger.testing.debug("-- + playing since \(since.S)")
         }
     }
+    func durationConnected(_ seconds: TimeInterval?) {
+        if let connected = seconds {
+            Logger.testing.notice("-- + connected after \(connected.S)")
+        }
+    }
+    func durationReadyToPlay(_ seconds: TimeInterval?) {
+        if let ready = seconds {
+            Logger.testing.notice("-- + ready after \(ready.S)")
+        }
+    }
+    func bufferSize(averagedSeconds: TimeInterval?, currentSeconds: TimeInterval?) {
+        if let buffer = currentSeconds {
+            Logger.testing.debug("-- + buffer \(buffer.S)")
+        }
+    }
+    
 }
+
 
