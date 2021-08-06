@@ -31,9 +31,11 @@ public protocol YbridControl : YbridPlayerSDK.PlaybackControl {
   func skipBackward(_ type: YbridPlayerSDK.ItemType?, _ audioComplete: YbridPlayerSDK.AudioCompleteCallback?)
   func swapItem(_ audioComplete: YbridPlayerSDK.AudioCompleteCallback?)
   func swapService(to id: Swift.String, _ audioComplete: YbridPlayerSDK.AudioCompleteCallback?)
+  func maxBitRate(to: Swift.Int32)
   func refresh()
 }
 public typealias AudioCompleteCallback = ((Swift.Bool) -> ())
+public let bitRatesRange: Swift.ClosedRange<Swift.Int32>
 extension YbridControl {
   public func wind(by: Foundation.TimeInterval)
   public func windToLive()
@@ -51,6 +53,7 @@ public protocol YbridControlListener : YbridPlayerSDK.AudioPlayerListener {
   func offsetToLiveChanged(_ offset: Foundation.TimeInterval?)
   func servicesChanged(_ services: [YbridPlayerSDK.Service])
   func swapsChanged(_ swapsLeft: Swift.Int)
+  func bitRateChanged(_ maxBitRate: Swift.Int32)
 }
 extension AudioPlayer {
   public typealias PlaybackControlCallback = (YbridPlayerSDK.PlaybackControl) -> ()
@@ -82,15 +85,6 @@ public typealias ErrorCode = Swift.Int32
     get
   }
   @objc deinit
-}
-public enum SubInfo {
-  case metadata
-  case bouquet
-  public static func == (a: YbridPlayerSDK.SubInfo, b: YbridPlayerSDK.SubInfo) -> Swift.Bool
-  public var hashValue: Swift.Int {
-    get
-  }
-  public func hash(into hasher: inout Swift.Hasher)
 }
 public protocol Metadata {
   var displayTitle: Swift.String? { get }
@@ -240,8 +234,6 @@ public enum MediaProtocol : Swift.String {
 }
 extension YbridPlayerSDK.ErrorSeverity : Swift.Equatable {}
 extension YbridPlayerSDK.ErrorSeverity : Swift.Hashable {}
-extension YbridPlayerSDK.SubInfo : Swift.Equatable {}
-extension YbridPlayerSDK.SubInfo : Swift.Hashable {}
 extension YbridPlayerSDK.ItemType : Swift.Equatable {}
 extension YbridPlayerSDK.ItemType : Swift.Hashable {}
 extension YbridPlayerSDK.ItemType : Swift.RawRepresentable {}

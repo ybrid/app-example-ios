@@ -6,55 +6,55 @@
 	<dict>
 		<key>Info.plist</key>
 		<data>
-		Io4UzAtOzt6+2F/d/I+cRqrcsEg=
+		fZkTFQOdGRodHOTJnYsyqYN6RNA=
 		</data>
 		<key>Modules/YbridPlayerSDK.swiftmodule/i386-apple-ios-simulator.swiftdoc</key>
 		<data>
-		Gcm8TrFgJLJjgtMzloMsTopcgzA=
+		rZX0c/OmllWQgXJeOkEdLV2IjWM=
 		</data>
 		<key>Modules/YbridPlayerSDK.swiftmodule/i386-apple-ios-simulator.swiftinterface</key>
 		<data>
-		e0TFxgeajAoLnOHF/IhXtcUQUTE=
+		ELLunDCtCzB5TI62aqOYmlRoHE0=
 		</data>
 		<key>Modules/YbridPlayerSDK.swiftmodule/i386-apple-ios-simulator.swiftmodule</key>
 		<data>
-		x93tIUoXFiQtNGSRaAYHwE42Jhg=
+		qbbJ3sIA48ZBsfSFpy9wEoIcJO0=
 		</data>
 		<key>Modules/YbridPlayerSDK.swiftmodule/i386.swiftdoc</key>
 		<data>
-		Gcm8TrFgJLJjgtMzloMsTopcgzA=
+		rZX0c/OmllWQgXJeOkEdLV2IjWM=
 		</data>
 		<key>Modules/YbridPlayerSDK.swiftmodule/i386.swiftinterface</key>
 		<data>
-		e0TFxgeajAoLnOHF/IhXtcUQUTE=
+		ELLunDCtCzB5TI62aqOYmlRoHE0=
 		</data>
 		<key>Modules/YbridPlayerSDK.swiftmodule/i386.swiftmodule</key>
 		<data>
-		x93tIUoXFiQtNGSRaAYHwE42Jhg=
+		qbbJ3sIA48ZBsfSFpy9wEoIcJO0=
 		</data>
 		<key>Modules/YbridPlayerSDK.swiftmodule/x86_64-apple-ios-simulator.swiftdoc</key>
 		<data>
-		vazRvT2Ju7wklZikk+sHcGth4a4=
+		bYmu4DGtrsDFVcgiTM6rsC9IB58=
 		</data>
 		<key>Modules/YbridPlayerSDK.swiftmodule/x86_64-apple-ios-simulator.swiftinterface</key>
 		<data>
-		TR+qrPa6XvGS1iTkMXnwUONz/Bk=
+		5DHe7BI+dGQqTcAMQaKrYt3qrfc=
 		</data>
 		<key>Modules/YbridPlayerSDK.swiftmodule/x86_64-apple-ios-simulator.swiftmodule</key>
 		<data>
-		V8yX5Ewu92XAiiw6OIHTo7+dKLE=
+		ukmnTJcEOdRYFVsjsozDX3TX/DQ=
 		</data>
 		<key>Modules/YbridPlayerSDK.swiftmodule/x86_64.swiftdoc</key>
 		<data>
-		vazRvT2Ju7wklZikk+sHcGth4a4=
+		bYmu4DGtrsDFVcgiTM6rsC9IB58=
 		</data>
 		<key>Modules/YbridPlayerSDK.swiftmodule/x86_64.swiftinterface</key>
 		<data>
-		TR+qrPa6XvGS1iTkMXnwUONz/Bk=
+		5DHe7BI+dGQqTcAMQaKrYt3qrfc=
 		</data>
 		<key>Modules/YbridPlayerSDK.swiftmodule/x86_64.swiftmodule</key>
 		<data>
-		V8yX5Ewu92XAiiw6OIHTo7+dKLE=
+		ukmnTJcEOdRYFVsjsozDX3TX/DQ=
 		</data>
 		<key>Modules/module.modulemap</key>
 		<data>
@@ -67,132 +67,132 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			Gcm8TrFgJLJjgtMzloMsTopcgzA=
+			rZX0c/OmllWQgXJeOkEdLV2IjWM=
 			</data>
 			<key>hash2</key>
 			<data>
-			KrYZGnXDXN/CdesHXYVaOYAqKxMMbdM10QPJgTOQ+iI=
+			dUInnJJIT+sxcoqOP69IaDTzweh67cZ9+sy3avvrY8Y=
 			</data>
 		</dict>
 		<key>Modules/YbridPlayerSDK.swiftmodule/i386-apple-ios-simulator.swiftinterface</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			e0TFxgeajAoLnOHF/IhXtcUQUTE=
+			ELLunDCtCzB5TI62aqOYmlRoHE0=
 			</data>
 			<key>hash2</key>
 			<data>
-			1atMTe1AtVN+1Z/n31fczXG8qum2+n/O9hIINX66wpI=
+			//tPBUlPc+y06mX2Pi29wpVeWHCjuqpv6K02memhfJM=
 			</data>
 		</dict>
 		<key>Modules/YbridPlayerSDK.swiftmodule/i386-apple-ios-simulator.swiftmodule</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			x93tIUoXFiQtNGSRaAYHwE42Jhg=
+			qbbJ3sIA48ZBsfSFpy9wEoIcJO0=
 			</data>
 			<key>hash2</key>
 			<data>
-			97eB3v21MyK5W3EDV5k91aW+GauT4n1f+q6Bjcu1ozw=
+			rvr+clSV4HaG7H/E14JE+kW1HaBMREp5XDq6pbHMiPc=
 			</data>
 		</dict>
 		<key>Modules/YbridPlayerSDK.swiftmodule/i386.swiftdoc</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			Gcm8TrFgJLJjgtMzloMsTopcgzA=
+			rZX0c/OmllWQgXJeOkEdLV2IjWM=
 			</data>
 			<key>hash2</key>
 			<data>
-			KrYZGnXDXN/CdesHXYVaOYAqKxMMbdM10QPJgTOQ+iI=
+			dUInnJJIT+sxcoqOP69IaDTzweh67cZ9+sy3avvrY8Y=
 			</data>
 		</dict>
 		<key>Modules/YbridPlayerSDK.swiftmodule/i386.swiftinterface</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			e0TFxgeajAoLnOHF/IhXtcUQUTE=
+			ELLunDCtCzB5TI62aqOYmlRoHE0=
 			</data>
 			<key>hash2</key>
 			<data>
-			1atMTe1AtVN+1Z/n31fczXG8qum2+n/O9hIINX66wpI=
+			//tPBUlPc+y06mX2Pi29wpVeWHCjuqpv6K02memhfJM=
 			</data>
 		</dict>
 		<key>Modules/YbridPlayerSDK.swiftmodule/i386.swiftmodule</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			x93tIUoXFiQtNGSRaAYHwE42Jhg=
+			qbbJ3sIA48ZBsfSFpy9wEoIcJO0=
 			</data>
 			<key>hash2</key>
 			<data>
-			97eB3v21MyK5W3EDV5k91aW+GauT4n1f+q6Bjcu1ozw=
+			rvr+clSV4HaG7H/E14JE+kW1HaBMREp5XDq6pbHMiPc=
 			</data>
 		</dict>
 		<key>Modules/YbridPlayerSDK.swiftmodule/x86_64-apple-ios-simulator.swiftdoc</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			vazRvT2Ju7wklZikk+sHcGth4a4=
+			bYmu4DGtrsDFVcgiTM6rsC9IB58=
 			</data>
 			<key>hash2</key>
 			<data>
-			fEzLvopNSyERKaBZWINQuiokI7Hj151aLxMXhYPbiRw=
+			mtfwvJuMag9zKX5FbF2KnmBEP0EPMOhzgh4a4LxS8Mk=
 			</data>
 		</dict>
 		<key>Modules/YbridPlayerSDK.swiftmodule/x86_64-apple-ios-simulator.swiftinterface</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			TR+qrPa6XvGS1iTkMXnwUONz/Bk=
+			5DHe7BI+dGQqTcAMQaKrYt3qrfc=
 			</data>
 			<key>hash2</key>
 			<data>
-			JtE8B6UQM9ZLoYw2OmL2aOYTAeGrxiqfRWyNNwvxA9o=
+			9HuZeyemHSi2ENZGXtYs6O49LW6CZtGKhlQPlrbmLqs=
 			</data>
 		</dict>
 		<key>Modules/YbridPlayerSDK.swiftmodule/x86_64-apple-ios-simulator.swiftmodule</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			V8yX5Ewu92XAiiw6OIHTo7+dKLE=
+			ukmnTJcEOdRYFVsjsozDX3TX/DQ=
 			</data>
 			<key>hash2</key>
 			<data>
-			WambguR2j/Fqbp3z59fdEckDjRHFvc/NefO0RVLaz78=
+			pGC+HMHmyi0W1b0mXVIhMW1qbkqnH7tO+PEeboXQmpE=
 			</data>
 		</dict>
 		<key>Modules/YbridPlayerSDK.swiftmodule/x86_64.swiftdoc</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			vazRvT2Ju7wklZikk+sHcGth4a4=
+			bYmu4DGtrsDFVcgiTM6rsC9IB58=
 			</data>
 			<key>hash2</key>
 			<data>
-			fEzLvopNSyERKaBZWINQuiokI7Hj151aLxMXhYPbiRw=
+			mtfwvJuMag9zKX5FbF2KnmBEP0EPMOhzgh4a4LxS8Mk=
 			</data>
 		</dict>
 		<key>Modules/YbridPlayerSDK.swiftmodule/x86_64.swiftinterface</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			TR+qrPa6XvGS1iTkMXnwUONz/Bk=
+			5DHe7BI+dGQqTcAMQaKrYt3qrfc=
 			</data>
 			<key>hash2</key>
 			<data>
-			JtE8B6UQM9ZLoYw2OmL2aOYTAeGrxiqfRWyNNwvxA9o=
+			9HuZeyemHSi2ENZGXtYs6O49LW6CZtGKhlQPlrbmLqs=
 			</data>
 		</dict>
 		<key>Modules/YbridPlayerSDK.swiftmodule/x86_64.swiftmodule</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			V8yX5Ewu92XAiiw6OIHTo7+dKLE=
+			ukmnTJcEOdRYFVsjsozDX3TX/DQ=
 			</data>
 			<key>hash2</key>
 			<data>
-			WambguR2j/Fqbp3z59fdEckDjRHFvc/NefO0RVLaz78=
+			pGC+HMHmyi0W1b0mXVIhMW1qbkqnH7tO+PEeboXQmpE=
 			</data>
 		</dict>
 		<key>Modules/module.modulemap</key>
