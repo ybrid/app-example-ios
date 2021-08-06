@@ -432,9 +432,11 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
     }
     
     func enableOffset(_ enable:Bool) {
-        DispatchQueue.main.async {
-            self.offsetS.alpha = enable ? 1.0 : 0.5
-        }
+        /// Disabled visualization for timeshifts by doing nothing here.
+        /// unitl points in time for audioComplete are more reliable.
+//        DispatchQueue.main.async {
+//            self.offsetS.alpha = enable ? 1.0 : 0.5
+//        }
     }
     
     

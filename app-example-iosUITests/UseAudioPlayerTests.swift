@@ -34,8 +34,8 @@ class UseAudioPlayerTests: XCTestCase {
 
     var semaphore:DispatchSemaphore?
     override func setUpWithError() throws {
-        /// log additional debug information in this tests
-        Logger.verbose = true
+        /// could log additional debug information in this tests
+//        Logger.verbose = true
         
         playerListener.reset()
         
@@ -63,7 +63,6 @@ class UseAudioPlayerTests: XCTestCase {
     Stop could need a second to clean up. Otherwise it may not sound nice.
     */
     func test01_PlaySomeSeconds() throws {
-        
         try AudioPlayer.open(for: myEndpoint, listener: nil) {
             (control) in
             
@@ -129,7 +128,7 @@ class UseAudioPlayerTests: XCTestCase {
      - an exception and
      - listener.error lets you see all errors, warnings and notifications
      */
-    func test04a_Error_NoPlayer() throws {
+    func test04_Error_NoPlayer() throws {
         defer { self.semaphore?.signal() }
         
         let badEndpoint = MediaEndpoint(mediaUri:  "https://swr-swr3.cast.io/bad/url")
@@ -145,7 +144,7 @@ class UseAudioPlayerTests: XCTestCase {
             XCTAssertTrue(error is SessionError, "AudioPlayerError of type SessionError expected. There is a problem establishing a session with the endpoint")
         }
         
-        /// AudioPlayerListener.error(...) recieves errors as well, asynchroinously
+        /// AudioPlayerListener.error(...) recieves errors as well, asynchronously
         sleep(1)
         XCTAssertEqual(playerListener.errors.count, 1)
         guard let lastError = playerListener.errors.last else {
@@ -166,7 +165,7 @@ class UseAudioPlayerTests: XCTestCase {
      
      listener.error lets you see all errors, warnings and notifications
      */
-    func test04b_Error_NoAudioData() {
+    func test05_Error_NoAudio() {
         
         let badEndpoint = MediaEndpoint(mediaUri:  "https://cast.ybrid.io/bad/url")
         
@@ -183,10 +182,11 @@ class UseAudioPlayerTests: XCTestCase {
                 
                 XCTAssertEqual(playerListener.errors.count, 1)
                 guard let lastError = playerListener.errors.last else {
+                    XCTFail()
                     return
                 }
                 XCTAssertNotEqual(0, lastError.code) /// error occured
-                XCTAssertEqual(302, lastError.code) /// ErrorKind.cannotProcessMimeType
+                XCTAssertEqual(303, lastError.code) /// ErrorKind.cannotResolveDecoder
 
                 XCTAssertNil(lastError.osstatus)
             }
@@ -200,9 +200,8 @@ class UseAudioPlayerTests: XCTestCase {
     /*
      The audio codec opus is supported
      */
-    func test05_PlayOpus() {
+    func test06_PlayOpus() {
         let opusEndpoint = MediaEndpoint(mediaUri: "https://dradio-dlf-live.cast.addradio.de/dradio/dlf/live/opus/high/stream.opus")
-        
         do {
             try AudioPlayer.open(for: opusEndpoint, listener: playerListener) {
                 (control) in
@@ -225,7 +224,7 @@ class UseAudioPlayerTests: XCTestCase {
      are identified as on demand files. They can be paused.
      Remember, all actions are asynchronous. So assertions in this test are delayed.
      */
-    func test06_OnDemandPlayPausePlayPauseStop() {
+    func test07_OnDemandPlayPausePlayPauseStop() {
         let onDemandEndpoint = MediaEndpoint(mediaUri:  "https://github.com/ybrid/test-files/blob/main/mpeg-audio/music/organ.mp3?raw=true")
         do {
             try AudioPlayer.open(for: onDemandEndpoint, listener: playerListener) {
@@ -261,10 +260,10 @@ class UseAudioPlayerTests: XCTestCase {
      listener.metadataChanged is called when metadata changes. In the beginning of streaming
      there ist always a change compared to nothing.
      */
-    func test07_ListenToMetadata() {
+    func test08_ListenToMetadata() {
 
         do {
-            try AudioPlayer.open(for: ybridSwr3Endpoint, listener: playerListener) {
+            try AudioPlayer.open(for: myEndpoint, listener: playerListener) {
                 [self] (control) in
                 
                 control.play()
@@ -287,23 +286,27 @@ class UseAudioPlayerTests: XCTestCase {
             semaphore?.signal(); return
         }
     }
-
     
     /*
      Use an endpoint that supports ybridV2 and implement the ybridControl callback.
      YbridControl's methods can shift time and alter the streamed audio content.
+     
+     The AudioCompleteCallback is called when the content change takes place.
      */
-    func test10_UseYbridControl() {
+    func test09_UseYbridControl() {
 
         do {
-            try AudioPlayer.open(for: ybridSwr3Endpoint, listener: nil, playbackControl: { _ in XCTFail("ybridControl should be called back");                   self.semaphore?.signal() },
+            try AudioPlayer.open(for: ybridSwr3Endpoint, listener: nil, playbackControl: { _ in XCTFail("ybridControl should be called back"); self.semaphore?.signal() },
              ybridControl: {
                 [self] (control) in /// called asychronously
                
                 control.play()
                 sleep(2)
-                control.skipBackward(ItemType.NEWS)
-                sleep(8) /// listen to the news
+                control.skipBackward(ItemType.NEWS) { (success) in
+                    print("Now You listen to news. That's \(success).")
+                    XCTAssertTrue(success)
+                }
+                sleep(10) /// listen to the news
                 
                 control.stop()
                 sleep(1)
@@ -316,37 +319,59 @@ class UseAudioPlayerTests: XCTestCase {
     }
 
     /*
-     YbridControlListener extends AudioPlayerListener.
-     The listener is notified of ybrid states in the beginning of the session.
-     The listeners methods are called when the specific state changes or
-     when refresh() is called.
+     Audio codecs AAC are supported up to profile HE-AAC_v2.
+     
+     Besides the first sine you should hear 4 different high frequencies.
      */
-    func test11_YbridControlListener_Refresh() {
-        let ybridPlayerListener = TestYbridPlayerListener()
+    func test10_PlayHEAACv2() {
+        
         do {
-            try AudioPlayer.open(for: ybridSwr3Endpoint, listener: ybridPlayerListener, playbackControl: { _ in XCTFail("ybridControl should be called back");                   self.semaphore?.signal() })  {
+            try AudioPlayer.open(for: aacHEv2Endpoint, listener: nil) {
                 [self] (control) in
-               
-                sleep(1)
-                control.refresh()
                 
-                control.close()
+                control.play()
+                sleep(6)
+                control.stop()
                 sleep(1)
+                
+                XCTAssertEqual(playerListener.errors.count, 0)
+                playerListener.errors.forEach{ (error) in
+                    XCTFail(error.message ?? error.localizedDescription)
+                }
+                
                 self.semaphore?.signal()
             }
         } catch {
-            XCTFail("no player. Something went wrong");
-            semaphore?.signal(); return
+            XCTFail("no player control. Something went wrong");
+            self.semaphore?.signal(); return
         }
-        _ = semaphore?.wait(timeout: .distantFuture)
-
-        
-        XCTAssertEqual(2, ybridPlayerListener.services.count, "YbridControlListener.serviceChanged(...) should have been called twice, but was \(ybridPlayerListener.services.count)")
-        
-        XCTAssertTrue((2...3).contains(ybridPlayerListener.offsets.count), "YbridControlListener.offsetToLiveChanged(...) should have been called \(2...3), but was \(ybridPlayerListener.offsets.count), \(ybridPlayerListener.offsets)")
-        
-        XCTAssertEqual(2, ybridPlayerListener.swaps.count, "YbridControlListener.swapsChanged(...) should have been called twice, but was \(ybridPlayerListener.swaps.count)")
-        
-        semaphore?.signal()
     }
+    
+    /**
+     FLAC with pink noise.
+     */
+    func test11_PlayFlac() {
+        
+        do {
+            try AudioPlayer.open(for: flacOnDemandEndpoint, listener: playerListener) {
+                [self] (control) in
+                
+                control.play()
+                sleep(6)
+                control.stop()
+                sleep(1)
+                
+                XCTAssertEqual(playerListener.errors.count, 0)
+                playerListener.errors.forEach{ (error) in
+                    XCTFail(error.message ?? error.localizedDescription)
+                }
+                
+                self.semaphore?.signal()
+            }
+        } catch {
+            XCTFail("no player control. Something went wrong");
+            self.semaphore?.signal(); return
+        }
+    }
+
 }
