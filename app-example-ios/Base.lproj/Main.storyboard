@@ -222,7 +222,7 @@
                                 </constraints>
                                 <color key="thumbTintColor" red="0.45817720890000002" green="0.98520225289999996" blue="0.29782712459999999" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <connections>
-                                    <action selector="bitRateChanged:" destination="BYZ-38-t0r" eventType="valueChanged" id="t4c-yL-Cbe"/>
+                                    <action selector="maxBitRateSelected:" destination="BYZ-38-t0r" eventType="valueChanged" id="t4c-yL-Cbe"/>
                                 </connections>
                             </slider>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="kbps" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="w6U-oJ-hRJ">

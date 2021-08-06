@@ -159,9 +159,7 @@ class YbridControlBasicTests: XCTestCase {
             ybrid.stop()
             sleep(1)
         }
-
     }
-    
 
     func test05_playing_ChangeBitRate() throws {
         
@@ -184,7 +182,7 @@ class YbridControlBasicTests: XCTestCase {
             
             ybrid.maxBitRate(to:.high)
             sleep(1)
-            XCTAssertEqual(160_000, self.listener.maxBitRate)
+            XCTAssertEqual(192_000, self.listener.maxBitRate)
             
             sleep(4)
         }

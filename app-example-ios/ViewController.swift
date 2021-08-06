@@ -333,17 +333,13 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
     }
        
     
-    @IBAction func bitRateChanged(_ sender: Any) {
-        let steps:Int = BitRate.allCases.count - 1
-        let val:Float = bitRateSlider.value
-        let index:Int = Int((val * Float(steps)).rounded())
-        let newValue = Float(index) / Float(steps)
-        bitRateSlider.setValue(newValue, animated: false)
-        
-        let bitRate = BitRate.allCases[index]
-        Logger.shared.info("+ bit rate new value \(newValue) -> \(bitRate)")
+    @IBAction func maxBitRateSelected(_ sender: Any) {
+         
+        let selectedRate =  bitRatesRange.lowerBound + Int32(bitRateSlider.value * Float(bitRatesRange.upperBound -  bitRatesRange.lowerBound))
+ 
+        Logger.shared.debug("selected bit-rate is \(selectedRate)")
         if let ybrid = currentControl as? YbridControl {
-            ybrid.maxBitRate(to: bitRate)
+            ybrid.maxBitRate(to: selectedRate)
         }
     }
     
@@ -464,21 +460,17 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
 
     func bitRateChanged(_ rate: Int32) {
         DispatchQueue.main.async {
-            guard rate > 1000 else {
-                self.bitRate.text = "max bit rate"
+            guard bitRatesRange.contains(rate) else {
+                self.bitRate.text = "max bit-rate"
                 return
             }
-            self.bitRate.text = "\(rate/1000) kbps"
+            let displayText = "\(Int32(rate/1000)) kbps"
+            self.bitRate.text = displayText
+            Logger.shared.info("max bit-rate is \(displayText)")
             
-            guard let index:Int = BitRate.allCases.firstIndex(where: { return $0.rawValue == rate }) else {
-                return
-            }
+            let newValue = Float(rate - bitRatesRange.lowerBound) / Float(bitRatesRange.upperBound - bitRatesRange.lowerBound)
 
-            let steps:Int = BitRate.allCases.count - 1
-        
-            let newValue = Float(index) / Float(steps)
             self.bitRateSlider.setValue(newValue, animated: false)
-
         }
     }
 
