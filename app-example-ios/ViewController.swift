@@ -53,13 +53,16 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
     @IBOutlet weak var windForwardButton: ActionButton!
     @IBOutlet weak var windToLiveButton: ActionButton!
     @IBOutlet weak var itemForwardButton: ActionButton!
-    @IBOutlet weak var bitRateSlider: UISlider!
+
     
     @IBOutlet weak var offsetS: UILabel!
     @IBOutlet weak var offsetLabel: UILabel!
     @IBOutlet weak var playedSince: UILabel!
     
-    @IBOutlet weak var bitRate: UILabel!
+    @IBOutlet weak var currentRateSlider: UISlider!
+    @IBOutlet weak var maxRateSlider: UISlider!
+    @IBOutlet weak var bitRateLabel: UILabel!
+    
     @IBOutlet weak var ready: UILabel!
     @IBOutlet weak var connected: UILabel!
     
@@ -116,13 +119,15 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
             
             initialize(label: problem)
             initialize(label: playedSince, monospaced: true)
-            initialize(label: bitRate)
+            initialize(label: bitRateLabel)
             initialize(label: ready, monospaced: true)
             initialize(label: connected, monospaced: true)
             initialize(label: bufferAveraged, monospaced: true)
             initialize(label: bufferCurrent, monospaced: true)
             initialize(label: offsetS, monospaced: true)
             
+            maxRateSlider.layer.zPosition =  currentRateSlider.layer.zPosition + 1
+
             appVersion.text = "demo-app\n" + getBundleInfo(id: Bundle.main.bundleIdentifier ?? "io.ybrid.example-player-ios")
             sdkVersion.text = "player-sdk\n" + getBundleInfo(id:"io.ybrid.player-sdk-swift")
         }
@@ -167,7 +172,7 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
             playingTitle.text = nil
             problem.text = nil
             playingSince(0)
-            bitRate.text = nil
+            bitRateLabel.text = nil
             durationReadyToPlay(nil)
             durationConnected(nil)
             bufferSize(averagedSeconds: nil, currentSeconds: nil)
@@ -335,7 +340,7 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
     
     @IBAction func maxBitRateSelected(_ sender: Any) {
          
-        let selectedRate =  bitRatesRange.lowerBound + Int32(bitRateSlider.value * Float(bitRatesRange.upperBound -  bitRatesRange.lowerBound))
+        let selectedRate =  bitRatesRange.lowerBound + Int32(maxRateSlider.value * Float(bitRatesRange.upperBound -  bitRatesRange.lowerBound))
  
         Logger.shared.debug("selected bit-rate is \(selectedRate)")
         if let ybrid = currentControl as? YbridControl {
@@ -370,8 +375,8 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
             self.itemForwardButton.isHidden = hidden
             self.swapItemButton.isHidden = hidden
             self.channelPicker.isHidden = hidden
-            self.bitRate.isHidden = hidden
-            self.bitRateSlider.isHidden = hidden
+            self.bitRateLabel.isHidden = hidden
+            self.maxRateSlider.isHidden = hidden
         }
     }
     
@@ -469,38 +474,46 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
         }
         
         var currentKbps:Int32? = nil
+        var currentRateValue:Float?
         if let currentBps = currentBitsPerSecond, bitRatesRange.contains(currentBps) {
             let kbps =  Int32(currentBps/1000)
             Logger.shared.info("current bit-rate is \(kbps) kbps")
             currentKbps = kbps
+            currentRateValue = Float(currentBps - bitRatesRange.lowerBound) / Float(bitRatesRange.upperBound - bitRatesRange.lowerBound)
         }
         
         DispatchQueue.main.async {
+            if let currentRateSliderValue = currentRateValue {
+                self.currentRateSlider.setValue(currentRateSliderValue, animated: true)
+            }
             if let maxRateSliderValue = maxRateValue {
-                self.bitRateSlider.setValue(maxRateSliderValue, animated: false)
+                self.maxRateSlider.setValue(maxRateSliderValue, animated: false)
             }
             let coloredLabelText = self.coloredBitRatesText(currentKbps, maxKbps)
-            self.bitRate.attributedText = coloredLabelText
+            self.bitRateLabel.attributedText = coloredLabelText
         }
     }
 
     private func coloredBitRatesText(_ current:Int32?,_ maximum:Int32?) -> NSAttributedString {
+        
+        let currentRateColor = UIColor.green
+        let maxRateColor = UIColor.magenta
         
         guard let cur = current else {
             var maxRateText = "max bit-rate"
             if let max = maximum {
                 maxRateText = "\(max) kbps"
             }
-            return NSAttributedString(string:maxRateText, attributes: [NSAttributedString.Key.foregroundColor : UIColor.green])
+            return NSAttributedString(string:maxRateText, attributes: [NSAttributedString.Key.foregroundColor : maxRateColor])
         }
         
         guard let max = maximum else {
             let currentRateText = "cur. \(cur) kbps"
-            return NSAttributedString(string:currentRateText, attributes: [NSAttributedString.Key.foregroundColor : UIColor.yellow])
+            return NSAttributedString(string:currentRateText, attributes: [NSAttributedString.Key.foregroundColor : currentRateColor])
         }
         
-        let totalText = NSMutableAttributedString(string:"\(cur)/", attributes: [NSAttributedString.Key.foregroundColor : UIColor.yellow])
-        totalText.append(NSAttributedString(string:"\(max) kbps", attributes: [NSAttributedString.Key.foregroundColor : UIColor.green]))
+        let totalText = NSMutableAttributedString(string:"\(cur) / ", attributes: [NSAttributedString.Key.foregroundColor : currentRateColor])
+        totalText.append(NSAttributedString(string:"\(max) kbps", attributes: [NSAttributedString.Key.foregroundColor : maxRateColor]))
         return totalText
     }
     

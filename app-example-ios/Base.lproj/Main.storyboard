@@ -5,6 +5,7 @@
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -214,19 +215,21 @@
                                 <nil key="highlightedColor"/>
                                 <size key="shadowOffset" width="2" height="-1"/>
                             </label>
-                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minValue="0.0" maxValue="1" continuous="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QRs-gy-Apj" userLabel="quality">
+                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minValue="0.0" maxValue="1" continuous="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QRs-gy-Apj" userLabel="maxRate">
                                 <rect key="frame" x="20" y="643" width="124.5" height="31"/>
                                 <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="80" id="dbs-8f-47R"/>
                                 </constraints>
-                                <color key="thumbTintColor" red="0.45817720890000002" green="0.98520225289999996" blue="0.29782712459999999" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <color key="minimumTrackTintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="maximumTrackTintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="thumbTintColor" red="0.91764705879999997" green="0.20000000000000001" blue="0.96862745100000003" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <connections>
                                     <action selector="maxBitRateSelected:" destination="BYZ-38-t0r" eventType="valueChanged" id="t4c-yL-Cbe"/>
                                 </connections>
                             </slider>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="kbps" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="w6U-oJ-hRJ">
-                                <rect key="frame" x="22.5" y="673.5" width="120" height="19.5"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="kbps" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="w6U-oJ-hRJ">
+                                <rect key="frame" x="22" y="674" width="121" height="20"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="120" id="nTL-2A-ehR"/>
                                 </constraints>
@@ -234,6 +237,14 @@
                                 <color key="textColor" red="0.45817720890000002" green="0.98520225289999996" blue="0.29782712459999999" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <slider opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="0.0" maxValue="1" continuous="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fT8-Dm-Jij" userLabel="currentRate">
+                                <rect key="frame" x="20" y="643" width="124.5" height="31"/>
+                                <color key="tintColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="80" id="aN6-pM-WIz"/>
+                                </constraints>
+                                <color key="thumbTintColor" systemColor="systemGreenColor"/>
+                            </slider>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -257,6 +268,7 @@
                             <constraint firstItem="7QN-Kw-pvi" firstAttribute="leading" secondItem="wop-Ut-BsE" secondAttribute="leading" id="DRc-ot-53B"/>
                             <constraint firstItem="T1X-Xs-cjv" firstAttribute="centerY" secondItem="DyK-RF-1Wl" secondAttribute="centerY" priority="800" constant="20" id="EQP-re-jVJ"/>
                             <constraint firstItem="BTB-qz-aRk" firstAttribute="top" relation="greaterThanOrEqual" secondItem="vIB-Zb-9qf" secondAttribute="bottom" priority="950" constant="10" id="Et3-dm-gpy"/>
+                            <constraint firstItem="fT8-Dm-Jij" firstAttribute="leading" secondItem="QRs-gy-Apj" secondAttribute="leading" id="G4b-jd-1gh"/>
                             <constraint firstItem="a4P-CE-qso" firstAttribute="centerY" secondItem="TDH-yJ-Bni" secondAttribute="centerY" id="H6L-8C-6FD"/>
                             <constraint firstItem="Hh0-PX-fsf" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="7QN-Kw-pvi" secondAttribute="trailing" priority="500" constant="155" id="Hcr-n3-dxh"/>
                             <constraint firstItem="weW-fG-4s2" firstAttribute="centerX" secondItem="XAX-JF-8k1" secondAttribute="centerX" priority="980" id="IFQ-jS-Pmv"/>
@@ -304,6 +316,7 @@
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="leading" relation="lessThanOrEqual" secondItem="ws0-6p-CFg" secondAttribute="leading" constant="-10" id="ekt-00-yni"/>
                             <constraint firstItem="xmB-be-FaE" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="110" id="f2N-nT-jOi"/>
                             <constraint firstItem="weW-fG-4s2" firstAttribute="centerY" secondItem="A7F-yx-e4d" secondAttribute="centerY" priority="900" constant="50" id="ftI-rc-c5k"/>
+                            <constraint firstItem="fT8-Dm-Jij" firstAttribute="centerY" secondItem="QRs-gy-Apj" secondAttribute="centerY" id="ftd-wo-YOk"/>
                             <constraint firstItem="vIB-Zb-9qf" firstAttribute="top" relation="greaterThanOrEqual" secondItem="Ml7-EU-1Wn" secondAttribute="bottom" id="gFB-GO-bLL"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="08c-fV-PIe" secondAttribute="trailing" constant="15" id="hMO-RQ-FRT"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="A7F-yx-e4d" secondAttribute="trailing" constant="10" id="hjs-YR-hAt"/>
@@ -321,6 +334,7 @@
                             <constraint firstItem="2fM-w0-pgB" firstAttribute="centerY" secondItem="jIK-AS-qbk" secondAttribute="centerY" priority="800" constant="-20" id="nBD-5U-2FM"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="Ml7-EU-1Wn" secondAttribute="trailing" constant="10" id="oe4-qG-n9F"/>
                             <constraint firstItem="a4P-CE-qso" firstAttribute="centerX" secondItem="TDH-yJ-Bni" secondAttribute="centerX" priority="950" constant="70" id="s8K-bY-EOZ"/>
+                            <constraint firstItem="fT8-Dm-Jij" firstAttribute="trailing" secondItem="QRs-gy-Apj" secondAttribute="trailing" id="sGk-yl-ap9"/>
                             <constraint firstItem="Ml7-EU-1Wn" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="tZK-He-K4t"/>
                             <constraint firstItem="udR-tg-S7A" firstAttribute="trailing" secondItem="weW-fG-4s2" secondAttribute="centerX" priority="700" constant="184" id="ulh-kS-GWq"/>
                             <constraint firstItem="xvv-zn-uJk" firstAttribute="centerX" secondItem="weW-fG-4s2" secondAttribute="centerX" priority="950" constant="110" id="wDB-gg-LAP"/>
@@ -338,16 +352,17 @@
                     </view>
                     <connections>
                         <outlet property="appVersion" destination="ws0-6p-CFg" id="gHk-GS-Pe4"/>
-                        <outlet property="bitRate" destination="w6U-oJ-hRJ" id="Px0-Zo-i2h"/>
-                        <outlet property="bitRateSlider" destination="QRs-gy-Apj" id="xHh-pj-uST"/>
+                        <outlet property="bitRateLabel" destination="w6U-oJ-hRJ" id="Px0-Zo-i2h"/>
                         <outlet property="broadcaster" destination="vIB-Zb-9qf" id="HV0-x2-uaO"/>
                         <outlet property="bufferAveraged" destination="of3-5X-iLa" id="MIi-0b-Hsh"/>
                         <outlet property="bufferCurrent" destination="Hh0-PX-fsf" id="cVA-cq-2Sx"/>
                         <outlet property="channelPickerFrame" destination="U6z-Sr-MtJ" id="kPc-hP-VDL"/>
                         <outlet property="connected" destination="DyK-RF-1Wl" id="9Qn-2Z-CKq"/>
+                        <outlet property="currentRateSlider" destination="fT8-Dm-Jij" id="UNZ-g6-MEJ"/>
                         <outlet property="genre" destination="08c-fV-PIe" id="fob-4M-LXM"/>
                         <outlet property="itemBackwardButton" destination="SFj-Ko-4Gc" id="qC3-sO-tPs"/>
                         <outlet property="itemForwardButton" destination="0YJ-69-Ho2" id="r8m-sQ-dNs"/>
+                        <outlet property="maxRateSlider" destination="QRs-gy-Apj" id="xHh-pj-uST"/>
                         <outlet property="offsetLabel" destination="jIK-AS-qbk" id="WpT-2a-URO"/>
                         <outlet property="offsetS" destination="2fM-w0-pgB" id="4r9-kz-UaF"/>
                         <outlet property="playedSince" destination="fSV-kl-ZJX" id="t3t-hb-BJ9"/>
@@ -381,6 +396,9 @@
         <image name="windToLive" width="59.5" height="59"/>
         <systemColor name="darkTextColor">
             <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemGreenColor">
+            <color red="0.20392156862745098" green="0.7803921568627451" blue="0.34901960784313724" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>
