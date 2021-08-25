@@ -80,7 +80,7 @@ class YbridControlBasicTests: XCTestCase {
         
         ybridControl.stopped() { (ybridControl) in
             
-            ybridControl.refresh()
+            ybridControl.select()
             usleep(20_000) /// because the listener is notified asyncronously it *may* take some millis on old devices
         }
         
@@ -114,7 +114,7 @@ class YbridControlBasicTests: XCTestCase {
         
         ybridControl.playing() { (ybridControl) in
             
-            ybridControl.refresh()
+            ybridControl.select()
             usleep(10_000) /// because the listener notifies asyncronously it *may* take some millis
         }
         
@@ -170,7 +170,7 @@ class YbridControlBasicTests: XCTestCase {
         test.playing() { (ybrid) in
             
             sleep(1)
-            XCTAssertEqual(-1, self.listener.maxBitRate)
+            XCTAssertNil(self.listener.maxBitRate)
             
             ybrid.maxBitRate(to:32_000)
             sleep(1)

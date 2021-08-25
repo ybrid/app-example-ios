@@ -458,28 +458,29 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
         }
     }
 
-    func bitRateChanged(currentBitsPerSecond: Int32?, _ maxBitsPerSecond: Int32) {
+    func bitRateChanged(currentBitsPerSecond: Int32?, maxBitsPerSecond: Int32?) {
         var maxKbps:Int32? = nil
         var maxRateValue:Float?
-        if bitRatesRange.contains(maxBitsPerSecond) {
-            let kbps = Int32(maxBitsPerSecond/1000)
+        if let maxBps = maxBitsPerSecond, bitRatesRange.contains(maxBps) {
+            let kbps = Int32(maxBps/1000)
             Logger.shared.info("max bit-rate is \(kbps) kbps")
             maxKbps = kbps
-            maxRateValue = Float(maxBitsPerSecond - bitRatesRange.lowerBound) / Float(bitRatesRange.upperBound - bitRatesRange.lowerBound)
+            maxRateValue = Float(maxBps - bitRatesRange.lowerBound) / Float(bitRatesRange.upperBound - bitRatesRange.lowerBound)
         }
         
         var currentKbps:Int32? = nil
-        if let currentBps = currentBitsPerSecond,
-           bitRatesRange.contains(currentBps) {
-            currentKbps = Int32(currentBps/1000)
+        if let currentBps = currentBitsPerSecond, bitRatesRange.contains(currentBps) {
+            let kbps =  Int32(currentBps/1000)
+            Logger.shared.info("current bit-rate is \(kbps) kbps")
+            currentKbps = kbps
         }
         
         DispatchQueue.main.async {
             if let maxRateSliderValue = maxRateValue {
                 self.bitRateSlider.setValue(maxRateSliderValue, animated: false)
             }
-            let coloredText = self.coloredBitRatesText(currentKbps, maxKbps)
-            self.bitRate.attributedText = coloredText
+            let coloredLabelText = self.coloredBitRatesText(currentKbps, maxKbps)
+            self.bitRate.attributedText = coloredLabelText
         }
     }
 

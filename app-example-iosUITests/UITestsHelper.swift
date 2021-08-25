@@ -160,7 +160,7 @@ class TestYbridPlayerListener : AbstractAudioPlayerListener, YbridControlListene
     var errors:[AudioPlayerError] = []
     var services:[[Service]] = []
     var swaps:[Int] = []
-    var bitrates:[Int32] = []
+    var bitrates:[Int32?] = []
     
     
     // the latest recieved value for offset
@@ -180,7 +180,7 @@ class TestYbridPlayerListener : AbstractAudioPlayerListener, YbridControlListene
     // the latest value for max bit rate
     var maxBitRate:Int32? { get {
         queue.sync {
-            return bitrates.last
+            return bitrates.last ?? nil
         }
     }}
     
@@ -223,10 +223,10 @@ class TestYbridPlayerListener : AbstractAudioPlayerListener, YbridControlListene
         }
     }
     
-    func bitRateChanged(_ maxBitRate: Int32) {
-        Logger.testing.info("-- max bit rate \(maxBitRate)")
+    func bitRateChanged(currentBitsPerSecond: Int32?, maxBitsPerSecond: Int32?) {
+        Logger.testing.info("-- max bit rate \(maxBitsPerSecond ?? 0)")
         queue.async {
-            self.bitrates.append(maxBitRate)
+            self.bitrates.append(maxBitsPerSecond)
         }
     }
     
