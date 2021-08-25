@@ -232,7 +232,7 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
             Logger.shared.debug("control changed to \(type(of: current))")
             controls(enable: true)
             if let ybridControl = current as? YbridControl {
-                ybridControl.refresh()
+                ybridControl.select()
                 ybridControls(visible: true)
             } else {
                 ybridControls(visible: false)
@@ -458,19 +458,30 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
         }
     }
 
-    func bitRateChanged(_ rate: Int32) {
+    func bitRateChanged(currentBitsPerSecond: Int32?, _ maxBps: Int32) {
         DispatchQueue.main.async {
-            guard bitRatesRange.contains(rate) else {
+            if !bitRatesRange.contains(maxBps) {
                 self.bitRate.text = "max bit-rate"
-                return
-            }
-            let displayText = "\(Int32(rate/1000)) kbps"
-            self.bitRate.text = displayText
-            Logger.shared.info("max bit-rate is \(displayText)")
-            
-            let newValue = Float(rate - bitRatesRange.lowerBound) / Float(bitRatesRange.upperBound - bitRatesRange.lowerBound)
+            } else {
+                let displayText = "\(Int32(maxBps/1000)) kbps"
+                self.bitRate.text = displayText
+                Logger.shared.info("max bit-rate is \(displayText)")
+                
+                let newValue = Float(maxBps - bitRatesRange.lowerBound) / Float(bitRatesRange.upperBound - bitRatesRange.lowerBound)
 
-            self.bitRateSlider.setValue(newValue, animated: false)
+                self.bitRateSlider.setValue(newValue, animated: false)
+            }
+        }
+        
+        if let currentRate = currentBitsPerSecond,
+           bitRatesRange.contains(currentRate) {
+            DispatchQueue.main.async {
+                if bitRatesRange.contains(maxBps) {
+                    self.bitRate.text = "\(Int32(currentRate/1000))/\(Int32(maxBps/1000)) kbps"
+                } else {
+                    self.bitRate.text = "cur. \(Int32(currentRate/1000)) kbps"
+                }
+            }
         }
     }
 

@@ -226,9 +226,9 @@
                                 </connections>
                             </slider>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="kbps" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="w6U-oJ-hRJ">
-                                <rect key="frame" x="37.5" y="673.5" width="90" height="19.5"/>
+                                <rect key="frame" x="22.5" y="673.5" width="120" height="19.5"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="90" id="nTL-2A-ehR"/>
+                                    <constraint firstAttribute="width" constant="120" id="nTL-2A-ehR"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                 <color key="textColor" red="0.45817720890000002" green="0.98520225289999996" blue="0.29782712459999999" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
