@@ -126,6 +126,7 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
             initialize(label: bufferCurrent, monospaced: true)
             initialize(label: offsetS, monospaced: true)
             
+            /// thumb of max bit-rate covers thumb of current
             maxRateSlider.layer.zPosition =  currentRateSlider.layer.zPosition + 1
 
             appVersion.text = "demo-app\n" + getBundleInfo(id: Bundle.main.bundleIdentifier ?? "io.ybrid.example-player-ios")
@@ -360,6 +361,7 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
             self.itemForwardButton.isEnabled = enable
             self.swapItemButton.isEnabled = enable
             self.channelSelector?.enable(enable)
+            self.maxRateSlider.isEnabled = enable
         }
     }
     
@@ -377,6 +379,7 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
             self.channelPicker.isHidden = hidden
             self.bitRateLabel.isHidden = hidden
             self.maxRateSlider.isHidden = hidden
+            self.currentRateSlider.isHidden = hidden
         }
     }
     
@@ -502,18 +505,18 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
         guard let cur = current else {
             var maxRateText = "max bit-rate"
             if let max = maximum {
-                maxRateText = "\(max) kbps"
+                maxRateText = "max \(max) kbps"
             }
             return NSAttributedString(string:maxRateText, attributes: [NSAttributedString.Key.foregroundColor : maxRateColor])
         }
         
         guard let max = maximum else {
-            let currentRateText = "cur. \(cur) kbps"
+            let currentRateText = "\(cur) kbps"
             return NSAttributedString(string:currentRateText, attributes: [NSAttributedString.Key.foregroundColor : currentRateColor])
         }
         
-        let totalText = NSMutableAttributedString(string:"\(cur) / ", attributes: [NSAttributedString.Key.foregroundColor : currentRateColor])
-        totalText.append(NSAttributedString(string:"\(max) kbps", attributes: [NSAttributedString.Key.foregroundColor : maxRateColor]))
+        let totalText = NSMutableAttributedString(string:"\(cur)", attributes: [NSAttributedString.Key.foregroundColor : currentRateColor])
+        totalText.append(NSAttributedString(string:" /\(max) kbps", attributes: [NSAttributedString.Key.foregroundColor : maxRateColor]))
         return totalText
     }
     
