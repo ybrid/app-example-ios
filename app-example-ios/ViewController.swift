@@ -81,7 +81,7 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
     // MARK: initialization
     
     private var ybrid:YbridControl? { get {
-        currentControl as? YbridControl
+        audioController?.control as? YbridControl
     }}
     
     private func initializeElements() {
@@ -191,72 +191,58 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
             Logger.shared.info("endpoint changed to \(endpoint?.uri ?? "(nil)")")
             
             var oldPlaying = false
-            if oldValue != nil, let oldControl = cachedControls[oldValue!], oldControl.state != .stopped {
+            if oldValue != nil, let oldControl = cachedControllers[oldValue!], oldControl.state != .stopped {
                 oldPlaying = oldControl.state == .playing
-                oldControl.stop()
+                oldControl.control?.stop() // todo
             }
             
             guard let endpoint = endpoint else {
-                currentControl = nil
+                audioController = nil
                 return
             }
             
-            guard let control = cachedControls[endpoint] else {
-                newControl(endpoint) { (control) in
-                    guard control.mediaEndpoint == self.endpoint else {
-                        Logger.shared.notice("aborting \(control.mediaEndpoint.uri)")
+            guard let controller = cachedControllers[endpoint] else {
+                newController(endpoint) { (controller) in
+                    guard controller.control?.mediaEndpoint == self.endpoint else {
+                        Logger.shared.notice("aborting \(controller.control?.mediaEndpoint.uri)")
                         return
                     }
-                    self.currentControl = control
+                    self.audioController = controller
                     if oldPlaying {
-                        self.doToggle(control)
+                        self.doToggle(controller)
                     }
                 }
                 return
             }
             
-            currentControl = control
+            audioController = controller
             if oldPlaying {
-                doToggle(control)
+                doToggle(controller)
             }
         }
     }
     
-    private var cachedControls:[MediaEndpoint:PlaybackControl] = [:]
+    private var cachedControllers:[MediaEndpoint:AudioController] = [:]
     
-    private var currentControl:PlaybackControl? {
-        didSet {
-            guard let current = currentControl else {
-                Logger.shared.notice("control changed to (nil)")
-                self.setStopped()
-                self.resetValues()
-                self.controls(enable: false)
-                self.ybridControls(visible: false)
-                return
-            }
-            
-            Logger.shared.debug("control changed to \(type(of: current))")
-            controls(enable: true)
-            if let ybridControl = current as? YbridControl {
-                ybridControl.select()
-                ybridControls(visible: true)
-            } else {
-                ybridControls(visible: false)
-            }
+    var audioController:AudioController? { didSet {
+        if let control = audioController?.control {
+            attach(control: control)
+        } else {
+            detatchModel()
         }
-    }
+    }}
 
     // MARK: main
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-//        Logger.verbose = true
-        Logger.shared.notice("using \(AudioPlayer.versionString)")
-
-        hideKeyboardWhenTappedAround()
         view.layoutIfNeeded()
+        hideKeyboardWhenTappedAround()
+        
         initializeElements()
+        
+        audioController = AudioController(view:self)
         
         /// clearing values and states
         resetValues()
@@ -298,14 +284,33 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        cachedControls.forEach { (endpoint,player) in
+        cachedControllers.forEach { (endpoint,player) in
             Logger.shared.info("closing player for endpoint \(endpoint.uri)")
-            player.close()
+            audioController?.control?.close()
         }
     }
 
     override func didRotate(from fromInterfaceOrientation: UIInterfaceOrientation) {
         channelPicker.frame = channelPickerFrame.frame
+    }
+    
+    // MARK: model
+    
+    func detatchModel() {
+        setStopped()
+        resetValues()
+        controls(enable: false)
+        ybridControls(visible: false)
+    }
+    
+    func attach(control:SimpleControl) {
+        controls(enable: true)
+        if let ybridControl = control as? YbridControl {
+            ybridControl.select()
+            ybridControls(visible: true)
+        } else {
+            ybridControls(visible: false)
+        }
     }
     
     // MARK: user actions
@@ -317,19 +322,20 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
             return
         }
         
-        guard let control = cachedControls[endpoint] else {
-            newControl(endpoint) {(control) in
-                guard control.mediaEndpoint == self.endpoint else {
-                    Logger.shared.notice("aborting \(control.mediaEndpoint.uri)")
+        guard let controller = cachedControllers[endpoint] else {
+            newController(endpoint) {(controller) in
+                guard controller.control?.mediaEndpoint == self.endpoint else {
+                    Logger.shared.notice("aborting \(controller.control?.mediaEndpoint.uri)")
                     return
                 }
-                self.currentControl = control
-                self.doToggle(control) // run it
+                
+                self.audioController = controller
+                self.doToggle(controller) // run it
             }
             return
         }
         
-        doToggle(control)
+        doToggle(controller)
     }
     
     /// edit custom url
@@ -344,9 +350,7 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
         let selectedRate =  bitRatesRange.lowerBound + Int32(maxRateSlider.value * Float(bitRatesRange.upperBound -  bitRatesRange.lowerBound))
  
         Logger.shared.debug("selected bit-rate is \(selectedRate)")
-        if let ybrid = currentControl as? YbridControl {
-            ybrid.maxBitRate(to: selectedRate)
-        }
+        ybrid?.maxBitRate(to: selectedRate)
     }
     
     // MARK: helpers acting on ui elements
@@ -383,33 +387,46 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
         }
     }
     
-    fileprivate func newControl(_ endpoint:MediaEndpoint, callback: @escaping (PlaybackControl) -> ()) {
-        controls(enable: false)
-        ybridControls(visible: false)
-        resetValues()
+    fileprivate func newController(_ endpoint:MediaEndpoint, callback: @escaping (AudioController) -> ()) {
+        detatchModel()
         
+//        if let existingController = self.cachedControllers[endpoint] {
+//            Logger.shared.notice("already created control for \(endpoint.uri)")
+//            callback(existingController)
+//            return
+//        }
+//
+//
+//
         DispatchQueue.global().async {
         do {
             try AudioPlayer.open(for: endpoint, listener: self,
                playbackControl: { (control) in
-                if let existingControl = self.cachedControls[endpoint] {
+                if let existingController = self.cachedControllers[endpoint] {
                     Logger.shared.notice("already created control for \(endpoint.uri)")
                     control.close()
-                    callback(existingControl)
+                    callback(existingController)
                     return
                 }
-                self.cachedControls[endpoint] = control
-                callback(control)
+                let audioController = AudioController(view: self)
+                audioController.control = control
+                self.cachedControllers[endpoint] = audioController
+                self.audioController = audioController
+                callback(audioController)
                },
                ybridControl: { (ybridControl) in
-                if let existingControl = self.cachedControls[endpoint] {
+                if let existingControl = self.cachedControllers[endpoint] {
                     Logger.shared.notice("already created control for \(endpoint.uri)")
                     ybridControl.close()
                     callback(existingControl)
                     return
                 }
-                self.cachedControls[endpoint] = ybridControl
-                callback(ybridControl)
+                
+                let audioController = AudioController(view: self)
+                audioController.control = ybridControl
+                self.cachedControllers[endpoint] = audioController
+                self.audioController = audioController
+                callback(audioController)
                })
         } catch {
             Logger.shared.error("no player for \(endpoint.uri)")
@@ -417,21 +434,14 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
             return
         }}
     }
-    
-    fileprivate func doToggle(_ player:PlaybackControl) {
 
-        switch player.state  {
-        case .stopped, .pausing:
+    fileprivate func doToggle(_ controller:AudioController) {
+
+        controller.toggle()
+        if !controller.running {
             DispatchQueue.main.async {
                 self.problem.text = nil
             }
-            player.play()
-        case .playing:
-            player.canPause ? player.pause() : player.stop()
-        case .buffering:
-            player.stop()
-        @unknown default:
-            fatalError("unknown player state \(player.state )")
         }
     }
     
@@ -525,9 +535,9 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
     // MARK: AudioPlayerListener
 
     func stateChanged(_ state: PlaybackState) {
-        guard currentControl?.state == state else {
+        guard audioController?.state == state else {
             /// ignore events from the last player
-            Logger.shared.notice("ignoring \(state), current control is \(String(describing: currentControl?.state))")
+            Logger.shared.notice("ignoring \(state), current control is \(String(describing: audioController?.state))")
             return
         }
 
@@ -559,7 +569,7 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
     private let stopImage = UIImage(named: "stop")!.scale(factor: 0.8)
     private func setPlaying() {
         self.togglePlay.setTitle(nil, for: .normal)
-        if let control = self.currentControl, control.canPause {
+        if let control = self.audioController?.control, control.canPause {
             self.togglePlay.setImage(self.pauseImage, for: UIControl.State.normal)
         } else {
             self.togglePlay.setImage(self.stopImage, for: UIControl.State.normal)
@@ -576,7 +586,7 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
     
     func metadataChanged(_ metadata:Metadata) {
         DispatchQueue.main.async {
-            if self.currentControl?.state != .stopped,
+            if self.audioController?.state != .stopped,
                let title = metadata.displayTitle {
                 self.playingTitle.text = title
             } else {
