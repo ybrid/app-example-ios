@@ -171,7 +171,7 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
             broadcaster.text = nil
             genre.text = nil
             playingTitle.text = nil
-            problem.text = nil
+//            problem.text = nil
             playingSince(0)
             bitRateLabel.text = nil
             durationReadyToPlay(nil)
@@ -191,23 +191,21 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
             Logger.shared.info("endpoint changed to \(endpoint?.uri ?? "(nil)")")
             
             var oldPlaying = false
-            if oldValue != nil, let oldControl = cachedControllers[oldValue!], oldControl.state != .stopped {
-                oldPlaying = oldControl.state == .playing
-                oldControl.control?.stop() // todo
+            if oldValue != nil, let oldController = cachedControllers[oldValue!], oldController.running {
+                oldPlaying = true
+                oldController.control?.stop()
             }
             
+            DispatchQueue.main.async {
+                self.problem.text = nil
+            }
             guard let endpoint = endpoint else {
                 audioController = nil
                 return
             }
             
             guard let controller = cachedControllers[endpoint] else {
-                newController(endpoint) { (controller) in
-                    guard controller.control?.mediaEndpoint == self.endpoint else {
-                        Logger.shared.notice("aborting \(controller.control?.mediaEndpoint.uri)")
-                        return
-                    }
-                    self.audioController = controller
+                useController(endpoint) { (controller) in
                     if oldPlaying {
                         self.doToggle(controller)
                     }
@@ -224,11 +222,11 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
     
     private var cachedControllers:[MediaEndpoint:AudioController] = [:]
     
-    var audioController:AudioController? { didSet {
+    private var audioController:AudioController? { didSet {
         if let control = audioController?.control {
             attach(control: control)
         } else {
-            detatchModel()
+            detach()
         }
     }}
 
@@ -237,12 +235,13 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        //  Logger.verbose = true
+        
         view.layoutIfNeeded()
         hideKeyboardWhenTappedAround()
         
         initializeElements()
-        
-        audioController = AudioController(view:self)
+
         
         /// clearing values and states
         resetValues()
@@ -296,8 +295,8 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
     
     // MARK: model
     
-    func detatchModel() {
-        setStopped()
+    func detach() {
+//        setStopped()
         resetValues()
         controls(enable: false)
         ybridControls(visible: false)
@@ -323,13 +322,7 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
         }
         
         guard let controller = cachedControllers[endpoint] else {
-            newController(endpoint) {(controller) in
-                guard controller.control?.mediaEndpoint == self.endpoint else {
-                    Logger.shared.notice("aborting \(controller.control?.mediaEndpoint.uri)")
-                    return
-                }
-                
-                self.audioController = controller
+            useController(endpoint) {(controller) in
                 self.doToggle(controller) // run it
             }
             return
@@ -387,62 +380,41 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
         }
     }
     
-    fileprivate func newController(_ endpoint:MediaEndpoint, callback: @escaping (AudioController) -> ()) {
-        detatchModel()
+    fileprivate func useController(_ endpoint:MediaEndpoint, accept: @escaping (AudioController) -> ()) {
         
-//        if let existingController = self.cachedControllers[endpoint] {
-//            Logger.shared.notice("already created control for \(endpoint.uri)")
-//            callback(existingController)
-//            return
-//        }
-//
-//
-//
-        DispatchQueue.global().async {
-        do {
-            try AudioPlayer.open(for: endpoint, listener: self,
-               playbackControl: { (control) in
-                if let existingController = self.cachedControllers[endpoint] {
-                    Logger.shared.notice("already created control for \(endpoint.uri)")
-                    control.close()
-                    callback(existingController)
-                    return
-                }
-                let audioController = AudioController(view: self)
-                audioController.control = control
-                self.cachedControllers[endpoint] = audioController
-                self.audioController = audioController
-                callback(audioController)
-               },
-               ybridControl: { (ybridControl) in
-                if let existingControl = self.cachedControllers[endpoint] {
-                    Logger.shared.notice("already created control for \(endpoint.uri)")
-                    ybridControl.close()
-                    callback(existingControl)
-                    return
-                }
-                
-                let audioController = AudioController(view: self)
-                audioController.control = ybridControl
-                self.cachedControllers[endpoint] = audioController
-                self.audioController = audioController
-                callback(audioController)
-               })
-        } catch {
-            Logger.shared.error("no player for \(endpoint.uri)")
-            self.controls(enable: false)
+        if let existingController = self.cachedControllers[endpoint] {
+            Logger.shared.notice("already created control for \(endpoint.uri)")
+            audioController = existingController
+            accept(existingController)
             return
-        }}
+        }
+        
+        _ = AudioController(view: self, endpoint, listener: self) { (controller) in
+            guard controller.control?.mediaEndpoint == self.endpoint else {
+                Logger.shared.notice("aborted, endpoint \(endpoint.uri) differs to \(controller.control?.mediaEndpoint.uri ?? "(nil)")")
+                controller.control?.close()
+                return
+            }
+            
+            if let _ = self.cachedControllers[endpoint] {
+                controller.control?.close()
+                return
+            }
+            
+            self.audioController = controller
+            self.cachedControllers[endpoint] = controller
+            accept(controller)
+        }
     }
 
     fileprivate func doToggle(_ controller:AudioController) {
 
-        controller.toggle()
         if !controller.running {
             DispatchQueue.main.async {
                 self.problem.text = nil
             }
         }
+        controller.toggle()
     }
     
     func enableOffset(_ enable:Bool) {

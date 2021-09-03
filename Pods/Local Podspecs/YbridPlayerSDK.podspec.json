@@ -25,8 +25,8 @@
   "user_target_xcconfig": {
     "EXCLUDED_ARCHS[sdk=iphonesimulator*]": "arm64"
   },
-  "frameworks": "YbridPlayerSDK",
-  "vendored_frameworks": "YbridPlayerSDK.xcframework",
+  "source_files": "player-sdk-swift/**/*.{swift}",
+  "module_name": "YbridPlayerSDK",
   "dependencies": {
     "YbridOgg": [
       "0.7.4"

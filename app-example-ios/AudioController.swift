@@ -36,14 +36,14 @@ class AudioController {
         guard let player = control else {
             return false
         }
-        return player.state == .buffering || player.state == .buffering
+        return player.state == .buffering || player.state == .playing
     }}
     
     var control:PlaybackControl? {
         didSet {
             guard let control = control else {
                 Logger.shared.notice("control changed to (nil)")
-                view?.detatchModel()
+                view?.detach()
                 return
             }
             
@@ -54,48 +54,30 @@ class AudioController {
     
     weak var view:ViewController?
     
-    init(view:ViewController) {
-//        Logger.verbose = true
-        Logger.shared.notice("using \(AudioPlayer.versionString)")
-        self.view = view
-    }
-    
-    
-    init(view:ViewController,_ endpoint:MediaEndpoint, callback: @escaping (AudioController) -> ()) {
+    init(view:ViewController?,_ endpoint:MediaEndpoint, listener:AudioPlayerListener, callback: @escaping (AudioController) -> ()) {
 
+        view?.detach()
         self.view = view
         
         do {
-            try AudioPlayer.open(for: endpoint, listener: nil,
+            try AudioPlayer.open(for: endpoint, listener: listener,
                playbackControl: { (control) in
-
-                let audioController = AudioController(view: self.view!)
                 self.control = control
-                callback(audioController)
+                callback(self)
                },
                ybridControl: { (ybridControl) in
-                let audioController = AudioController(view: self.view!)
                 self.control = ybridControl
-                callback(audioController)
+                callback(self)
                })
         } catch {
             Logger.shared.error("no player for \(endpoint.uri)")
             self.control = nil
+            callback(self)
             return
         }
     }
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    func toggle() {
+     func toggle() {
         guard let player = control else {
             // todo
             return
