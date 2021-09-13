@@ -30,6 +30,7 @@
 		17A8204A268F0D5D0025BE6A /* YbridControlBasicTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A82047268F0D5D0025BE6A /* YbridControlBasicTests.swift */; };
 		17A8204B268F0D5D0025BE6A /* YbridSwapItemTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A82048268F0D5D0025BE6A /* YbridSwapItemTests.swift */; };
 		17A8204C268F0D5D0025BE6A /* YbridSwapServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A82049268F0D5D0025BE6A /* YbridSwapServiceTests.swift */; };
+		17E3391826F0CE280026711D /* ViewItemGroups.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17E3391726F0CE280026711D /* ViewItemGroups.swift */; };
 		17F5E355267C9DF700BCE656 /* YbridTimeshiftTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F5E353267C9DF600BCE656 /* YbridTimeshiftTests.swift */; };
 		3DE4632F9C5B79744D9597DB /* Pods_app_example_ios.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F08C6EBCE5B6DC10660F6A7C /* Pods_app_example_ios.framework */; };
 /* End PBXBuildFile section */
@@ -72,6 +73,7 @@
 		17A82048268F0D5D0025BE6A /* YbridSwapItemTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YbridSwapItemTests.swift; sourceTree = "<group>"; };
 		17A82049268F0D5D0025BE6A /* YbridSwapServiceTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YbridSwapServiceTests.swift; sourceTree = "<group>"; };
 		17D3A0332507D29700859BF9 /* app-example-ios.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "app-example-ios.entitlements"; sourceTree = "<group>"; };
+		17E3391726F0CE280026711D /* ViewItemGroups.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewItemGroups.swift; sourceTree = "<group>"; };
 		17F5E353267C9DF600BCE656 /* YbridTimeshiftTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YbridTimeshiftTests.swift; sourceTree = "<group>"; };
 		248D87F35ADE806513210A89 /* Pods-app-example-ios.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-app-example-ios.debug.xcconfig"; path = "Target Support Files/Pods-app-example-ios/Pods-app-example-ios.debug.xcconfig"; sourceTree = "<group>"; };
 		4B4F7883DA6DC4D88169DCEC /* Pods-app-example-ios-app-example-iosUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-app-example-ios-app-example-iosUITests.release.xcconfig"; path = "Target Support Files/Pods-app-example-ios-app-example-iosUITests/Pods-app-example-ios-app-example-iosUITests.release.xcconfig"; sourceTree = "<group>"; };
@@ -131,8 +133,9 @@
 				17587CC325027DC900951211 /* Main.storyboard */,
 				17587CC125027DC900951211 /* ViewController.swift */,
 				172A4121263D9A7E0042ADA4 /* MediaSelector.swift */,
-				17651DEE266A6957005D46BA /* ChannelSelector.swift */,
+				17E3391726F0CE280026711D /* ViewItemGroups.swift */,
 				171C93DC26E0ECFA005114FF /* AudioController.swift */,
+				17651DEE266A6957005D46BA /* ChannelSelector.swift */,
 				1759CE14267669270040ED0A /* UserFeedback.swift */,
 				177182CA267FEB870061DB8D /* Actions.swift */,
 				17587CC925027DCC00951211 /* Assets.xcassets */,
@@ -376,6 +379,7 @@
 				17587CC825027DC900951211 /* app_example_ios.xcdatamodeld in Sources */,
 				17651DEF266A6957005D46BA /* ChannelSelector.swift in Sources */,
 				17587CC025027DC900951211 /* SceneDelegate.swift in Sources */,
+				17E3391826F0CE280026711D /* ViewItemGroups.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

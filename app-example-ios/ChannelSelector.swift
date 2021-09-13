@@ -23,7 +23,6 @@
 // SOFTWARE.
 //
 
-import Foundation
 import UIKit
 import YbridPlayerSDK
 
@@ -34,18 +33,15 @@ class ChannelSelector:
     let componentsSize:CGSize
     let font:UIFont
     let userSelectedChannel:(String?) -> ()
-    weak var view:UIPickerView?
-    
-    
-    var selected:String? { didSet {
-    }}
+    weak var pView:UIPickerView?
+    var selected:String?
     
     init(_ view:UIPickerView, font:UIFont, onChannelSelected:@escaping (String?) -> () ) {
         self.userSelectedChannel = onChannelSelected
         self.font = font
         self.componentsSize = CGSize(width: 54, height: 50)
         super.init()
-        self.view = view
+        self.pView = view
         view.delegate = self
         view.dataSource = self
         view.transform = CGAffineTransform(rotationAngle: -90 * (.pi/180))
@@ -68,7 +64,7 @@ class ChannelSelector:
     func setChannels(ids:[String]) {
         channels = ids
         DispatchQueue.main.async {
-            self.view?.reloadAllComponents()
+            self.pView?.reloadAllComponents()
         }
     }
     
@@ -78,7 +74,7 @@ class ChannelSelector:
             Logger.shared.error("unknown channel with id \(id)")
             return
         }
-        guard let view = view else {
+        guard let view = pView else {
             Logger.shared.error("no channel selector view")
             return
         }
@@ -91,8 +87,8 @@ class ChannelSelector:
     
     func enable(_ enable:Bool) {
         DispatchQueue.main.async {
-            self.view?.alpha = enable ? 1 : 0.6
-            self.view?.isUserInteractionEnabled = enable
+            self.pView?.alpha = enable ? 1 : 0.6
+            self.pView?.isUserInteractionEnabled = enable
         }
     }
     

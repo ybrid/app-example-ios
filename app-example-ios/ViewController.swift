@@ -32,7 +32,7 @@ import AVFoundation
 import YbridPlayerSDK
 
 
-class ViewController: UIViewController, AudioPlayerListener, YbridControlListener {
+class ViewController: UIViewController {
 
     // MARK: ui outlets
 
@@ -72,50 +72,108 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
     @IBOutlet weak var sdkVersion: UILabel!
     @IBOutlet weak var appVersion: UILabel!
     
-    
     private var uriSelector:MediaSelector?
-    private var channelPicker = UIPickerView()
-    private var channelSelector:ChannelSelector?
-    private var feedback:UserFeedback?
+
+
+    // MARK: media endpoint selection
+    
+    var endpoint:MediaEndpoint? {
+        didSet {
+            if oldValue == endpoint {
+                return
+            }
+            
+            Logger.shared.info("endpoint changed to \(endpoint?.uri ?? "(nil)")")
+            
+            DispatchQueue.main.async {
+                self.problem.text = nil
+            }
+            guard let endpoint = endpoint else {
+                audioController?.control = nil
+                return
+            }
+            
+            audioController?.useControl(endpoint){_ in }
+        }
+    }
+    
+    var audioController:AudioController?
+    
+    // MARK: main method
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        //  Logger.verbose = true
+        
+        view.layoutIfNeeded()
+        hideKeyboardWhenTappedAround()
+        
+        initializeGui()
+        initializeActions()
+        audioController = AudioController(view: self)
+        
+        /// picking preset media or custom url
+        uriSelector = MediaSelector(urlPicker: urlPicker, urlField: urlField) { (endpoint) in
+            self.endpoint = endpoint
+        }
+        let initialSelectedRow = 0
+        urlPicker.selectRow(initialSelectedRow, inComponent: 0, animated: true)
+        uriSelector?.pickerView(urlPicker, didSelectRow: initialSelectedRow, inComponent: 0)
+    }
+    
+    override func didReceiveMemoryWarning() {
+        Logger.shared.notice()
+        if PlayerContext.handleMemoryLimit() {
+            Logger.shared.error("player handeled memory limit of \(PlayerContext.memoryLimitMB) MB")
+        }
+        super.didReceiveMemoryWarning()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        audioController?.cachedControls.forEach { (endpoint,player) in
+            Logger.shared.info("closing player for endpoint \(endpoint.uri)")
+            player.close()
+        }
+    }
+
+    override func didRotate(from fromInterfaceOrientation: UIInterfaceOrientation) {
+        audioController?.interactions.channelPicker.frame = channelPickerFrame.frame
+    }
+    
+    // MARK: on pressing play/stop/pause
+    
+    func doToggle() {
+
+        guard let endpoint = endpoint else {
+            Logger.shared.error("no endpoint to toggle")
+            return
+        }
+        
+        if let control = audioController?.control,
+           !control.running {
+            DispatchQueue.main.async {
+                self.problem.text = nil
+            }
+        }
+        
+        audioController?.useControl(endpoint) {(control) in
+            guard control.mediaEndpoint == self.endpoint else {
+                Logger.shared.notice("aborting \(control.mediaEndpoint.uri)")
+                return
+            }
+            self.audioController?.toggle() // run it
+        }
+        return
+    }
+    
     
     // MARK: initialization
     
-    private var ybrid:YbridControl? { get {
-        audioController?.control as? YbridControl
-    }}
-    
-    private func initializeElements() {
+    private func initializeGui() {
         DispatchQueue.main.async { [self] in
-            
             togglePlay.setTitle("", for: .disabled)
-            togglePlay.action = Action("toggle", .always, self.toggle)
-            
-            initialize(button: swapItemButton, image: "swapItem", scale: 0.5, "swap item", behaviour: .single) {
-                ybrid?.swapItem{ _ in swapItemButton.completed() }
-            }
-            
-
-            initialize(button: itemBackwardButton, image: "itemBackward", scale: 0.5, "item backward", behaviour: .multi ) {
-                enableOffset(false)
-                ybrid?.skipBackward() { _ in enableOffset(true) }
-            }
-            initialize(button: windBackButton, image: "windBack", scale: 0.4, "wind back", behaviour: .multi) {
-                enableOffset(false)
-                ybrid?.wind(by: -15.0) { _ in enableOffset(true) }
-            }
-            initialize(button: windToLiveButton, image:  "windToLive", scale: 0.9, "wind to live", behaviour: .single ) {
-                enableOffset(false)
-                ybrid?.windToLive{ _ in windToLiveButton.completed(); enableOffset(true) }
-            }
-            
-            initialize(button: windForwardButton, image: "windForward", scale: 0.4, "wind forward", behaviour: .multi) {
-                enableOffset(false)
-                ybrid?.wind(by: +15.0) { _ in self.enableOffset(true) }
-            }
-            initialize(button: itemForwardButton, image: "itemForward", scale: 0.5, "item forward", behaviour: .multi) {
-                enableOffset(false)
-                ybrid?.skipForward() { _ in self.enableOffset(true) }
-            }
             
             initialize(label: problem)
             initialize(label: playedSince, monospaced: true)
@@ -133,20 +191,12 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
             sdkVersion.text = "player-sdk\n" + getBundleInfo(id:"io.ybrid.player-sdk-swift")
         }
     }
-    
     private func initialize(label: UILabel, monospaced:Bool = false) {
         if monospaced {
             label.font = label.font.monospacedDigitFont
         }
         label.text = nil
     }
-    
-    private func initialize(button: ActionButton, image:String, scale:Float, _ actionString:String, behaviour:Action.behaviour, _ action: @escaping () -> () ) {
-        let itemImage = UIImage(named: image)!.scale(factor: scale)
-        button.setImage(itemImage, for: .normal)
-        button.action = Action(actionString, behaviour, action)
-    }
-    
     private func getBundleInfo(id:String) -> String {
         guard let bundle = Bundle(identifier: id) else {
             Logger.shared.error("no bundle with id \(id)")
@@ -166,256 +216,92 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
         return "\(version) (\(build))"
     }
     
-    private func resetValues() {
+    private let playImage = UIImage(named: "play")!
+    private let pauseImage = UIImage(named: "pause")!.scale(factor: 0.9)
+    private let stopImage = UIImage(named: "stop")!.scale(factor: 0.8)
+    func setStopped() {
         DispatchQueue.main.async { [self] in
-            broadcaster.text = nil
-            genre.text = nil
-            playingTitle.text = nil
-//            problem.text = nil
-            playingSince(0)
-            bitRateLabel.text = nil
-            durationReadyToPlay(nil)
-            durationConnected(nil)
-            bufferSize(averagedSeconds: nil, currentSeconds: nil)
+            togglePlay.setTitle(nil, for: .normal)
+            togglePlay.setImage(self.playImage, for: .normal)
         }
     }
-    
-    // MARK: endpoint selection
-    
-    var endpoint:MediaEndpoint? {
-        didSet {
-            if oldValue == endpoint {
-                return
-            }
-            
-            Logger.shared.info("endpoint changed to \(endpoint?.uri ?? "(nil)")")
-            
-            var oldPlaying = false
-            if oldValue != nil, let oldController = cachedControllers[oldValue!], oldController.running {
-                oldPlaying = true
-                oldController.control?.stop()
-            }
-            
-            DispatchQueue.main.async {
-                self.problem.text = nil
-            }
-            guard let endpoint = endpoint else {
-                audioController = nil
-                return
-            }
-            
-            guard let controller = cachedControllers[endpoint] else {
-                useController(endpoint) { (controller) in
-                    if oldPlaying {
-                        self.doToggle(controller)
-                    }
-                }
-                return
-            }
-            
-            audioController = controller
-            if oldPlaying {
-                doToggle(controller)
+    func setPlaying(canPause:Bool) {
+        DispatchQueue.main.async { [self] in
+            togglePlay.setTitle(nil, for: .normal)
+            if canPause {
+                togglePlay.setImage(self.pauseImage, for: .normal)
+            } else {
+                togglePlay.setImage(self.stopImage, for: .normal)
             }
         }
     }
-    
-    private var cachedControllers:[MediaEndpoint:AudioController] = [:]
-    
-    private var audioController:AudioController? { didSet {
-        if let control = audioController?.control {
-            attach(control: control)
-        } else {
-            detach()
+    func setBuffering() {
+        DispatchQueue.main.async { [self] in
+            togglePlay.setTitle("● ● ●", for: .normal) // \u{25cf} Black Circle
+            togglePlay.setImage(nil, for: .normal)
         }
-    }}
-
-    // MARK: main
+    }
+    func setPausing() {
+        DispatchQueue.main.async { [self] in
+            togglePlay.setTitle(nil, for: .normal)
+            togglePlay.setImage(self.playImage, for: .normal)
+        }
+    }
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    private func initializeActions() {
+        togglePlay.action = Action("toggle", .always) {
+            self.doToggle()
+        }
         
-        //  Logger.verbose = true
-        
-        view.layoutIfNeeded()
-        hideKeyboardWhenTappedAround()
-        
-        initializeElements()
-
-        
-        /// clearing values and states
-        resetValues()
-        ybridControls(visible: false)
-        
-        /// picking preset media or custom url
-        uriSelector = MediaSelector(urlPicker: urlPicker, urlField: urlField) { (endpoint) in
-            self.endpoint = endpoint
-        }
-        let initialSelectedRow = 0
-        urlPicker.selectRow(initialSelectedRow, inComponent: 0, animated: true)
-        uriSelector?.pickerView(urlPicker, didSelectRow: initialSelectedRow, inComponent: 0)
-        
-        /// picking the first service of ybrid bucket
-        channelSelector = ChannelSelector(channelPicker, font: (urlField as UITextField).font!) { (channel) in
-            Logger.shared.notice("service \(channel ?? "(nil)") selected")
-            if let ybrid = self.ybrid,
-               let service = channel {
-                Logger.shared.debug("swap service to \(service) triggered")
-                self.channelSelector?.enable(false)
-                ybrid.swapService(to: service) { (changed) in
-                    Logger.shared.debug("swap service \(changed ? "" : "not ")completed")
-                    self.channelSelector?.enable(true)
-                }
+        DispatchQueue.main.async { [self] in
+            initialize(button: swapItemButton, image: "swapItem", scale: 0.5, "swap item", behaviour: .single) {
+                audioController?.ybrid?.swapItem{ _ in swapItemButton.completed() }
+            }
+            initialize(button: itemBackwardButton, image: "itemBackward", scale: 0.5, "item backward", behaviour: .multi ) {
+                enableOffset(false)
+                audioController?.ybrid?.skipBackward() { _ in enableOffset(true) }
+            }
+            initialize(button: windBackButton, image: "windBack", scale: 0.4, "wind back", behaviour: .multi) {
+                enableOffset(false)
+                audioController?.ybrid?.wind(by: -15.0) { _ in enableOffset(true) }
+            }
+            initialize(button: windToLiveButton, image:  "windToLive", scale: 0.9, "wind to live", behaviour: .single ) {
+                enableOffset(false)
+                audioController?.ybrid?.windToLive{ _ in windToLiveButton.completed(); enableOffset(true) }
+            }
+            initialize(button: windForwardButton, image: "windForward", scale: 0.4, "wind forward", behaviour: .multi) {
+                enableOffset(false)
+                audioController?.ybrid?.wind(by: +15.0) { _ in self.enableOffset(true) }
+            }
+            initialize(button: itemForwardButton, image: "itemForward", scale: 0.5, "item forward", behaviour: .multi) {
+                enableOffset(false)
+                audioController?.ybrid?.skipForward() { _ in self.enableOffset(true) }
             }
         }
-        channelPicker.frame = channelPickerFrame.frame
-        view.addSubview(channelPicker)
-        channelPicker.selectRow(0, inComponent: 0, animated: true)
     }
-    
-    override func didReceiveMemoryWarning() {
-        Logger.shared.notice()
-        if PlayerContext.handleMemoryLimit() {
-            Logger.shared.error("player handeled memory limit of \(PlayerContext.memoryLimitMB) MB")
-        }
-        super.didReceiveMemoryWarning()
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        cachedControllers.forEach { (endpoint,player) in
-            Logger.shared.info("closing player for endpoint \(endpoint.uri)")
-            audioController?.control?.close()
-        }
-    }
-
-    override func didRotate(from fromInterfaceOrientation: UIInterfaceOrientation) {
-        channelPicker.frame = channelPickerFrame.frame
-    }
-    
-    // MARK: model
-    
-    func detach() {
-//        setStopped()
-        resetValues()
-        controls(enable: false)
-        ybridControls(visible: false)
-    }
-    
-    func attach(control:SimpleControl) {
-        controls(enable: true)
-        if let ybridControl = control as? YbridControl {
-            ybridControl.select()
-            ybridControls(visible: true)
-        } else {
-            ybridControls(visible: false)
-        }
+    private func initialize(button: ActionButton, image:String, scale:Float, _ actionString:String, behaviour:Action.behaviour, _ action: @escaping () -> () ) {
+        let itemImage = UIImage(named: image)!.scale(factor: scale)
+        button.setImage(itemImage, for: .normal)
+        button.action = Action(actionString, behaviour, action)
     }
     
     // MARK: user actions
     
-    /// toggle play or stop
-    func toggle() {
-        print("toggle called")
-        guard let endpoint = endpoint else {
-            return
-        }
-        
-        guard let controller = cachedControllers[endpoint] else {
-            useController(endpoint) {(controller) in
-                self.doToggle(controller) // run it
-            }
-            return
-        }
-        
-        doToggle(controller)
-    }
-    
     /// edit custom url
     @IBAction func urlEditChanged(_ sender: Any) {
         let valid = uriSelector?.urlEditChanged() ?? true
-        controls(enable: valid)
+        audioController?.interactions.enable(valid)
     }
-       
     
     @IBAction func maxBitRateSelected(_ sender: Any) {
          
         let selectedRate =  bitRatesRange.lowerBound + Int32(maxRateSlider.value * Float(bitRatesRange.upperBound -  bitRatesRange.lowerBound))
  
         Logger.shared.debug("selected bit-rate is \(selectedRate)")
-        ybrid?.maxBitRate(to: selectedRate)
+        audioController?.ybrid?.maxBitRate(to: selectedRate)
     }
     
     // MARK: helpers acting on ui elements
-    
-    private func controls(enable:Bool) {
-        DispatchQueue.main.async {
-            self.togglePlay.isEnabled = enable
-            self.windBackButton.isEnabled = enable
-            self.windForwardButton.isEnabled = enable
-            self.windToLiveButton.isEnabled = enable
-            self.itemBackwardButton.isEnabled = enable
-            self.itemForwardButton.isEnabled = enable
-            self.swapItemButton.isEnabled = enable
-            self.channelSelector?.enable(enable)
-            self.maxRateSlider.isEnabled = enable
-        }
-    }
-    
-    private func ybridControls(visible:Bool) {
-        let hidden = !visible
-        DispatchQueue.main.async {
-            self.offsetS.isHidden = hidden
-            self.offsetLabel.isHidden = hidden
-            self.windBackButton.isHidden = hidden
-            self.windToLiveButton.isHidden = hidden
-            self.windForwardButton.isHidden = hidden
-            self.itemBackwardButton.isHidden = hidden
-            self.itemForwardButton.isHidden = hidden
-            self.swapItemButton.isHidden = hidden
-            self.channelPicker.isHidden = hidden
-            self.bitRateLabel.isHidden = hidden
-            self.maxRateSlider.isHidden = hidden
-            self.currentRateSlider.isHidden = hidden
-        }
-    }
-    
-    fileprivate func useController(_ endpoint:MediaEndpoint, accept: @escaping (AudioController) -> ()) {
-        
-        if let existingController = self.cachedControllers[endpoint] {
-            Logger.shared.notice("already created control for \(endpoint.uri)")
-            audioController = existingController
-            accept(existingController)
-            return
-        }
-        
-        _ = AudioController(view: self, endpoint, listener: self) { (controller) in
-            guard controller.control?.mediaEndpoint == self.endpoint else {
-                Logger.shared.notice("aborted, endpoint \(endpoint.uri) differs to \(controller.control?.mediaEndpoint.uri ?? "(nil)")")
-                controller.control?.close()
-                return
-            }
-            
-            if let _ = self.cachedControllers[endpoint] {
-                controller.control?.close()
-                return
-            }
-            
-            self.audioController = controller
-            self.cachedControllers[endpoint] = controller
-            accept(controller)
-        }
-    }
-
-    fileprivate func doToggle(_ controller:AudioController) {
-
-        if !controller.running {
-            DispatchQueue.main.async {
-                self.problem.text = nil
-            }
-        }
-        controller.toggle()
-    }
     
     func enableOffset(_ enable:Bool) {
         /// Disabled visualization for timeshifts by doing nothing here.
@@ -424,231 +310,7 @@ class ViewController: UIViewController, AudioPlayerListener, YbridControlListene
 //            self.offsetS.alpha = enable ? 1.0 : 0.5
 //        }
     }
-    
-    
-    // MARK: YbridControlListener
-    
-    func offsetToLiveChanged(_ offset:TimeInterval?) {
-        DispatchQueue.main.async {
-            if let seconds = offset {
-                self.offsetS.text =  seconds.hmmssS
-            } else {
-                self.offsetS.text = nil
-            }
-        }
-    }
-    
-    func servicesChanged(_ services: [Service]) {
-        self.channelSelector?.setChannels(ids: services.map{ $0.identifier })
-    }
-    
-    func swapsChanged(_ swapsLeft: Int) {
-        DispatchQueue.main.async {
-            self.swapItemButton.isEnabled = swapsLeft != 0
-        }
-    }
 
-    func bitRateChanged(currentBitsPerSecond: Int32?, maxBitsPerSecond: Int32?) {
-        var maxKbps:Int32? = nil
-        var maxRateValue:Float?
-        if let maxBps = maxBitsPerSecond, bitRatesRange.contains(maxBps) {
-            let kbps = Int32(maxBps/1000)
-            Logger.shared.info("max bit-rate is \(kbps) kbps")
-            maxKbps = kbps
-            maxRateValue = Float(maxBps - bitRatesRange.lowerBound) / Float(bitRatesRange.upperBound - bitRatesRange.lowerBound)
-        }
-        
-        var currentKbps:Int32? = nil
-        var currentRateValue:Float?
-        if let currentBps = currentBitsPerSecond, bitRatesRange.contains(currentBps) {
-            let kbps =  Int32(currentBps/1000)
-            Logger.shared.info("current bit-rate is \(kbps) kbps")
-            currentKbps = kbps
-            currentRateValue = Float(currentBps - bitRatesRange.lowerBound) / Float(bitRatesRange.upperBound - bitRatesRange.lowerBound)
-        }
-        
-        DispatchQueue.main.async {
-            if let currentRateSliderValue = currentRateValue {
-                self.currentRateSlider.setValue(currentRateSliderValue, animated: true)
-            }
-            if let maxRateSliderValue = maxRateValue {
-                self.maxRateSlider.setValue(maxRateSliderValue, animated: false)
-            }
-            let coloredLabelText = self.coloredBitRatesText(currentKbps, maxKbps)
-            self.bitRateLabel.attributedText = coloredLabelText
-        }
-    }
-
-    private func coloredBitRatesText(_ current:Int32?,_ maximum:Int32?) -> NSAttributedString {
-        
-        let currentRateColor = UIColor.green
-        let maxRateColor = UIColor.magenta
-        
-        guard let cur = current else {
-            var maxRateText = "max bit-rate"
-            if let max = maximum {
-                maxRateText = "max \(max) kbps"
-            }
-            return NSAttributedString(string:maxRateText, attributes: [NSAttributedString.Key.foregroundColor : maxRateColor])
-        }
-        
-        guard let max = maximum else {
-            let currentRateText = "\(cur) kbps"
-            return NSAttributedString(string:currentRateText, attributes: [NSAttributedString.Key.foregroundColor : currentRateColor])
-        }
-        
-        let totalText = NSMutableAttributedString(string:"\(cur)", attributes: [NSAttributedString.Key.foregroundColor : currentRateColor])
-        totalText.append(NSAttributedString(string:" /\(max) kbps", attributes: [NSAttributedString.Key.foregroundColor : maxRateColor]))
-        return totalText
-    }
-    
-    
-    
-    // MARK: AudioPlayerListener
-
-    func stateChanged(_ state: PlaybackState) {
-        guard audioController?.state == state else {
-            /// ignore events from the last player
-            Logger.shared.notice("ignoring \(state), current control is \(String(describing: audioController?.state))")
-            return
-        }
-
-        Logger.shared.debug("state changed to \(state)")
-
-        DispatchQueue.main.sync { [self] in
-            switch state {
-            case .stopped:
-                setStopped()
-                self.playingTitle.text = nil
-            case .pausing:
-                setPausing()
-            case .buffering:
-                setBuffering()
-            case .playing:
-                setPlaying()
-            @unknown default:
-                Logger.shared.error("state changed to unknown \(state)")
-            }
-
-        }
-    }
-    private let playImage = UIImage(named: "play")!
-    private func setStopped() {
-        self.togglePlay.setTitle(nil, for: .normal)
-        self.togglePlay.setImage(self.playImage, for: UIControl.State.normal)
-    }
-    private let pauseImage = UIImage(named: "pause")!.scale(factor: 0.9)
-    private let stopImage = UIImage(named: "stop")!.scale(factor: 0.8)
-    private func setPlaying() {
-        self.togglePlay.setTitle(nil, for: .normal)
-        if let control = self.audioController?.control, control.canPause {
-            self.togglePlay.setImage(self.pauseImage, for: UIControl.State.normal)
-        } else {
-            self.togglePlay.setImage(self.stopImage, for: UIControl.State.normal)
-        }
-    }
-    private func setBuffering() {
-        self.togglePlay.setTitle("● ● ●", for: .normal) // \u{25cf} Black Circle
-        self.togglePlay.setImage(nil, for: UIControl.State.normal)
-    }
-    private func setPausing() {
-        self.togglePlay.setTitle(nil, for: .normal)
-        self.togglePlay.setImage(self.playImage, for: UIControl.State.normal)
-    }
-    
-    func metadataChanged(_ metadata:Metadata) {
-        DispatchQueue.main.async {
-            if self.audioController?.state != .stopped,
-               let title = metadata.displayTitle {
-                self.playingTitle.text = title
-            } else {
-                self.playingTitle.text = nil
-            }
-            
-            if let station = metadata.station {
-                self.broadcaster.text = station.name
-                self.genre.text = station.genre
-            } else {
-                self.broadcaster.text = nil
-                self.genre.text = nil
-            }
-
-            if let serviceId = metadata.activeService?.identifier {
-                self.channelSelector?.setSelection(to: serviceId)
-            }
-        }
-    }
-    
-    func error(_ severity: ErrorSeverity, _ exception: AudioPlayerError) {
-        DispatchQueue.main.async { [self] in
-            switch severity {
-            case .fatal: problem.textColor = .red
-                problem.text = exception.message ?? exception.failureReason
-            case .recoverable: problem.textColor = .systemOrange
-                problem.text = exception.message
-                DispatchQueue.global().async {
-                    sleep(5)
-                    DispatchQueue.main.async {
-                        problem.text = nil
-                    }
-                }
-            case .notice: problem.textColor = .systemGreen
-                problem.text = exception.message
-                DispatchQueue.global().async {
-                    sleep(5)
-                    DispatchQueue.main.async {
-                        problem.text = nil
-                    }
-                }
-            @unknown default:
-                Logger.shared.error("unknown error: severity \(severity), \(exception.localizedDescription)")
-            }
-        }
-    }
-    
-     
-    func playingSince(_ seconds: TimeInterval?) {
-        DispatchQueue.main.async {
-            guard let playedS = seconds else {
-                self.playedSince.text = nil
-                return
-            }
-            self.playedSince.text = playedS.hmsS
-        }
-    }
-    
-    func durationReadyToPlay(_ seconds: TimeInterval?) {
-        DispatchQueue.main.async {
-            if let readyS = seconds {
-                self.ready.text = readyS.sSSS
-            } else {
-                self.ready.text = nil
-            }
-        }
-    }
-    func durationConnected(_ seconds: TimeInterval?) {
-        DispatchQueue.main.async {
-            if let connectS = seconds {
-                self.connected.text = connectS.sSSS
-            } else {
-                self.connected.text = nil
-            }
-        }
-    }
-    func bufferSize(averagedSeconds: TimeInterval?, currentSeconds: TimeInterval?) {
-        DispatchQueue.main.async {
-            if let averaged = averagedSeconds {
-                self.bufferAveraged.text = averaged.sS
-            } else {
-                self.bufferAveraged.text = nil
-            }
-            if let current = currentSeconds {
-                self.bufferCurrent.text = current.sSS
-            } else {
-                self.bufferCurrent.text = nil
-            }
-        }
-    }
 }
 
 fileprivate extension UIViewController {
