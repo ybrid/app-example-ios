@@ -62,6 +62,8 @@ class ViewController: UIViewController {
     @IBOutlet weak var currentRateSlider: UISlider!
     @IBOutlet weak var maxRateSlider: UISlider!
     @IBOutlet weak var bitRateLabel: UILabel!
+    @IBOutlet weak var currentBitRate: UILabel!
+    @IBOutlet weak var currentBitRateLabel: UILabel!
     
     @IBOutlet weak var ready: UILabel!
     @IBOutlet weak var connected: UILabel!
@@ -177,15 +179,13 @@ class ViewController: UIViewController {
             
             initialize(label: problem)
             initialize(label: playedSince, monospaced: true)
-            initialize(label: bitRateLabel)
             initialize(label: ready, monospaced: true)
             initialize(label: connected, monospaced: true)
             initialize(label: bufferAveraged, monospaced: true)
             initialize(label: bufferCurrent, monospaced: true)
             initialize(label: offsetS, monospaced: true)
-            
-            /// thumb of max bit-rate covers thumb of current
-            maxRateSlider.layer.zPosition =  currentRateSlider.layer.zPosition + 1
+            initialize(label: bitRateLabel)
+            initialize(label: currentBitRate, monospaced: true)
 
             appVersion.text = "demo-app\n" + getBundleInfo(id: Bundle.main.bundleIdentifier ?? "io.ybrid.example-player-ios")
             sdkVersion.text = "player-sdk\n" + getBundleInfo(id:"io.ybrid.player-sdk-swift")
@@ -292,7 +292,7 @@ class ViewController: UIViewController {
         let valid = uriSelector?.urlEditChanged() ?? true
         audioController?.interactions.enable(valid)
     }
-    
+
     @IBAction func maxBitRateSelected(_ sender: Any) {
          
         let selectedRate =  bitRatesRange.lowerBound + Int32(maxRateSlider.value * Float(bitRatesRange.upperBound -  bitRatesRange.lowerBound))

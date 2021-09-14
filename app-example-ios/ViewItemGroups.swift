@@ -105,6 +105,10 @@ class InteractionItems {
     }
     
     private func initialize() {
+        DispatchQueue.main.async {
+            self.view?.maxRateSlider.value = 1.0
+            self.view?.bitRateLabel.text = "max bit-rate"
+        }
     }
     
     private func enable(_ playback:Bool, _ ybrid:Bool) {
@@ -118,6 +122,7 @@ class InteractionItems {
             self.view?.itemForwardButton.isEnabled = ybrid
             self.view?.swapItemButton.isEnabled = ybrid
             self.view?.maxRateSlider.isEnabled = ybrid
+            self.view?.bitRateLabel.isEnabled = ybrid
             self.channelSelector?.enable(ybrid)
         }
     }
@@ -131,6 +136,8 @@ class InteractionItems {
             self.view?.itemForwardButton.isHidden = !ybrid
             self.view?.swapItemButton.isHidden = !ybrid
             self.view?.maxRateSlider.isHidden = !ybrid
+            self.view?.bitRateLabel.isHidden = !ybrid
+
             self.channelSelector?.pView?.isHidden = !ybrid
         }
     }
@@ -164,7 +171,7 @@ class MeteringItems {
             self.listener?.durationReadyToPlay(nil)
             self.listener?.durationConnected(nil)
             self.listener?.bufferSize(averagedSeconds: nil, currentSeconds: nil)
-            self.view?.bitRateLabel.text = nil
+            self.view?.currentBitRate.text = nil
         }
     }
     
@@ -172,8 +179,8 @@ class MeteringItems {
         DispatchQueue.main.async {
             self.view?.offsetS.isHidden = !ybrid
             self.view?.offsetLabel.isHidden = !ybrid
-            self.view?.bitRateLabel.isHidden = !ybrid
-            self.view?.currentRateSlider.isHidden = !ybrid
+            self.view?.currentBitRate.isHidden = !ybrid
+            self.view?.currentBitRateLabel.isHidden = !ybrid
         }
     }
     
@@ -181,8 +188,9 @@ class MeteringItems {
         DispatchQueue.main.async {
             self.view?.offsetS.isEnabled = ybrid
             self.view?.offsetLabel.isEnabled = ybrid
-            self.view?.bitRateLabel.isEnabled = ybrid
-            self.view?.currentRateSlider.isEnabled = ybrid
+            self.view?.currentBitRate.isEnabled = ybrid
+            self.view?.currentBitRateLabel.isEnabled = ybrid
+
         }
     }
 

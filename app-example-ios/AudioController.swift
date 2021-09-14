@@ -303,23 +303,29 @@ class AudioController: AudioPlayerListener, YbridControlListener {
         }
         
         var currentKbps:Int32? = nil
-        var currentRateValue:Float?
         if let currentBps = currentBitsPerSecond, bitRatesRange.contains(currentBps) {
             let kbps =  Int32(currentBps/1000)
             Logger.shared.info("current bit-rate is \(kbps) kbps")
             currentKbps = kbps
-            currentRateValue = Float(currentBps - bitRatesRange.lowerBound) / Float(bitRatesRange.upperBound - bitRatesRange.lowerBound)
         }
         
         DispatchQueue.main.async {
-            if let currentRateSliderValue = currentRateValue {
-                self.metering.view?.currentRateSlider.setValue(currentRateSliderValue, animated: true)
-            }
             if let maxRateSliderValue = maxRateValue {
                 self.interactions.view?.maxRateSlider.setValue(maxRateSliderValue, animated: false)
             }
-            let coloredLabelText = self.coloredBitRatesText(currentKbps, maxKbps)
-            self.metering.view?.bitRateLabel.attributedText = coloredLabelText
+            if let max = maxKbps {
+                self.metering.view?.bitRateLabel.text = "max \(max) kbit/s"
+            } else {
+                self.metering.view?.bitRateLabel.text = "max bit-rate"
+            }
+            
+            if let curr = currentKbps {
+                self.metering.view?.currentBitRate.text = "\(curr) kbit/s"
+            } else {
+                self.metering.view?.currentBitRate.text = nil
+            }
+//            let coloredLabelText = self.coloredBitRatesText(currentKbps, maxKbps)
+//            self.metering.view?.bitRateLabel.attributedText = coloredLabelText
         }
     }
 
