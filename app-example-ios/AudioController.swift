@@ -23,6 +23,8 @@
 // SOFTWARE.
 //
 
+import Foundation
+import UIKit
 import YbridPlayerSDK
 
 extension PlaybackControl {
@@ -54,9 +56,7 @@ class AudioController: AudioPlayerListener, YbridControlListener {
                     oldControl.stop()
                 }
                 
-                interactions.detach()
-                metadata.detach()
-                metering.detach()
+                attach(nil)
                 return
             }
             
@@ -70,17 +70,9 @@ class AudioController: AudioPlayerListener, YbridControlListener {
                 oldControl.stop()
             }
             
-            Logger.shared.debug("control changing to \(type(of: control))")
-
-            
-            interactions.attach(control)
-            metadata.attach(control)
-            metering.attach(control)
-            
-            if let ybrid = control as? YbridControl {
-                ybrid.select()
-            }
+            attach(control)
             Logger.shared.debug("control changed to \(type(of: control))")
+            
             if oldPlaying {
                 control.play()
             }
@@ -99,6 +91,23 @@ class AudioController: AudioPlayerListener, YbridControlListener {
         metering.listener = self
     }
 
+    private func attach(_ control:PlaybackControl?) {
+        if let control = control {
+            interactions.attach(control)
+            metadata.attach(control)
+            metering.attach(control)
+            
+            if let ybrid = control as? YbridControl {
+                ybrid.select()
+            }
+        } else {
+            interactions.detach()
+            metadata.detach()
+            metering.detach()
+        }
+    }
+    
+    
     func useControl(_ endpoint:MediaEndpoint, callback: @escaping (PlaybackControl) -> ()) {
         
         if let existingControl = self.cachedControls[endpoint] {
@@ -111,13 +120,13 @@ class AudioController: AudioPlayerListener, YbridControlListener {
         interactions.enable(false)
         do {
             try AudioPlayer.open(for: endpoint, listener: self,
-               playbackControl: { (control) in
+                                 playbackControl: { (control:PlaybackControl) in
                 self.cachedControls[endpoint] = control
                 self.control = control
                 callback(control)
                 self.interactions.enable(true)
                },
-               ybridControl: { (ybridControl) in
+               ybridControl: { (ybridControl:YbridControl) in
                 self.cachedControls[endpoint] = ybridControl
                 self.control = ybridControl
                 callback(ybridControl)
@@ -126,7 +135,7 @@ class AudioController: AudioPlayerListener, YbridControlListener {
         } catch {
             Logger.shared.error("no player for \(endpoint.uri)")
             self.control = nil
-            interactions.enable(true)
+            interactions.enable(false)
             return
         }
      }
@@ -314,9 +323,9 @@ class AudioController: AudioPlayerListener, YbridControlListener {
                 self.interactions.view?.maxRateSlider.setValue(maxRateSliderValue, animated: false)
             }
             if let max = maxKbps {
-                self.metering.view?.bitRateLabel.text = "max \(max) kbit/s"
+                self.metering.view?.maxRateLabel.text = "max \(max) kbit/s"
             } else {
-                self.metering.view?.bitRateLabel.text = "max bit-rate"
+                self.metering.view?.maxRateLabel.text = "max bit-rate"
             }
             
             if let curr = currentKbps {
@@ -324,32 +333,7 @@ class AudioController: AudioPlayerListener, YbridControlListener {
             } else {
                 self.metering.view?.currentBitRate.text = nil
             }
-//            let coloredLabelText = self.coloredBitRatesText(currentKbps, maxKbps)
-//            self.metering.view?.bitRateLabel.attributedText = coloredLabelText
         }
-    }
-
-    private func coloredBitRatesText(_ current:Int32?,_ maximum:Int32?) -> NSAttributedString {
-        
-        let currentRateColor = UIColor.green
-        let maxRateColor = UIColor.magenta
-        
-        guard let cur = current else {
-            var maxRateText = "max bit-rate"
-            if let max = maximum {
-                maxRateText = "max \(max) kbps"
-            }
-            return NSAttributedString(string:maxRateText, attributes: [NSAttributedString.Key.foregroundColor : maxRateColor])
-        }
-        
-        guard let max = maximum else {
-            let currentRateText = "\(cur) kbps"
-            return NSAttributedString(string:currentRateText, attributes: [NSAttributedString.Key.foregroundColor : currentRateColor])
-        }
-        
-        let totalText = NSMutableAttributedString(string:"\(cur)", attributes: [NSAttributedString.Key.foregroundColor : currentRateColor])
-        totalText.append(NSAttributedString(string:" /\(max) kbps", attributes: [NSAttributedString.Key.foregroundColor : maxRateColor]))
-        return totalText
     }
 }
 

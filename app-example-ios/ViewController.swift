@@ -54,14 +54,12 @@ class ViewController: UIViewController {
     @IBOutlet weak var windToLiveButton: ActionButton!
     @IBOutlet weak var itemForwardButton: ActionButton!
 
-    
     @IBOutlet weak var offsetS: UILabel!
     @IBOutlet weak var offsetLabel: UILabel!
     @IBOutlet weak var playedSince: UILabel!
     
-    @IBOutlet weak var currentRateSlider: UISlider!
     @IBOutlet weak var maxRateSlider: UISlider!
-    @IBOutlet weak var bitRateLabel: UILabel!
+    @IBOutlet weak var maxRateLabel: UILabel!
     @IBOutlet weak var currentBitRate: UILabel!
     @IBOutlet weak var currentBitRateLabel: UILabel!
     
@@ -165,88 +163,46 @@ class ViewController: UIViewController {
                 Logger.shared.notice("aborting \(control.mediaEndpoint.uri)")
                 return
             }
-            self.audioController?.toggle() // run it
+            self.audioController?.toggle()
         }
         return
     }
     
+    // MARK: user actions
     
-    // MARK: initialization
-    
-    private func initializeGui() {
-        DispatchQueue.main.async { [self] in
-            togglePlay.setTitle("", for: .disabled)
-            
-            initialize(label: problem)
-            initialize(label: playedSince, monospaced: true)
-            initialize(label: ready, monospaced: true)
-            initialize(label: connected, monospaced: true)
-            initialize(label: bufferAveraged, monospaced: true)
-            initialize(label: bufferCurrent, monospaced: true)
-            initialize(label: offsetS, monospaced: true)
-            initialize(label: bitRateLabel)
-            initialize(label: currentBitRate, monospaced: true)
+    /// edit custom url
+    @IBAction func urlEditChanged(_ sender: Any) {
+        let valid = uriSelector?.urlEditChanged() ?? true
+        audioController?.interactions.enable(valid)
+    }
 
-            appVersion.text = "demo-app\n" + getBundleInfo(id: Bundle.main.bundleIdentifier ?? "io.ybrid.example-player-ios")
-            sdkVersion.text = "player-sdk\n" + getBundleInfo(id:"io.ybrid.player-sdk-swift")
-        }
+    @IBAction func maxBitRateSelected(_ sender: Any) {
+         
+        let selectedRate =  bitRatesRange.lowerBound + Int32(maxRateSlider.value * Float(bitRatesRange.upperBound -  bitRatesRange.lowerBound))
+ 
+        Logger.shared.debug("selected bit-rate is \(selectedRate)")
+        audioController?.ybrid?.maxBitRate(to: selectedRate)
     }
-    private func initialize(label: UILabel, monospaced:Bool = false) {
-        if monospaced {
-            label.font = label.font.monospacedDigitFont
-        }
-        label.text = nil
-    }
-    private func getBundleInfo(id:String) -> String {
-        guard let bundle = Bundle(identifier: id) else {
-            Logger.shared.error("no bundle with id \(id)")
-            return "(no bundle)"
-        }
-        guard let info = bundle.infoDictionary else {
-            Logger.shared.error("no dictionary for bundle id \(id)")
-            return "(no info)"
-        }
-        Logger.shared.debug("infoDictionary is '\(info)'")
-        
-        let version = info["CFBundleShortVersionString"] as! String
-        let name = info["CFBundleName"] as! String
-        let build = info["CFBundleVersion"] as! String
-        Logger.shared.info("using \(name) \(version) (build \(build))")
-        
-        return "\(version) (\(build))"
-    }
+    
     
     private let playImage = UIImage(named: "play")!
     private let pauseImage = UIImage(named: "pause")!.scale(factor: 0.9)
     private let stopImage = UIImage(named: "stop")!.scale(factor: 0.8)
     func setStopped() {
-        DispatchQueue.main.async { [self] in
-            togglePlay.setTitle(nil, for: .normal)
-            togglePlay.setImage(self.playImage, for: .normal)
-        }
+        changeButton(togglePlay, image:playImage)
     }
     func setPlaying(canPause:Bool) {
-        DispatchQueue.main.async { [self] in
-            togglePlay.setTitle(nil, for: .normal)
-            if canPause {
-                togglePlay.setImage(self.pauseImage, for: .normal)
-            } else {
-                togglePlay.setImage(self.stopImage, for: .normal)
-            }
-        }
+        changeButton(togglePlay, image: (canPause ? pauseImage : stopImage))
     }
     func setBuffering() {
-        DispatchQueue.main.async { [self] in
-            togglePlay.setTitle("● ● ●", for: .normal) // \u{25cf} Black Circle
-            togglePlay.setImage(nil, for: .normal)
-        }
+        // \u{25cf} Black Circle
+        changeButton(togglePlay, text:"● ● ●")
     }
     func setPausing() {
-        DispatchQueue.main.async { [self] in
-            togglePlay.setTitle(nil, for: .normal)
-            togglePlay.setImage(self.playImage, for: .normal)
-        }
+        changeButton(togglePlay, image:playImage)
     }
+    
+    // MARK: initializations
     
     private func initializeActions() {
         togglePlay.action = Action("toggle", .always) {
@@ -279,28 +235,79 @@ class ViewController: UIViewController {
             }
         }
     }
+    
+    private func initializeGui() {
+        
+        setStopped()
+        
+        DispatchQueue.main.async { [self] in
+            
+            initialize(label: problem)
+            initialize(label: playedSince, monospaced: true)
+            initialize(label: ready, monospaced: true)
+            initialize(label: connected, monospaced: true)
+            initialize(label: bufferAveraged, monospaced: true)
+            initialize(label: bufferCurrent, monospaced: true)
+            initialize(label: offsetS, monospaced: true)
+            initialize(label: currentBitRate, monospaced: true)
+
+            appVersion.text = "demo-app\n" + getBundleInfo(id: Bundle.main.bundleIdentifier ?? "io.ybrid.example-player-ios")
+            sdkVersion.text = "player-sdk\n" + getBundleInfo(id:"io.ybrid.player-sdk-swift")
+        }
+    }
+    
+    // MARK: helpers
+    
+    private func initialize(label: UILabel, monospaced:Bool = false) {
+        if monospaced {
+            label.font = label.font.monospacedDigitFont
+        }
+        label.text = nil
+    }
+    private func getBundleInfo(id:String) -> String {
+        guard let bundle = Bundle(identifier: id) else {
+            Logger.shared.error("no bundle with id \(id)")
+            return "(no bundle)"
+        }
+        guard let info = bundle.infoDictionary else {
+            Logger.shared.error("no dictionary for bundle id \(id)")
+            return "(no info)"
+        }
+        Logger.shared.debug("infoDictionary is '\(info)'")
+        
+        let version = info["CFBundleShortVersionString"] as! String
+        let name = info["CFBundleName"] as! String
+        let build = info["CFBundleVersion"] as! String
+        Logger.shared.info("using \(name) \(version) (build \(build))")
+        
+        return "\(version) (\(build))"
+    }
+    
     private func initialize(button: ActionButton, image:String, scale:Float, _ actionString:String, behaviour:Action.behaviour, _ action: @escaping () -> () ) {
         let itemImage = UIImage(named: image)!.scale(factor: scale)
         button.setImage(itemImage, for: .normal)
         button.action = Action(actionString, behaviour, action)
     }
     
-    // MARK: user actions
-    
-    /// edit custom url
-    @IBAction func urlEditChanged(_ sender: Any) {
-        let valid = uriSelector?.urlEditChanged() ?? true
-        audioController?.interactions.enable(valid)
+    private func changeButton(_ button:UIButton, image:UIImage) {
+        DispatchQueue.main.async {
+            button.setImage(image, for: .normal)
+            button.setImage(image.withGrayscale, for: .disabled)
+            button.setTitle(nil, for: .normal)
+            button.setTitle(nil, for: .disabled)
+        }
     }
+    
+    private func changeButton(_ button:UIButton, text:String) {
+        DispatchQueue.main.async {
+            button.setImage(nil, for: .normal)
+            button.setImage(nil, for: .disabled)
+            button.setTitle(text, for: .normal)
+            button.setTitle(text, for: .disabled)
+        }
+    }
+    
 
-    @IBAction func maxBitRateSelected(_ sender: Any) {
-         
-        let selectedRate =  bitRatesRange.lowerBound + Int32(maxRateSlider.value * Float(bitRatesRange.upperBound -  bitRatesRange.lowerBound))
- 
-        Logger.shared.debug("selected bit-rate is \(selectedRate)")
-        audioController?.ybrid?.maxBitRate(to: selectedRate)
-    }
-    
     // MARK: helpers acting on ui elements
     
     func enableOffset(_ enable:Bool) {

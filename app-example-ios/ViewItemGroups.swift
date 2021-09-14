@@ -107,7 +107,7 @@ class InteractionItems {
     private func initialize() {
         DispatchQueue.main.async {
             self.view?.maxRateSlider.value = 1.0
-            self.view?.bitRateLabel.text = "max bit-rate"
+            self.view?.maxRateLabel.text = "max bit-rate"
         }
     }
     
@@ -122,7 +122,7 @@ class InteractionItems {
             self.view?.itemForwardButton.isEnabled = ybrid
             self.view?.swapItemButton.isEnabled = ybrid
             self.view?.maxRateSlider.isEnabled = ybrid
-            self.view?.bitRateLabel.isEnabled = ybrid
+            self.view?.maxRateLabel.isEnabled = ybrid
             self.channelSelector?.enable(ybrid)
         }
     }
@@ -136,7 +136,7 @@ class InteractionItems {
             self.view?.itemForwardButton.isHidden = !ybrid
             self.view?.swapItemButton.isHidden = !ybrid
             self.view?.maxRateSlider.isHidden = !ybrid
-            self.view?.bitRateLabel.isHidden = !ybrid
+            self.view?.maxRateLabel.isHidden = !ybrid
 
             self.channelSelector?.pView?.isHidden = !ybrid
         }

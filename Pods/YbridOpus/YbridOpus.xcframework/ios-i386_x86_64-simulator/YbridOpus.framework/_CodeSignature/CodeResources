@@ -6,7 +6,7 @@
 	<dict>
 		<key>Config.xcconfig</key>
 		<data>
-		HVSHYm1wHLXAmlz4FLgENOhfE5k=
+		+CifWGfGG+eJ+6RQiR2J6Z9++KM=
 		</data>
 		<key>Headers/opus.h</key>
 		<data>
@@ -30,7 +30,7 @@
 		</data>
 		<key>Info.plist</key>
 		<data>
-		k3kO4w97GKxSVOD61vvcnynhu1M=
+		VDcGbi+CICjBJ9cahFRuboF4eQ8=
 		</data>
 		<key>Modules/module.modulemap</key>
 		<data>
@@ -43,11 +43,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			HVSHYm1wHLXAmlz4FLgENOhfE5k=
+			+CifWGfGG+eJ+6RQiR2J6Z9++KM=
 			</data>
 			<key>hash2</key>
 			<data>
-			xHesIOCtbZhY/iWb1NpmraVL+hK5hhGidWxIttTtEqU=
+			yWuzbLu2XVuQ/KyJjefCQA6yUIG/ledJEQXfvayiZ78=
 			</data>
 		</dict>
 		<key>Headers/opus.h</key>
