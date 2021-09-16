@@ -36,6 +36,7 @@ class ViewController: UIViewController {
 
     // MARK: ui outlets
 
+    @IBOutlet weak var metadataArea: MetadataItems!
     @IBOutlet weak var urlPicker: UIPickerView!
     @IBOutlet weak var urlField: UrlField!
     @IBOutlet weak var broadcaster: UILabel!
@@ -57,6 +58,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var offsetS: UILabel!
     @IBOutlet weak var offsetLabel: UILabel!
     @IBOutlet weak var playedSince: UILabel!
+    @IBOutlet weak var playingSinceLabel: UILabel!
     
     @IBOutlet weak var maxRateSlider: UISlider!
     @IBOutlet weak var maxRateLabel: UILabel!
@@ -64,10 +66,16 @@ class ViewController: UIViewController {
     @IBOutlet weak var currentBitRateLabel: UILabel!
     
     @IBOutlet weak var ready: UILabel!
+    @IBOutlet weak var readyLabel: UILabel!
     @IBOutlet weak var connected: UILabel!
+    @IBOutlet weak var connectedLabel: UILabel!
     
-    @IBOutlet weak var bufferAveraged: UILabel!
+
+
     @IBOutlet weak var bufferCurrent: UILabel!
+    @IBOutlet weak var bufferCurrentLabel: UILabel!
+    @IBOutlet weak var bufferAveraged: UILabel!
+    @IBOutlet weak var bufferAveragedLabel: UILabel!
     
     @IBOutlet weak var sdkVersion: UILabel!
     @IBOutlet weak var appVersion: UILabel!

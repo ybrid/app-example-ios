@@ -28,14 +28,37 @@ import YbridPlayerSDK
 
 // just groups of ui elements
 
-class MetadataItems {
+class MetadataItems : UIView {
+    private static let metadataColor = UIColor(rgb: 0x00f000) // green
+
     weak var view:ViewController?
     init(view:ViewController) {
+        super.init(frame: view.accessibilityFrame)
         self.view = view
-        initialize()
+        let items = [view.broadcaster, view.genre, view.playingTitle]
+        DispatchQueue.main.async {
+            items.forEach { item in
+                item?.textColor = MetadataItems.metadataColor
+            }
+        }
+        self.initializeValues()
+//        view.accessibilityFrame.layer.zPosition = self.layer.zPosition + 1
+
     }
+    
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        let items:[UILabel] = []
+        DispatchQueue.main.async {
+            items.forEach { item in
+                item.textColor = MetadataItems.metadataColor
+            }
+        }
+        initializeValues()
+    }
+    
     func attach(_ control:SimpleControl) {
-        initialize()
+        initializeValues()
     }
     func detach() {
     }
@@ -46,7 +69,7 @@ class MetadataItems {
         }
     }
     
-    private func initialize() {
+    private func initializeValues() {
         DispatchQueue.main.async {
             self.view?.broadcaster.text = nil
             self.view?.genre.text = nil
@@ -144,15 +167,37 @@ class InteractionItems {
 }
 
 class MeteringItems {
+    private static let meteringColor = UIColor(rgb:0x00f8f8) // cyan
     weak var view:ViewController?
     weak var listener:AudioPlayerListener?
     
     init(view:ViewController) {
         self.view = view
-        initialize()
+        let items:[UILabel] = [
+            view.offsetS,
+            view.offsetLabel,
+            view.playedSince,
+            view.playingSinceLabel,
+            view.currentBitRate,
+            view.currentBitRateLabel,
+            view.readyLabel,
+            view.ready,
+            view.connectedLabel,
+            view.connected,
+            view.bufferCurrent,
+            view.bufferCurrentLabel,
+            view.bufferAveraged,
+            view.bufferAveragedLabel
+        ]
+        DispatchQueue.main.async {
+            items.forEach { item in
+                item.textColor = MeteringItems.meteringColor
+            }
+        }
+        initializeValues()
     }
     func attach(_ control:SimpleControl) {
-        initialize()
+        initializeValues()
         if let _ = control as? YbridControl? {
             visible(true, true)
             enable(true, true)
@@ -165,7 +210,7 @@ class MeteringItems {
         visible(false, false)
         enable(false, false)
     }
-    private func initialize() {
+    private func initializeValues() {
         DispatchQueue.main.async {
             self.listener?.playingSince(0)
             self.listener?.durationReadyToPlay(nil)
@@ -193,7 +238,23 @@ class MeteringItems {
 
         }
     }
+}
 
-    
-    
+
+extension UIColor {
+   convenience init(red: Int, green: Int, blue: Int) {
+       assert(red >= 0 && red <= 255, "Invalid red component")
+       assert(green >= 0 && green <= 255, "Invalid green component")
+       assert(blue >= 0 && blue <= 255, "Invalid blue component")
+
+       self.init(red: CGFloat(red) / 255.0, green: CGFloat(green) / 255.0, blue: CGFloat(blue) / 255.0, alpha: 1.0)
+   }
+
+   convenience init(rgb: Int) {
+       self.init(
+           red: (rgb >> 16) & 0xFF,
+           green: (rgb >> 8) & 0xFF,
+           blue: rgb & 0xFF
+       )
+   }
 }
