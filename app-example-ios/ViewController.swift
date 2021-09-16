@@ -36,7 +36,6 @@ class ViewController: UIViewController {
 
     // MARK: ui outlets
 
-    @IBOutlet weak var metadataArea: MetadataItems!
     @IBOutlet weak var urlPicker: UIPickerView!
     @IBOutlet weak var urlField: UrlField!
     @IBOutlet weak var broadcaster: UILabel!
@@ -69,8 +68,6 @@ class ViewController: UIViewController {
     @IBOutlet weak var readyLabel: UILabel!
     @IBOutlet weak var connected: UILabel!
     @IBOutlet weak var connectedLabel: UILabel!
-    
-
 
     @IBOutlet weak var bufferCurrent: UILabel!
     @IBOutlet weak var bufferCurrentLabel: UILabel!

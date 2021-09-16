@@ -79,6 +79,7 @@ class MetadataItems : UIView {
 }
 
 class InteractionItems {
+    private static let interactionsColor = UIColor(rgb:0xf000f0)
     weak var view:ViewController?
     
     var channelSelector:ChannelSelector?
@@ -86,7 +87,13 @@ class InteractionItems {
     
     init(view:ViewController) {
         self.view = view
-
+        let items:[UILabel] = [view.maxRateLabel]
+        DispatchQueue.main.async {
+            items.forEach { item in
+                item.textColor = InteractionItems.interactionsColor
+            }
+        }
+        
         channelSelector = ChannelSelector(channelPicker, font: (view.urlField as UITextField).font!) { (channel) in
             Logger.shared.notice("service \(channel ?? "(nil)") selected")
             if let ybrid = view.audioController?.ybrid,
