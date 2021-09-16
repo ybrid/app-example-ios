@@ -260,7 +260,17 @@ class ViewController: UIViewController {
             initialize(label: currentBitRate, monospaced: true)
 
             appVersion.text = "demo-app\n" + getBundleInfo(id: Bundle.main.bundleIdentifier ?? "io.ybrid.example-player-ios")
-            sdkVersion.text = "player-sdk\n" + getBundleInfo(id:"io.ybrid.player-sdk-swift")
+            
+            let sdkProduct =  AudioPlayer.productName ?? "player-sdk"
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "dd.MM.YYYY"
+            var sdkVerString = dateFormatter.string(from:Date())
+            if let sdkVer = AudioPlayer.productVersion,
+               let sdkBuild = AudioPlayer.productBuildNumber {
+                sdkVerString = "\(sdkVer) (\(sdkBuild))"
+            }
+            sdkVersion.text = "\(sdkProduct)\n\(sdkVerString)"
+
         }
     }
     

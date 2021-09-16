@@ -1,7 +1,7 @@
 PODS:
   - YbridOgg (0.8.0)
   - YbridOpus (0.8.0)
-  - YbridPlayerSDK (0.12.4):
+  - YbridPlayerSDK (0.13.0):
     - YbridOgg (= 0.8.0)
     - YbridOpus (= 0.8.0)
 
@@ -20,7 +20,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   YbridOgg: 4af27a7224f0876a7000e1893df8ba986dd4a014
   YbridOpus: e9af373b9b38acff3702d9a3bd97cae3c232887c
-  YbridPlayerSDK: 0452c612c6f3a979529056d6b7f990b2f849bf3a
+  YbridPlayerSDK: 3da84d6c778fd0e8ffb3ee92ddf3b8a2b6a31b9a
 
 PODFILE CHECKSUM: 0579805391861d4cb1d7d01c7d284635e7f8b481
 
