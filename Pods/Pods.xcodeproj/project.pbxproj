@@ -34,8 +34,8 @@
 				736000D4FCE4636DCBD7995DA232934D /* [CP] Copy XCFrameworks */,
 			);
 			dependencies = (
-				574EAACF09667098FD5B68ED1D1A5828 /* PBXTargetDependency */,
-				19AB82D4D9EB210440D33B76C1EF8B1D /* PBXTargetDependency */,
+				7BD413DF5AE1A815481E415DA2B4BBB8 /* PBXTargetDependency */,
+				A98AFBC9FE445C761104C298A67E66CD /* PBXTargetDependency */,
 			);
 			name = YbridPlayerSDK;
 		};
@@ -51,56 +51,56 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		00E596F01F837959D7C76B07CD53FE86 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 675F49D1A9EEAE258F0EEB9BD8E23E7E;
-			remoteInfo = YbridOgg;
-		};
-		040BC5968D654BBA6FE28FF215614784 /* PBXContainerItemProxy */ = {
+		0D4E067EDC0A2CFD00019D6CD043396C /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 070788B6BE9F902CBB1CDF7CB00F2F5D;
 			remoteInfo = YbridOpus;
 		};
-		473ECCC0851A6582BB047EE364EC485F /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 070788B6BE9F902CBB1CDF7CB00F2F5D;
-			remoteInfo = YbridOpus;
-		};
-		58230420147A4408733E7DC959B60380 /* PBXContainerItemProxy */ = {
+		0E875ADBDF99B910CBA9C7A5970270C4 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 849053863B4B180F25417076C244652C;
 			remoteInfo = YbridPlayerSDK;
 		};
-		B2E239DEAE0F7BD8194AEF169ECA00AF /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 070788B6BE9F902CBB1CDF7CB00F2F5D;
-			remoteInfo = YbridOpus;
-		};
-		F679052FAC3AAAE035E48E7AF36288F6 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 849053863B4B180F25417076C244652C;
-			remoteInfo = YbridPlayerSDK;
-		};
-		F857C75F5320774E7BCC4C7E98B37ADB /* PBXContainerItemProxy */ = {
+		1330144A2F583A0D671F332D514941AA /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 675F49D1A9EEAE258F0EEB9BD8E23E7E;
 			remoteInfo = YbridOgg;
 		};
-		FE35CCAE10615CFE0EE4CEFBF5EBCF33 /* PBXContainerItemProxy */ = {
+		68D145F7ED6D9FC47AFF93E5D96B6F00 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 070788B6BE9F902CBB1CDF7CB00F2F5D;
+			remoteInfo = YbridOpus;
+		};
+		7491F7E858434D565619AE5DA7492BCA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 675F49D1A9EEAE258F0EEB9BD8E23E7E;
+			remoteInfo = YbridOgg;
+		};
+		8734590310D4BA640511B61BDDC4B54D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 070788B6BE9F902CBB1CDF7CB00F2F5D;
+			remoteInfo = YbridOpus;
+		};
+		E789EDD5EE8EC8BC01165B3BC080F2B6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 849053863B4B180F25417076C244652C;
+			remoteInfo = YbridPlayerSDK;
+		};
+		F17F856EA0B7A401F5693AF089E5217F /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
 			proxyType = 1;
@@ -111,42 +111,39 @@
 
 /* Begin PBXFileReference section */
 		038791E438F927DC7EC8427114FF7A54 /* Pods-app-example-ios-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-app-example-ios-dummy.m"; sourceTree = "<group>"; };
-		0AE1DE39DC509A440BE1435773DA70AA /* YbridPlayerSDK.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; path = YbridPlayerSDK.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		0E2F072CC0365CBD2CC0BE4E0945F038 /* Pods_app_example_ios.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_app_example_ios.framework; path = "Pods-app-example-ios.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
-		16F97AA4529641F284A4CBA47B189F60 /* YbridPlayerSDK.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = YbridPlayerSDK.release.xcconfig; sourceTree = "<group>"; };
+		0F8088FF7F22D33CF2394ABAC671CC9A /* YbridOgg.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = YbridOgg.release.xcconfig; sourceTree = "<group>"; };
+		22A66925FB8697F48A4313A1B5AFFD52 /* YbridOpus.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = YbridOpus.release.xcconfig; sourceTree = "<group>"; };
 		315335BE82EBF4497CE90FBBED0F0256 /* Pods-app-example-ios.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-app-example-ios.modulemap"; sourceTree = "<group>"; };
 		396108B28E9AC997BA635701EEB72B0C /* Pods-app-example-ios-app-example-iosUITests-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-app-example-ios-app-example-iosUITests-acknowledgements.plist"; sourceTree = "<group>"; };
-		3E46DA472449A71A3F35F1B76580CA27 /* YbridPlayerSDK.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = YbridPlayerSDK.debug.xcconfig; sourceTree = "<group>"; };
+		3F124BDFEBE5947CAB5869AFA669B66B /* YbridPlayerSDK.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = YbridPlayerSDK.debug.xcconfig; sourceTree = "<group>"; };
+		41E4CFB9DB22AC3788D3F2787B7FC3B1 /* YbridPlayerSDK-xcframeworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "YbridPlayerSDK-xcframeworks.sh"; sourceTree = "<group>"; };
 		5CDF7589DD390BC076C56288C8F356F4 /* Pods-app-example-ios.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-app-example-ios.debug.xcconfig"; sourceTree = "<group>"; };
 		5E2C172AA88B524E31023CC07EB391EF /* Pods-app-example-ios.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-app-example-ios.release.xcconfig"; sourceTree = "<group>"; };
 		73010CC983E3809BECEE5348DA1BB8C6 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS14.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		74EB0808CFFEC4AB89E508C67EBF7E99 /* Pods-app-example-ios-app-example-iosUITests-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-app-example-ios-app-example-iosUITests-umbrella.h"; sourceTree = "<group>"; };
-		792EC9C051E616A1A52547014DA2E19A /* YbridOpus.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = YbridOpus.release.xcconfig; sourceTree = "<group>"; };
-		7BF1F80B668232F3E6AF12CED42AA338 /* YbridOgg.xcframework */ = {isa = PBXFileReference; includeInIndex = 1; path = YbridOgg.xcframework; sourceTree = "<group>"; };
-		934DFEE0A6FA6ABA457A5BB57BB9168A /* YbridOpus.xcframework */ = {isa = PBXFileReference; includeInIndex = 1; path = YbridOpus.xcframework; sourceTree = "<group>"; };
+		7E1332B2EFDB171DB848F18012B28880 /* YbridOgg.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = YbridOgg.debug.xcconfig; sourceTree = "<group>"; };
+		86695FAA9E118C86D6AA607DD775A9C8 /* YbridPlayerSDK.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = YbridPlayerSDK.release.xcconfig; sourceTree = "<group>"; };
+		8CDB5106491DD96AC021F9F0F70046E0 /* YbridPlayerSDK.xcframework */ = {isa = PBXFileReference; includeInIndex = 1; path = YbridPlayerSDK.xcframework; sourceTree = "<group>"; };
 		94DF28AEA038E9E2D1DE344DF0EB98EE /* Pods-app-example-ios-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-app-example-ios-acknowledgements.markdown"; sourceTree = "<group>"; };
-		976E5946B570A6CA2CA9968CDC6483A2 /* YbridOgg.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = YbridOgg.debug.xcconfig; sourceTree = "<group>"; };
 		9BBE4686B6F8684F49DE800DA5E83542 /* Pods-app-example-ios-app-example-iosUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-app-example-ios-app-example-iosUITests.release.xcconfig"; sourceTree = "<group>"; };
 		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		A18DFE05F38C1C06587C837BA6500E3F /* Pods-app-example-ios-app-example-iosUITests-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-app-example-ios-app-example-iosUITests-dummy.m"; sourceTree = "<group>"; };
-		A61FAC9FD1B6DB72036041AA8AF5A57F /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; path = README.md; sourceTree = "<group>"; };
-		B292A0CB45891B65DBEA3F03EFBE7BFA /* YbridOgg.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = YbridOgg.release.xcconfig; sourceTree = "<group>"; };
+		B480F646097B008323DE4C2FB674828A /* YbridOpus.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = YbridOpus.debug.xcconfig; sourceTree = "<group>"; };
 		B5224285FE07EBF5D9335984481565BD /* Pods-app-example-ios-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-app-example-ios-acknowledgements.plist"; sourceTree = "<group>"; };
-		B6DA7BBC72E0BD7AA818DF8BE0B13CC0 /* YbridOpus.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = YbridOpus.debug.xcconfig; sourceTree = "<group>"; };
-		B80B7723939F3F88A93643F8833F67BF /* YbridOpus-xcframeworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "YbridOpus-xcframeworks.sh"; sourceTree = "<group>"; };
-		B8CDC8A4EAAC92759B13345EB0C02342 /* YbridPlayerSDK-xcframeworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "YbridPlayerSDK-xcframeworks.sh"; sourceTree = "<group>"; };
 		BB54073D66543851CAF0288A30735FBF /* Pods-app-example-ios-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-app-example-ios-umbrella.h"; sourceTree = "<group>"; };
 		BF7EB2B5C7E9822E2BC76E86DFD435FE /* Pods-app-example-ios-app-example-iosUITests.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-app-example-ios-app-example-iosUITests.modulemap"; sourceTree = "<group>"; };
 		BFBE5CA3E730B96950FB852837F3F7E2 /* Pods-app-example-ios-app-example-iosUITests-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-app-example-ios-app-example-iosUITests-frameworks.sh"; sourceTree = "<group>"; };
-		C6E02AE675A493A3891438DA8AA59677 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; path = LICENSE; sourceTree = "<group>"; };
-		C749130D9F98AB44F01A5A7B40B4C194 /* YbridOgg-xcframeworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "YbridOgg-xcframeworks.sh"; sourceTree = "<group>"; };
 		CF956B7B50C53A3DC0CC985BC5A34923 /* Pods-app-example-ios-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-app-example-ios-frameworks.sh"; sourceTree = "<group>"; };
 		D180A9AB2EB1DBC1964A3390453E5886 /* Pods-app-example-ios-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-app-example-ios-Info.plist"; sourceTree = "<group>"; };
+		D611FCCEA7DA8AEEDBBDE34D5769430A /* YbridOgg.xcframework */ = {isa = PBXFileReference; includeInIndex = 1; path = YbridOgg.xcframework; sourceTree = "<group>"; };
 		DDF4BA578A43B1F68DD50BB81AE60C20 /* Pods-app-example-ios-app-example-iosUITests-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-app-example-ios-app-example-iosUITests-Info.plist"; sourceTree = "<group>"; };
+		E5D2173C1140B912F849B119FE7A3991 /* YbridOgg-xcframeworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "YbridOgg-xcframeworks.sh"; sourceTree = "<group>"; };
+		E78E4CDD8AB1BCBF7C83B3ACDDE05C70 /* YbridOpus-xcframeworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "YbridOpus-xcframeworks.sh"; sourceTree = "<group>"; };
 		ED9AA9B7105598FF2AA2697FC41D73F9 /* Pods-app-example-ios-app-example-iosUITests-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-app-example-ios-app-example-iosUITests-acknowledgements.markdown"; sourceTree = "<group>"; };
 		EE9ED45D3F73C2B31C01C2C37F21A3F9 /* Pods_app_example_ios_app_example_iosUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_app_example_ios_app_example_iosUITests.framework; path = "Pods-app-example-ios-app-example-iosUITests.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F8A1297EA31697F24B137491056E2FBE /* Pods-app-example-ios-app-example-iosUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-app-example-ios-app-example-iosUITests.debug.xcconfig"; sourceTree = "<group>"; };
-		FA53BA951BCC3E5CCDEAE176E12C9E66 /* YbridPlayerSDK.xcframework */ = {isa = PBXFileReference; includeInIndex = 1; path = YbridPlayerSDK.xcframework; sourceTree = "<group>"; };
+		FE6EAF4E5E14F09C447D24FA792B8BCE /* YbridOpus.xcframework */ = {isa = PBXFileReference; includeInIndex = 1; path = YbridOpus.xcframework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -169,6 +166,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		11C2B255E9CE8487B6890FBB97BECA9D /* Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				E5D2173C1140B912F849B119FE7A3991 /* YbridOgg-xcframeworks.sh */,
+				7E1332B2EFDB171DB848F18012B28880 /* YbridOgg.debug.xcconfig */,
+				0F8088FF7F22D33CF2394ABAC671CC9A /* YbridOgg.release.xcconfig */,
+			);
+			name = "Support Files";
+			path = "../Target Support Files/YbridOgg";
+			sourceTree = "<group>";
+		};
 		15B66583E2367EC3CEF47AE299636C32 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -178,43 +186,25 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		34D8121A8452F6C39359D5A48DC27428 /* Frameworks */ = {
+		33903E3714DDB7E6F814875C02538870 /* Support Files */ = {
 			isa = PBXGroup;
 			children = (
-				7BF1F80B668232F3E6AF12CED42AA338 /* YbridOgg.xcframework */,
+				41E4CFB9DB22AC3788D3F2787B7FC3B1 /* YbridPlayerSDK-xcframeworks.sh */,
+				3F124BDFEBE5947CAB5869AFA669B66B /* YbridPlayerSDK.debug.xcconfig */,
+				86695FAA9E118C86D6AA607DD775A9C8 /* YbridPlayerSDK.release.xcconfig */,
 			);
-			name = Frameworks;
+			name = "Support Files";
+			path = "../Target Support Files/YbridPlayerSDK";
 			sourceTree = "<group>";
 		};
-		36EFB9B61129F5AEBAA34AD20CF479BC /* Pods */ = {
+		3AEFA53F29A10658C829FBD3A4BBEE60 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				65C1DB10990DD60CCED03C357219231B /* YbridOgg */,
-				89694B2EB53662A3948A535B6236FED9 /* YbridOpus */,
+				A2E916579F1C234025D64077293731D3 /* YbridOgg */,
+				75FCC259C02689E3E53A8A3F4458EE2F /* YbridOpus */,
+				99F96CE59C58B270C4FDADF421E5B383 /* YbridPlayerSDK */,
 			);
 			name = Pods;
-			sourceTree = "<group>";
-		};
-		3C23F9EF1425BD47C83125E9F641C87E /* Support Files */ = {
-			isa = PBXGroup;
-			children = (
-				C749130D9F98AB44F01A5A7B40B4C194 /* YbridOgg-xcframeworks.sh */,
-				976E5946B570A6CA2CA9968CDC6483A2 /* YbridOgg.debug.xcconfig */,
-				B292A0CB45891B65DBEA3F03EFBE7BFA /* YbridOgg.release.xcconfig */,
-			);
-			name = "Support Files";
-			path = "../Target Support Files/YbridOgg";
-			sourceTree = "<group>";
-		};
-		403FF811D4A5F87BCFDD7F84BCE41A44 /* Support Files */ = {
-			isa = PBXGroup;
-			children = (
-				B8CDC8A4EAAC92759B13345EB0C02342 /* YbridPlayerSDK-xcframeworks.sh */,
-				3E46DA472449A71A3F35F1B76580CA27 /* YbridPlayerSDK.debug.xcconfig */,
-				16F97AA4529641F284A4CBA47B189F60 /* YbridPlayerSDK.release.xcconfig */,
-			);
-			name = "Support Files";
-			path = "../app-example-ios/Pods/Target Support Files/YbridPlayerSDK";
 			sourceTree = "<group>";
 		};
 		578452D2E740E91742655AC8F1636D1F /* iOS */ = {
@@ -225,43 +215,51 @@
 			name = iOS;
 			sourceTree = "<group>";
 		};
-		6504AB721246D75FDF5BEC39ADCC35F3 /* Support Files */ = {
+		75FCC259C02689E3E53A8A3F4458EE2F /* YbridOpus */ = {
 			isa = PBXGroup;
 			children = (
-				B80B7723939F3F88A93643F8833F67BF /* YbridOpus-xcframeworks.sh */,
-				B6DA7BBC72E0BD7AA818DF8BE0B13CC0 /* YbridOpus.debug.xcconfig */,
-				792EC9C051E616A1A52547014DA2E19A /* YbridOpus.release.xcconfig */,
+				D5B8A9329A838803D91A3784167B6BA5 /* Frameworks */,
+				7E2AB9EAD5772A2EC57F3B8F4064B10F /* Support Files */,
+			);
+			name = YbridOpus;
+			path = YbridOpus;
+			sourceTree = "<group>";
+		};
+		7E2AB9EAD5772A2EC57F3B8F4064B10F /* Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				E78E4CDD8AB1BCBF7C83B3ACDDE05C70 /* YbridOpus-xcframeworks.sh */,
+				B480F646097B008323DE4C2FB674828A /* YbridOpus.debug.xcconfig */,
+				22A66925FB8697F48A4313A1B5AFFD52 /* YbridOpus.release.xcconfig */,
 			);
 			name = "Support Files";
 			path = "../Target Support Files/YbridOpus";
 			sourceTree = "<group>";
 		};
-		65C1DB10990DD60CCED03C357219231B /* YbridOgg */ = {
+		826CE4AA9DF0CAF051FFD14FC6B943EE /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				34D8121A8452F6C39359D5A48DC27428 /* Frameworks */,
-				3C23F9EF1425BD47C83125E9F641C87E /* Support Files */,
-			);
-			name = YbridOgg;
-			path = YbridOgg;
-			sourceTree = "<group>";
-		};
-		6CDF6C4F61E8B35BD3AFC4809348F0EE /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				934DFEE0A6FA6ABA457A5BB57BB9168A /* YbridOpus.xcframework */,
+				D611FCCEA7DA8AEEDBBDE34D5769430A /* YbridOgg.xcframework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		89694B2EB53662A3948A535B6236FED9 /* YbridOpus */ = {
+		99F96CE59C58B270C4FDADF421E5B383 /* YbridPlayerSDK */ = {
 			isa = PBXGroup;
 			children = (
-				6CDF6C4F61E8B35BD3AFC4809348F0EE /* Frameworks */,
-				6504AB721246D75FDF5BEC39ADCC35F3 /* Support Files */,
+				9B1C654A5565F5690CB9A9EC2E79C305 /* Frameworks */,
+				33903E3714DDB7E6F814875C02538870 /* Support Files */,
 			);
-			name = YbridOpus;
-			path = YbridOpus;
+			name = YbridPlayerSDK;
+			path = YbridPlayerSDK;
+			sourceTree = "<group>";
+		};
+		9B1C654A5565F5690CB9A9EC2E79C305 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				8CDB5106491DD96AC021F9F0F70046E0 /* YbridPlayerSDK.xcframework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		9E56EE427D3EAD01A02D1FDEBF13174C /* Pods-app-example-ios */ = {
@@ -281,31 +279,22 @@
 			path = "Target Support Files/Pods-app-example-ios";
 			sourceTree = "<group>";
 		};
-		A61A3ED11E9BC2BB2D7ADC347E1A3FDA /* Pod */ = {
+		A2E916579F1C234025D64077293731D3 /* YbridOgg */ = {
 			isa = PBXGroup;
 			children = (
-				C6E02AE675A493A3891438DA8AA59677 /* LICENSE */,
-				A61FAC9FD1B6DB72036041AA8AF5A57F /* README.md */,
-				0AE1DE39DC509A440BE1435773DA70AA /* YbridPlayerSDK.podspec */,
+				826CE4AA9DF0CAF051FFD14FC6B943EE /* Frameworks */,
+				11C2B255E9CE8487B6890FBB97BECA9D /* Support Files */,
 			);
-			name = Pod;
-			sourceTree = "<group>";
-		};
-		B5A86EF7406F01CABC56136E00635EAE /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				FA53BA951BCC3E5CCDEAE176E12C9E66 /* YbridPlayerSDK.xcframework */,
-			);
-			name = Frameworks;
+			name = YbridOgg;
+			path = YbridOgg;
 			sourceTree = "<group>";
 		};
 		CF1408CF629C7361332E53B88F7BD30C = {
 			isa = PBXGroup;
 			children = (
 				9D940727FF8FB9C785EB98E56350EF41 /* Podfile */,
-				FAFDA01E32E6A06E6A418D539ED3D6BF /* Development Pods */,
 				D210D550F4EA176C3123ED886F8F87F5 /* Frameworks */,
-				36EFB9B61129F5AEBAA34AD20CF479BC /* Pods */,
+				3AEFA53F29A10658C829FBD3A4BBEE60 /* Pods */,
 				15B66583E2367EC3CEF47AE299636C32 /* Products */,
 				EB8B21532A367172F52492E1BCDB93ED /* Targets Support Files */,
 			);
@@ -319,16 +308,13 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		DAB3F6D7245B979A513303823B60B5BD /* YbridPlayerSDK */ = {
+		D5B8A9329A838803D91A3784167B6BA5 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				B5A86EF7406F01CABC56136E00635EAE /* Frameworks */,
-				A61A3ED11E9BC2BB2D7ADC347E1A3FDA /* Pod */,
-				403FF811D4A5F87BCFDD7F84BCE41A44 /* Support Files */,
+				FE6EAF4E5E14F09C447D24FA792B8BCE /* YbridOpus.xcframework */,
 			);
-			name = YbridPlayerSDK;
-			path = "/Users/florian/github/player-sdk-swift";
-			sourceTree = "<absolute>";
+			name = Frameworks;
+			sourceTree = "<group>";
 		};
 		E03E519870C47FF951607364F85B4178 /* Pods-app-example-ios-app-example-iosUITests */ = {
 			isa = PBXGroup;
@@ -354,14 +340,6 @@
 				E03E519870C47FF951607364F85B4178 /* Pods-app-example-ios-app-example-iosUITests */,
 			);
 			name = "Targets Support Files";
-			sourceTree = "<group>";
-		};
-		FAFDA01E32E6A06E6A418D539ED3D6BF /* Development Pods */ = {
-			isa = PBXGroup;
-			children = (
-				DAB3F6D7245B979A513303823B60B5BD /* YbridPlayerSDK */,
-			);
-			name = "Development Pods";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -398,9 +376,9 @@
 			buildRules = (
 			);
 			dependencies = (
-				9E5973E60377E0BE0AA0C65DE08EA62A /* PBXTargetDependency */,
-				C4A650F95AEC11B092E838906E216B4A /* PBXTargetDependency */,
-				2401B71FBA18563EA6E7746482A2B190 /* PBXTargetDependency */,
+				35339A797AF81B9ECF648C6053355624 /* PBXTargetDependency */,
+				4C16483B9B6B0E3CB234FCC0E32DDC03 /* PBXTargetDependency */,
+				D1D2506E2FB9880AA80D2C3EB1269E20 /* PBXTargetDependency */,
 			);
 			name = "Pods-app-example-ios-app-example-iosUITests";
 			productName = "Pods-app-example-ios-app-example-iosUITests";
@@ -419,9 +397,9 @@
 			buildRules = (
 			);
 			dependencies = (
-				C3A91E26AAACB8D16247BC8DBFA73A69 /* PBXTargetDependency */,
-				129A40B0F8365D7AE2E888D501F2E12F /* PBXTargetDependency */,
-				B5E3458564056012FA6F9B3D3BFDC5D0 /* PBXTargetDependency */,
+				4AE49F3C87DA7C7DCBAD8DD8B379B140 /* PBXTargetDependency */,
+				1206B276508DBA82E4D4DB6F1386BFF7 /* PBXTargetDependency */,
+				6DD5495EC94C2AE469B6C5A94DB29535 /* PBXTargetDependency */,
 			);
 			name = "Pods-app-example-ios";
 			productName = "Pods-app-example-ios";
@@ -550,53 +528,53 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		129A40B0F8365D7AE2E888D501F2E12F /* PBXTargetDependency */ = {
+		1206B276508DBA82E4D4DB6F1386BFF7 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = YbridOpus;
 			target = 070788B6BE9F902CBB1CDF7CB00F2F5D /* YbridOpus */;
-			targetProxy = 473ECCC0851A6582BB047EE364EC485F /* PBXContainerItemProxy */;
+			targetProxy = 68D145F7ED6D9FC47AFF93E5D96B6F00 /* PBXContainerItemProxy */;
 		};
-		19AB82D4D9EB210440D33B76C1EF8B1D /* PBXTargetDependency */ = {
+		35339A797AF81B9ECF648C6053355624 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = YbridOgg;
+			target = 675F49D1A9EEAE258F0EEB9BD8E23E7E /* YbridOgg */;
+			targetProxy = 7491F7E858434D565619AE5DA7492BCA /* PBXContainerItemProxy */;
+		};
+		4AE49F3C87DA7C7DCBAD8DD8B379B140 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = YbridOgg;
+			target = 675F49D1A9EEAE258F0EEB9BD8E23E7E /* YbridOgg */;
+			targetProxy = F17F856EA0B7A401F5693AF089E5217F /* PBXContainerItemProxy */;
+		};
+		4C16483B9B6B0E3CB234FCC0E32DDC03 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = YbridOpus;
 			target = 070788B6BE9F902CBB1CDF7CB00F2F5D /* YbridOpus */;
-			targetProxy = 040BC5968D654BBA6FE28FF215614784 /* PBXContainerItemProxy */;
+			targetProxy = 8734590310D4BA640511B61BDDC4B54D /* PBXContainerItemProxy */;
 		};
-		2401B71FBA18563EA6E7746482A2B190 /* PBXTargetDependency */ = {
+		6DD5495EC94C2AE469B6C5A94DB29535 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = YbridPlayerSDK;
 			target = 849053863B4B180F25417076C244652C /* YbridPlayerSDK */;
-			targetProxy = F679052FAC3AAAE035E48E7AF36288F6 /* PBXContainerItemProxy */;
+			targetProxy = 0E875ADBDF99B910CBA9C7A5970270C4 /* PBXContainerItemProxy */;
 		};
-		574EAACF09667098FD5B68ED1D1A5828 /* PBXTargetDependency */ = {
+		7BD413DF5AE1A815481E415DA2B4BBB8 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = YbridOgg;
 			target = 675F49D1A9EEAE258F0EEB9BD8E23E7E /* YbridOgg */;
-			targetProxy = FE35CCAE10615CFE0EE4CEFBF5EBCF33 /* PBXContainerItemProxy */;
+			targetProxy = 1330144A2F583A0D671F332D514941AA /* PBXContainerItemProxy */;
 		};
-		9E5973E60377E0BE0AA0C65DE08EA62A /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = YbridOgg;
-			target = 675F49D1A9EEAE258F0EEB9BD8E23E7E /* YbridOgg */;
-			targetProxy = F857C75F5320774E7BCC4C7E98B37ADB /* PBXContainerItemProxy */;
-		};
-		B5E3458564056012FA6F9B3D3BFDC5D0 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = YbridPlayerSDK;
-			target = 849053863B4B180F25417076C244652C /* YbridPlayerSDK */;
-			targetProxy = 58230420147A4408733E7DC959B60380 /* PBXContainerItemProxy */;
-		};
-		C3A91E26AAACB8D16247BC8DBFA73A69 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = YbridOgg;
-			target = 675F49D1A9EEAE258F0EEB9BD8E23E7E /* YbridOgg */;
-			targetProxy = 00E596F01F837959D7C76B07CD53FE86 /* PBXContainerItemProxy */;
-		};
-		C4A650F95AEC11B092E838906E216B4A /* PBXTargetDependency */ = {
+		A98AFBC9FE445C761104C298A67E66CD /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = YbridOpus;
 			target = 070788B6BE9F902CBB1CDF7CB00F2F5D /* YbridOpus */;
-			targetProxy = B2E239DEAE0F7BD8194AEF169ECA00AF /* PBXContainerItemProxy */;
+			targetProxy = 0D4E067EDC0A2CFD00019D6CD043396C /* PBXContainerItemProxy */;
+		};
+		D1D2506E2FB9880AA80D2C3EB1269E20 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = YbridPlayerSDK;
+			target = 849053863B4B180F25417076C244652C /* YbridPlayerSDK */;
+			targetProxy = E789EDD5EE8EC8BC01165B3BC080F2B6 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -640,7 +618,7 @@
 		};
 		1224617468873400792EBE717E92F8CD /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B6DA7BBC72E0BD7AA818DF8BE0B13CC0 /* YbridOpus.debug.xcconfig */;
+			baseConfigurationReference = B480F646097B008323DE4C2FB674828A /* YbridOpus.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -656,7 +634,7 @@
 		};
 		23D0DE92A807DB992C15D330B0A8AA73 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 976E5946B570A6CA2CA9968CDC6483A2 /* YbridOgg.debug.xcconfig */;
+			baseConfigurationReference = 7E1332B2EFDB171DB848F18012B28880 /* YbridOgg.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -738,7 +716,7 @@
 		};
 		263BD98C8F5B90F40979EEBC67B1F001 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 16F97AA4529641F284A4CBA47B189F60 /* YbridPlayerSDK.release.xcconfig */;
+			baseConfigurationReference = 86695FAA9E118C86D6AA607DD775A9C8 /* YbridPlayerSDK.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -755,7 +733,7 @@
 		};
 		6595C2810F6E83AE4CBFD82E39A5145C /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3E46DA472449A71A3F35F1B76580CA27 /* YbridPlayerSDK.debug.xcconfig */;
+			baseConfigurationReference = 3F124BDFEBE5947CAB5869AFA669B66B /* YbridPlayerSDK.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -807,7 +785,7 @@
 		};
 		84967953310B8AC40B9BA1E80DA945C6 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 792EC9C051E616A1A52547014DA2E19A /* YbridOpus.release.xcconfig */;
+			baseConfigurationReference = 22A66925FB8697F48A4313A1B5AFFD52 /* YbridOpus.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -824,7 +802,7 @@
 		};
 		ABD05F8B9590FA697944B126B4BF0DA5 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B292A0CB45891B65DBEA3F03EFBE7BFA /* YbridOgg.release.xcconfig */;
+			baseConfigurationReference = 0F8088FF7F22D33CF2394ABAC671CC9A /* YbridOgg.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;

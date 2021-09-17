@@ -573,7 +573,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 32;
+				CURRENT_PROJECT_VERSION = 33;
 				DEVELOPMENT_TEAM = J327NUG776;
 				"ENABLE_HARDENED_RUNTIME[sdk=macosx*]" = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -588,7 +588,7 @@
 				);
 				LIBRARY_SEARCH_PATHS = "";
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
-				MARKETING_VERSION = 0.9.4;
+				MARKETING_VERSION = 0.10.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-framework",
@@ -620,7 +620,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 32;
+				CURRENT_PROJECT_VERSION = 33;
 				DEVELOPMENT_TEAM = J327NUG776;
 				"ENABLE_HARDENED_RUNTIME[sdk=macosx*]" = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -635,7 +635,7 @@
 				);
 				LIBRARY_SEARCH_PATHS = "";
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
-				MARKETING_VERSION = 0.9.4;
+				MARKETING_VERSION = 0.10.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-framework",
