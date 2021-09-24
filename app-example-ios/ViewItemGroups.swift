@@ -26,37 +26,43 @@
 import UIKit
 import YbridPlayerSDK
 
-// just groups of ui elements
+// groups of ui elements
 
 class MetadataItems : UIView {
     private static let metadataColor = UIColor(rgb: 0x00f000) // green
 
     weak var view:ViewController?
+    
+    // MARK: creation
     init(view:ViewController) {
         super.init(frame: view.accessibilityFrame)
         self.view = view
+        initialiteFields(view)
+        initializeValues()
+    }
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        initializeValues()
+    }
+    
+    fileprivate func initialiteFields(_ view: ViewController) {
         let items = [view.broadcaster, view.genre, view.playingTitle]
         DispatchQueue.main.async {
             items.forEach { item in
                 item?.textColor = MetadataItems.metadataColor
             }
         }
-        self.initializeValues()
-//        view.accessibilityFrame.layer.zPosition = self.layer.zPosition + 1
-
     }
     
-    required init?(coder: NSCoder) {
-        super.init(coder: coder)
-        let items:[UILabel] = []
+    private func initializeValues() {
         DispatchQueue.main.async {
-            items.forEach { item in
-                item.textColor = MetadataItems.metadataColor
-            }
+            self.view?.broadcaster.text = nil
+            self.view?.genre.text = nil
+            self.view?.playingTitle.text = nil
         }
-        initializeValues()
     }
     
+    // MARK:
     func attach(_ control:SimpleControl) {
         initializeValues()
     }
@@ -68,14 +74,7 @@ class MetadataItems : UIView {
             self.view?.playingTitle.text = nil
         }
     }
-    
-    private func initializeValues() {
-        DispatchQueue.main.async {
-            self.view?.broadcaster.text = nil
-            self.view?.genre.text = nil
-            self.view?.playingTitle.text = nil
-        }
-    }
+
 }
 
 class InteractionItems {
@@ -217,6 +216,28 @@ class MeteringItems {
         visible(false, false)
         enable(false, false)
     }
+    
+    func clearMessage() {
+        DispatchQueue.main.async {
+            self.view?.problem.text = nil
+        }
+    }
+    
+    func showMessage(_ color: UIColor, _ text:String) {
+        DispatchQueue.main.async {
+            self.view?.problem.textColor = color
+            self.view?.problem.text = text
+        }
+    }
+    
+    func enableOffset(_ enable:Bool) {
+        /// Disabled visualization for timeshifts by doing nothing here.
+        /// unitl points in time for audioComplete are more reliable.
+//        DispatchQueue.main.async {
+//            self.offsetS.alpha = enable ? 1.0 : 0.5
+//        }
+    }
+    
     private func initializeValues() {
         DispatchQueue.main.async {
             self.listener?.playingSince(0)
@@ -224,6 +245,7 @@ class MeteringItems {
             self.listener?.durationConnected(nil)
             self.listener?.bufferSize(averagedSeconds: nil, currentSeconds: nil)
             self.view?.currentBitRate.text = nil
+            self.view?.problem.text = nil
         }
     }
     
@@ -242,7 +264,6 @@ class MeteringItems {
             self.view?.offsetLabel.isEnabled = ybrid
             self.view?.currentBitRate.isEnabled = ybrid
             self.view?.currentBitRateLabel.isEnabled = ybrid
-
         }
     }
 }

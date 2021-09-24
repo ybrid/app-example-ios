@@ -31,7 +31,7 @@ import YbridPlayerSDK
 class Action {
 
     let actionString:String
-    let audioChange:()->()
+    let requestAudioChange:()->()
     enum behaviour {
         case always
         case single
@@ -41,7 +41,7 @@ class Action {
     init(_ name:String, _ behave:behaviour = .always, _ method: @escaping ()->()) {
         self.actionString = name
         self.behave = behave
-        self.audioChange = method
+        self.requestAudioChange = method
     }
 }
 
@@ -76,7 +76,7 @@ class ActionButton : UIButton {
         }
 
         Logger.shared.debug("\(action.actionString) triggered")
-        action.audioChange()
+        action.requestAudioChange()
     }
 
     func completed() {

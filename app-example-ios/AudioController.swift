@@ -48,14 +48,12 @@ class AudioController: AudioPlayerListener, YbridControlListener {
     
     var control:PlaybackControl? {
         didSet {
-            
             guard let control = control else {
                 Logger.shared.notice("control changed to (nil)")
                 
                 if let oldControl = oldValue, oldControl.state != .stopped {
                     oldControl.stop()
                 }
-                
                 attach(nil)
                 return
             }
@@ -69,10 +67,8 @@ class AudioController: AudioPlayerListener, YbridControlListener {
                 oldPlaying = oldControl.running
                 oldControl.stop()
             }
-            
             attach(control)
             Logger.shared.debug("control changed to \(type(of: control))")
-            
             if oldPlaying {
                 control.play()
             }
@@ -211,23 +207,14 @@ class AudioController: AudioPlayerListener, YbridControlListener {
     func error(_ severity: ErrorSeverity, _ exception: AudioPlayerError) {
         DispatchQueue.main.async { [self] in
             switch severity {
-            case .fatal: self.metadata.view?.problem.textColor = .red
-                self.metadata.view?.problem.text = exception.message ?? exception.failureReason
-            case .recoverable: self.metadata.view?.problem.textColor = .systemOrange
-                self.metadata.view?.problem.text = exception.message
+            case .fatal: metering.showMessage(.red, exception.message ?? exception.failureReason ?? "unknown error" )
+            case .recoverable: metering.showMessage(.systemOrange, exception.message ?? "waiting")
                 DispatchQueue.global().async {
-                    sleep(5)
-                    DispatchQueue.main.async {
-                        self.metadata.view?.problem.text = nil
-                    }
+                    sleep(5); metering.clearMessage()
                 }
-            case .notice: self.metadata.view?.problem.textColor = .systemGreen
-                self.metadata.view?.problem.text = exception.message
+            case .notice: metering.showMessage(.systemGreen, exception.message ?? "")
                 DispatchQueue.global().async {
-                    sleep(5)
-                    DispatchQueue.main.async {
-                        self.metadata.view?.problem.text = nil
-                    }
+                    sleep(5); metering.clearMessage()
                 }
             @unknown default:
                 Logger.shared.error("unknown error: severity \(severity), \(exception.localizedDescription)")

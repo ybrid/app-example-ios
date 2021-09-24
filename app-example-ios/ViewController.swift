@@ -90,9 +90,7 @@ class ViewController: UIViewController {
             
             Logger.shared.info("endpoint changed to \(endpoint?.uri ?? "(nil)")")
             
-            DispatchQueue.main.async {
-                self.problem.text = nil
-            }
+            audioController?.metering.clearMessage()
             guard let endpoint = endpoint else {
                 audioController?.control = nil
                 return
@@ -149,18 +147,11 @@ class ViewController: UIViewController {
     
     // MARK: on pressing play/stop/pause
     
-    func doToggle() {
+    func onToggle() {
 
         guard let endpoint = endpoint else {
             Logger.shared.error("no endpoint to toggle")
             return
-        }
-        
-        if let control = audioController?.control,
-           !control.running {
-            DispatchQueue.main.async {
-                self.problem.text = nil
-            }
         }
         
         audioController?.useControl(endpoint) {(control) in
@@ -208,39 +199,7 @@ class ViewController: UIViewController {
     }
     
     // MARK: initializations
-    
-    private func initializeActions() {
-        togglePlay.action = Action("toggle", .always) {
-            self.doToggle()
-        }
-        
-        DispatchQueue.main.async { [self] in
-            initialize(button: swapItemButton, image: "swapItem", scale: 0.5, "swap item", behaviour: .single) {
-                audioController?.ybrid?.swapItem{ _ in swapItemButton.completed() }
-            }
-            initialize(button: itemBackwardButton, image: "itemBackward", scale: 0.5, "item backward", behaviour: .multi ) {
-                enableOffset(false)
-                audioController?.ybrid?.skipBackward() { _ in enableOffset(true) }
-            }
-            initialize(button: windBackButton, image: "windBack", scale: 0.4, "wind back", behaviour: .multi) {
-                enableOffset(false)
-                audioController?.ybrid?.wind(by: -15.0) { _ in enableOffset(true) }
-            }
-            initialize(button: windToLiveButton, image:  "windToLive", scale: 0.9, "wind to live", behaviour: .single ) {
-                enableOffset(false)
-                audioController?.ybrid?.windToLive{ _ in windToLiveButton.completed(); enableOffset(true) }
-            }
-            initialize(button: windForwardButton, image: "windForward", scale: 0.4, "wind forward", behaviour: .multi) {
-                enableOffset(false)
-                audioController?.ybrid?.wind(by: +15.0) { _ in self.enableOffset(true) }
-            }
-            initialize(button: itemForwardButton, image: "itemForward", scale: 0.5, "item forward", behaviour: .multi) {
-                enableOffset(false)
-                audioController?.ybrid?.skipForward() { _ in self.enableOffset(true) }
-            }
-        }
-    }
-    
+
     private func initializeGui() {
         
         setStopped()
@@ -256,6 +215,13 @@ class ViewController: UIViewController {
             initialize(label: offsetS, monospaced: true)
             initialize(label: currentBitRate, monospaced: true)
 
+            initialize(button: swapItemButton, image: "swapItem", scale: 0.5)
+            initialize(button: itemBackwardButton, image: "itemBackward", scale: 0.5)
+            initialize(button: windBackButton, image: "windBack", scale: 0.4)
+            initialize(button: windToLiveButton, image:  "windToLive", scale: 0.9)
+            initialize(button: windForwardButton, image: "windForward", scale: 0.4)
+            initialize(button: itemForwardButton, image: "itemForward", scale: 0.5)
+            
             appVersion.text = "demo-app\n" + getBundleInfo(id: Bundle.main.bundleIdentifier ?? "io.ybrid.example-player-ios")
             
             let sdkProduct =  AudioPlayer.productName ?? "player-sdk"
@@ -269,6 +235,58 @@ class ViewController: UIViewController {
             sdkVersion.text = "\(sdkProduct)\n\(sdkVerString)"
 
         }
+    }
+
+    private func initializeActions() {
+
+        togglePlay.action = Action("toggle", .always) { [self] in
+            guard let audio = audioController else { return }
+            if let control = audio.control, !control.running {
+                audio.metering.clearMessage()
+            }
+            onToggle()
+        }
+
+        swapItemButton.action = Action("swap item", .single) { [self] in
+            guard let audio = audioController else { return }
+            audio.metering.clearMessage()
+            audio.ybrid?.swapItem{ _ in swapItemButton.completed() }
+        }
+        itemBackwardButton.action = Action("item backward", .multi ) { [self] in
+            guard let audio = audioController else { return }
+            audio.metering.enableOffset(false)
+            audio.metering.clearMessage()
+            audio.ybrid?.skipBackward() { _ in
+                audioController?.metering.enableOffset(true)
+            }
+        }
+        windBackButton.action = Action( "wind back", .multi) { [self] in
+            guard let audio = audioController else { return }
+            audio.metering.enableOffset(false)
+            audio.metering.clearMessage()
+            audio.ybrid?.wind(by: -15.0) { _ in
+                audioController?.metering.enableOffset(true)
+            }
+        }
+        windToLiveButton.action = Action( "wind to live", .single ) { [self] in
+            guard let audio = audioController else { return }
+            audio.metering.enableOffset(false)
+            audio.metering.clearMessage()
+            audio.ybrid?.windToLive{ _ in windToLiveButton.completed(); audioController?.metering.enableOffset(true) }
+        }
+        windForwardButton.action = Action("wind forward", .multi) { [self] in
+            guard let audio = audioController else { return }
+            audio.metering.enableOffset(false)
+            audio.metering.clearMessage()
+            audio.ybrid?.wind(by: +15.0) { _ in audioController?.metering.enableOffset(true) }
+        }
+        itemForwardButton.action = Action( "item forward", .multi) { [self] in
+            guard let audio = audioController else { return }
+            audio.metering.enableOffset(false)
+            audio.metering.clearMessage()
+            audio.ybrid?.skipForward() { _ in audioController?.metering.enableOffset(true) }
+        }
+
     }
     
     // MARK: helpers
@@ -297,13 +315,11 @@ class ViewController: UIViewController {
         
         return "\(version) (\(build))"
     }
-    
-    private func initialize(button: ActionButton, image:String, scale:Float, _ actionString:String, behaviour:Action.behaviour, _ action: @escaping () -> () ) {
+    private func initialize(button: ActionButton, image:String, scale:Float) {
         let itemImage = UIImage(named: image)!.scale(factor: scale)
         button.setImage(itemImage, for: .normal)
-        button.action = Action(actionString, behaviour, action)
     }
-    
+
     private func changeButton(_ button:UIButton, image:UIImage) {
         DispatchQueue.main.async {
             button.setImage(image, for: .normal)
@@ -324,14 +340,7 @@ class ViewController: UIViewController {
     
 
     // MARK: helpers acting on ui elements
-    
-    func enableOffset(_ enable:Bool) {
-        /// Disabled visualization for timeshifts by doing nothing here.
-        /// unitl points in time for audioComplete are more reliable.
-//        DispatchQueue.main.async {
-//            self.offsetS.alpha = enable ? 1.0 : 0.5
-//        }
-    }
+
 
 }
 
