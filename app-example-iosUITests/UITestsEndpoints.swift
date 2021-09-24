@@ -71,3 +71,7 @@ let aacHEv2notBackwardsCompatibleEndpoint = MediaEndpoint(mediaUri:"https://gith
 let aacNoSBREndpoint = MediaEndpoint(mediaUri:"https://github.com/ybrid/test-files/blob/main/aac/fraunhofer/SBRtestStereoAot29Sig0.mp4?raw=true")
 // mixed signaling -> HE-AAC_v2 'aach', 1 ch
 let aacMixed1ChEndpoint = MediaEndpoint(mediaUri:"https://github.com/ybrid/test-files/blob/main/aac/fraunhofer/SBRtestStereoAot5SigusePS.mp4?raw=true")
+
+let gitTestfilesAacUrl = "https://github.com/ybrid/test-files/blob/main/aac/fraunhofer/"
+let heaac48kbps_music = MediaEndpoint(mediaUri: gitTestfilesAacUrl + "Farewell01_LN_AACLC_048s_AACLC_320s.mp4?raw=true")
+let xheaac48kbps_music = MediaEndpoint(mediaUri: gitTestfilesAacUrl + "Farewell01_LN_xHE_048s_AACLC_320s.mp4?raw=true")

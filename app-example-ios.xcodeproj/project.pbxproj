@@ -11,6 +11,7 @@
 		171449C92530F37500E76141 /* streams.txt in Resources */ = {isa = PBXBuildFile; fileRef = 171449C82530F37500E76141 /* streams.txt */; };
 		1714DA14263848D400DD17B8 /* ConsumeMetadataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1714DA13263848D400DD17B8 /* ConsumeMetadataTests.swift */; };
 		171C93DD26E0ECFA005114FF /* AudioController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 171C93DC26E0ECFA005114FF /* AudioController.swift */; };
+		1721247626F8F25500DBF6FE /* AudioCodecTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1721247526F8F25500DBF6FE /* AudioCodecTests.swift */; };
 		172A4122263D9A7E0042ADA4 /* MediaSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 172A4121263D9A7E0042ADA4 /* MediaSelector.swift */; };
 		175849F1264E86680071FEE6 /* UITestsEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 175849F0264E86680071FEE6 /* UITestsEndpoints.swift */; };
 		17587CBE25027DC900951211 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17587CBD25027DC900951211 /* AppDelegate.swift */; };
@@ -49,6 +50,7 @@
 		171449C82530F37500E76141 /* streams.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = streams.txt; sourceTree = "<group>"; };
 		1714DA13263848D400DD17B8 /* ConsumeMetadataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsumeMetadataTests.swift; sourceTree = "<group>"; };
 		171C93DC26E0ECFA005114FF /* AudioController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioController.swift; sourceTree = "<group>"; };
+		1721247526F8F25500DBF6FE /* AudioCodecTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioCodecTests.swift; sourceTree = "<group>"; };
 		172A4121263D9A7E0042ADA4 /* MediaSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaSelector.swift; sourceTree = "<group>"; };
 		175849F0264E86680071FEE6 /* UITestsEndpoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITestsEndpoints.swift; sourceTree = "<group>"; };
 		17587CBA25027DC900951211 /* app-example-ios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "app-example-ios.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -148,6 +150,7 @@
 		176EE868257002A300AC49DD /* app-example-iosUITests */ = {
 			isa = PBXGroup;
 			children = (
+				1721247526F8F25500DBF6FE /* AudioCodecTests.swift */,
 				17E3391C26F3A3830026711D /* DevelopingPlayerTests.swift */,
 				1765781326BAA59500D7F465 /* TestYbridControl.swift */,
 				17A82047268F0D5D0025BE6A /* YbridControlBasicTests.swift */,
@@ -394,6 +397,7 @@
 				1760460F25B0B38600C79BF8 /* UITestsHelper.swift in Sources */,
 				17A8204B268F0D5D0025BE6A /* YbridSwapItemTests.swift in Sources */,
 				17A8204A268F0D5D0025BE6A /* YbridControlBasicTests.swift in Sources */,
+				1721247626F8F25500DBF6FE /* AudioCodecTests.swift in Sources */,
 				17A8204C268F0D5D0025BE6A /* YbridSwapServiceTests.swift in Sources */,
 				17F5E355267C9DF700BCE656 /* YbridTimeshiftTests.swift in Sources */,
 				1714DA14263848D400DD17B8 /* ConsumeMetadataTests.swift in Sources */,
