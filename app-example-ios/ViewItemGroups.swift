@@ -30,7 +30,6 @@ import YbridPlayerSDK
 
 class MetadataItems {
     private static let metadataColor = UIColor(rgb: 0x00f000) // green
-
     weak var view:ViewController?
     
     // MARK: creation
@@ -40,7 +39,7 @@ class MetadataItems {
         initializeValues()
     }
     
-    fileprivate func initialiteFields() {
+    private func initialiteFields() {
         guard let view = view else {
             return // todo error
         }
@@ -57,7 +56,6 @@ class MetadataItems {
         show(station: nil)
     }
     
-    // MARK:
     func attach(_ control:SimpleControl) {
         initializeValues()
     }
@@ -84,11 +82,6 @@ class InteractionItems {
     var channelSelector:ChannelSelector?
     var channelPicker = UIPickerView()
 
-
-    var audio:AudioController? { get {
-        return view?.audioController
-    }}
-
     init(view:ViewController) {
         self.view = view
         let items:[UILabel] = [view.maxRateLabel]
@@ -98,18 +91,8 @@ class InteractionItems {
             }
         }
 
-        channelSelector = ChannelSelector(channelPicker, font: (view.urlField as UITextField).font!) { (channel) in
-            Logger.shared.notice("service \(channel ?? "(nil)") selected")
-            if let ybrid = view.audioController?.ybrid,
-               let service = channel {
-                Logger.shared.debug("swap service to \(service) triggered")
-                self.channelSelector?.enable(false)
-                ybrid.swapService(to: service) { (changed) in
-                    Logger.shared.debug("swap service \(changed ? "" : "not ")completed")
-                    self.channelSelector?.enable(true)
-                }
-            }
-        }
+        channelSelector = ChannelSelector(channelPicker, font: (view.urlField as UITextField).font!, onChannelSelected: nil) 
+
         channelPicker.frame = view.channelPickerFrame.frame
         view.view.addSubview(channelPicker)
 
@@ -117,9 +100,9 @@ class InteractionItems {
         channelPicker.selectRow(0, inComponent: 0, animated: true)
 
         initialize()
-        initializeActions()
     }
 
+    
     func attach(_ control:SimpleControl) {
         initialize()
         if let _ = control as? YbridControl? {
@@ -138,64 +121,17 @@ class InteractionItems {
     func enable(_ enable:Bool) {
         self.enable(enable,enable)
     }
-
+    func setChannels(_ ids: [String]) {
+        channelSelector?.setChannels(ids: ids)
+    }
+    func selectChannel(_ serviceId: String) {
+        channelSelector?.setSelection(to: serviceId)
+    }
+    
+    
+    
     private func initialize() {
-        DispatchQueue.main.async {
-            self.view?.maxRateSlider.value = 1.0
-            self.view?.maxRateLabel.text = "max bit-rate"
-        }
     }
-
-
-
-    private func initializeActions() {
-
-//        self.view?.togglePlay.action = Action("toggle", .always) { [self] in
-//            guard let audio = audioController else { return }
-//            if let control = audio?.control, !control.running {
-//                audio.metering.clearMessage()
-//            }
-//            onToggle()
-//        }
-
-        view?.swapItemButton.action = Action("swap item", .single) { [self] in
-            audio?.metering.clearMessage()
-            audio?.ybrid?.swapItem{ _ in self.view?.swapItemButton.completed() }
-        }
-        view?.itemBackwardButton.action = Action("item backward", .multi ) { [self] in
-            audio?.metering.enableOffset(false)
-            audio?.metering.clearMessage()
-            audio?.ybrid?.skipBackward() { _ in
-                audio?.metering.enableOffset(true)
-            }
-        }
-        view?.windBackButton.action = Action( "wind back", .multi) { [self] in
-            audio?.metering.enableOffset(false)
-            audio?.metering.clearMessage()
-            audio?.ybrid?.wind(by: -15.0) { _ in
-                audio?.metering.enableOffset(true)
-            }
-        }
-        view?.windToLiveButton.action = Action( "wind to live", .single ) { [self] in
-            audio?.metering.enableOffset(false)
-            audio?.metering.clearMessage()
-            audio?.ybrid?.windToLive{ _ in
-                self.view?.windToLiveButton.completed()
-                audio?.metering.enableOffset(true)
-            }
-        }
-        view?.windForwardButton.action = Action("wind forward", .multi) { [self] in
-            audio?.metering.enableOffset(false)
-            audio?.metering.clearMessage()
-            audio?.ybrid?.wind(by: +15.0) { _ in audio?.metering.enableOffset(true) }
-        }
-        view?.itemForwardButton.action = Action( "item forward", .multi) { [self] in
-            audio?.metering.enableOffset(false)
-            audio?.metering.clearMessage()
-            audio?.ybrid?.skipForward() { _ in audio?.metering.enableOffset(true) }
-        }
-    }
-
 
     private func enable(_ playback:Bool, _ ybrid:Bool) {
         DispatchQueue.main.async { [self] in
@@ -257,6 +193,7 @@ class MeteringItems {
         }
         initializeValues()
     }
+    
     func attach(_ control:SimpleControl) {
         initializeValues()
         if let _ = control as? YbridControl? {
@@ -311,6 +248,7 @@ class MeteringItems {
         show(bufferAveraged: nil)
         show(currentRate: nil)
         clearMessage()
+        clearMaxRate()
     }
     
     private func visible(_ playback:Bool, _ ybrid:Bool) {
@@ -353,7 +291,24 @@ class MeteringItems {
             view?.currentBitRate.show(nil)
         }
     }
-    
+    func show(maxRate kbps: Int32?) {
+        if let max = kbps {
+            view?.maxRateLabel.show("max \(max) kbit/s")
+            DispatchQueue.main.async {
+                let maxRateValue = Float(max*1000 - bitRatesRange.lowerBound) / Float(bitRatesRange.upperBound - bitRatesRange.lowerBound)
+                self.view?.maxRateSlider.setValue(maxRateValue, animated: false)
+            }
+        } else {
+            view?.maxRateLabel.show("max bit-rate")
+        }
+    }
+    func clearMaxRate() {
+        DispatchQueue.main.async {
+            self.view?.maxRateSlider.value = 1.0
+            self.view?.maxRateLabel.text = "max bit-rate"
+        }
+    }
+
     func show(offsetToLive seconds: TimeInterval?) {
         view?.offsetS.show(seconds?.hmmssS)
     }
@@ -390,4 +345,53 @@ extension UIColor {
            blue: rgb & 0xFF
        )
    }
+}
+
+extension TimeInterval {
+    var hmsSManually:String {
+        if isLess(than: 60) {
+            return String(format: "%.1f s", self)
+        }
+        if isLess(than: 3600) {
+            let min = Int(self / 60)
+            return String(format: "%dm %02ds", min, Int(self - Double(min * 60)))
+        }
+        let hour = Int(self / 3600)
+        let min = Int(self / 60) - hour * 60
+        return String(format: "%dh %02dm", hour, min)
+    }
+    
+    var hmsS:String {
+        let date = Date(timeIntervalSince1970: self)
+        let formatter = DateFormatter()
+        formatter.timeZone = TimeZone(abbreviation: "UTC+00")
+        if isLess(than: 60) {
+            formatter.dateFormat = "s.S' s'"
+        } else if isLess(than: 3600) {
+            formatter.dateFormat = "m'm 'ss's'"
+        } else {
+            formatter.dateFormat = "h'h 'mm'm'"
+        }
+        return formatter.string(from: date)
+    }
+    
+    var hmmssS:String {
+        let date = Date(timeIntervalSince1970: -self)
+        let formatter = DateFormatter()
+        formatter.timeZone = TimeZone(abbreviation: "UTC+00")
+        formatter.dateFormat = "-H:mm:ss.S"
+        return formatter.string(from: date)
+    }
+    
+    var sSSS:String {
+        return String(format: "%.3f s", self)
+    }
+    
+    var sSS:String {
+        return String(format: "%.2f s", self)
+    }
+    
+    var sS:String {
+        return String(format: "%.1f s", self)
+    }
 }

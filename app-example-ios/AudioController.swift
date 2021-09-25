@@ -35,10 +35,7 @@ extension PlaybackControl {
 
 class AudioController: AudioPlayerListener, YbridControlListener {
     
-    var state:PlaybackState { get {
-        return control?.state ?? .stopped
-    }}
-    
+
     let metadatas:MetadataItems
     let interactions:InteractionItems
     let metering:MeteringItems
@@ -76,6 +73,10 @@ class AudioController: AudioPlayerListener, YbridControlListener {
     }
     var cachedControls:[MediaEndpoint:PlaybackControl] = [:]
 
+    private var state:PlaybackState { get {
+        return control?.state ?? .stopped
+    }}
+
     var ybrid:YbridControl? { get {
         control as? YbridControl
     }}
@@ -84,6 +85,8 @@ class AudioController: AudioPlayerListener, YbridControlListener {
         metadatas = MetadataItems(view: view)
         interactions = InteractionItems(view: view)
         metering = MeteringItems(view: view)
+        
+        defineActions(view: view)
     }
 
     private func attach(_ control:PlaybackControl?) {
@@ -102,7 +105,92 @@ class AudioController: AudioPlayerListener, YbridControlListener {
         }
     }
     
+    func defineActions(view:ViewController) {
+
+        view.togglePlay.action = Action("toggle", .always) { [self] in
+            if let control = control, !control.running {
+                metering.clearMessage()
+            }
+            
+            guard let endpoint = view.endpoint else {
+                Logger.shared.error("no endpoint to toggle")
+                return
+            }
+            
+            useControl(endpoint) {(control) in
+                guard control.mediaEndpoint == endpoint else {
+                    Logger.shared.notice("aborting \(control.mediaEndpoint.uri)")
+                    return
+                }
+                self.toggle()
+            }
+            return
+        }
+
+        view.swapItemButton.action = Action("swap item", .single) { [self] in
+            metering.clearMessage()
+            ybrid?.swapItem{ _ in view.swapItemButton.completed() }
+        }
+        view.itemBackwardButton.action = Action("item backward", .multi ) { [self] in
+            metering.enableOffset(false)
+            metering.clearMessage()
+            ybrid?.skipBackward() { _ in
+                metering.enableOffset(true)
+            }
+        }
+        view.windBackButton.action = Action( "wind back", .multi) { [self] in
+            metering.enableOffset(false)
+            metering.clearMessage()
+            ybrid?.wind(by: -15.0) { _ in
+                metering.enableOffset(true)
+            }
+        }
+        view.windToLiveButton.action = Action( "wind to live", .single ) { [self] in
+            metering.enableOffset(false)
+            metering.clearMessage()
+            ybrid?.windToLive{ _ in
+                view.windToLiveButton.completed()
+                metering.enableOffset(true)
+            }
+        }
+        view.windForwardButton.action = Action("wind forward", .multi) { [self] in
+            metering.enableOffset(false)
+            metering.clearMessage()
+            ybrid?.wind(by: +15.0) { _ in metering.enableOffset(true) }
+        }
+        view.itemForwardButton.action = Action( "item forward", .multi) { [self] in
+            metering.enableOffset(false)
+            metering.clearMessage()
+            ybrid?.skipForward() { _ in metering.enableOffset(true) }
+        }
+        
+        // other actions, no buttons
+        interactions.channelSelector?.defineAction(onChannelSelected: onChannelSelected)
+        view.maxRateSlider.addTarget(self, action: #selector(onMaxRateSelected), for: .touchUpInside)
+    }
     
+    func onChannelSelected(channel: String?) {
+        Logger.shared.notice("service \(channel ?? "(nil)") selected")
+        if let ybrid = ybrid, let service = channel {
+            Logger.shared.debug("swap service to \(service) triggered")
+            interactions.channelSelector?.enable(false)
+            ybrid.swapService(to: service) { (changed) in
+                Logger.shared.debug("swap service \(changed ? "" : "not ")completed")
+                self.interactions.channelSelector?.enable(true)
+            }
+        }
+    }
+    
+    @objc func onMaxRateSelected() {
+        guard let maxRateValue = interactions.view?.maxRateSlider.value else {
+            return
+        }
+        let selectedRate =  bitRatesRange.lowerBound + Int32(maxRateValue * Float(bitRatesRange.upperBound -  bitRatesRange.lowerBound))
+
+        Logger.shared.debug("selected bit-rate is \(selectedRate)")
+        ybrid?.maxBitRate(to: selectedRate)
+    }
+
     func useControl(_ endpoint:MediaEndpoint, callback: @escaping (PlaybackControl) -> ()) {
         
         if let existingControl = self.cachedControls[endpoint] {
@@ -153,11 +241,12 @@ class AudioController: AudioPlayerListener, YbridControlListener {
         }
     }
     
+    
     // MARK: AudioPlayerListener
 
     func stateChanged(_ state: PlaybackState) {
         guard self.state == state else {
-            /// ignore events from the last player
+             /// ignore events from the last player
             Logger.shared.notice("ignoring \(state), current control is \(String(describing: self.state))")
             return
         }
@@ -166,15 +255,18 @@ class AudioController: AudioPlayerListener, YbridControlListener {
 
         switch state {
         case .stopped:
-            interactions.view?.setStopped()
+            interactions.view?.showPlay()
             metadatas.reset()
         case .pausing:
-            self.interactions.view?.setPausing()
+            interactions.view?.showPlay()
         case .buffering:
-            self.interactions.view?.setBuffering()
+            self.interactions.view?.showBuffering()
         case .playing:
-            let canPause = self.control?.canPause
-            self.interactions.view?.setPlaying(canPause: canPause ?? false)
+            if control?.canPause == true {
+                interactions.view?.showPause()
+            } else {
+                interactions.view?.showStop()
+            }
         @unknown default:
             Logger.shared.error("state changed to unknown \(state)")
         }
@@ -188,9 +280,8 @@ class AudioController: AudioPlayerListener, YbridControlListener {
         }
         metadatas.show(station: metadata.station)
         
-
         if let serviceId = metadata.activeService?.identifier {
-            interactions.channelSelector?.setSelection(to: serviceId)
+            interactions.selectChannel(serviceId)
         }
     }
     
@@ -237,7 +328,7 @@ class AudioController: AudioPlayerListener, YbridControlListener {
     
     func servicesChanged(_ services: [Service]) {
         let ids = services.map{ $0.identifier }
-        self.interactions.channelSelector?.setChannels(ids: ids)
+        interactions.setChannels(ids)
     }
     
     func swapsChanged(_ swapsLeft: Int) {
@@ -246,24 +337,12 @@ class AudioController: AudioPlayerListener, YbridControlListener {
 
     func bitRateChanged(currentBitsPerSecond: Int32?, maxBitsPerSecond: Int32?) {
         var maxKbps:Int32? = nil
-        var maxRateValue:Float?
         if let maxBps = maxBitsPerSecond, bitRatesRange.contains(maxBps) {
             let kbps = Int32(maxBps/1000)
             Logger.shared.info("max bit-rate is \(kbps) kbps")
             maxKbps = kbps
-            maxRateValue = Float(maxBps - bitRatesRange.lowerBound) / Float(bitRatesRange.upperBound - bitRatesRange.lowerBound)
         }
-        
-        DispatchQueue.main.async { [self] in
-            if let maxRateSliderValue = maxRateValue {
-                self.interactions.view?.maxRateSlider.setValue(maxRateSliderValue, animated: false)
-            }
-            if let max = maxKbps {
-                self.metering.view?.maxRateLabel.text = "max \(max) kbit/s"
-            } else {
-                self.metering.view?.maxRateLabel.text = "max bit-rate"
-            }
-        }
+        metering.show(maxRate: maxKbps)
         
         var currentKbps:Int32? = nil
         if let currentBps = currentBitsPerSecond, bitRatesRange.contains(currentBps) {

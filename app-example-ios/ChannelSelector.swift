@@ -32,11 +32,11 @@ class ChannelSelector:
     var channels:[String] = []
     let componentsSize:CGSize
     let font:UIFont
-    let userSelectedChannel:(String?) -> ()
+    var userSelectedChannel:((String?) -> ())?
     weak var pView:UIPickerView?
     var selected:String?
     
-    init(_ view:UIPickerView, font:UIFont, onChannelSelected:@escaping (String?) -> () ) {
+    init(_ view:UIPickerView, font:UIFont, onChannelSelected: ((String?) -> ())? = nil ) {
         self.userSelectedChannel = onChannelSelected
         self.font = font
         self.componentsSize = CGSize(width: 54, height: 50)
@@ -47,6 +47,12 @@ class ChannelSelector:
         view.transform = CGAffineTransform(rotationAngle: -90 * (.pi/180))
     }
 
+    func defineAction(onChannelSelected:@escaping (String?) -> () ) {
+        userSelectedChannel = onChannelSelected
+    }
+    
+
+    
     /// on select channel
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
 
@@ -57,7 +63,7 @@ class ChannelSelector:
         selected = channels[row]
         if selected != oldValue {
             UserFeedback.haptic.medium()
-            userSelectedChannel(selected)
+            userSelectedChannel?(selected)
         }
     }
     

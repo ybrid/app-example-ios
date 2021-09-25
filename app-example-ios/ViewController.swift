@@ -90,13 +90,15 @@ class ViewController: UIViewController {
             
             Logger.shared.info("endpoint changed to \(endpoint?.uri ?? "(nil)")")
             
-            audioController?.metering.clearMessage()
+            
+            guard let audio = audioController else { return }
+            audio.metering.clearMessage()
             guard let endpoint = endpoint else {
-                audioController?.control = nil
+                audio.control = nil
                 return
             }
             
-            audioController?.useControl(endpoint){_ in }
+            audio.useControl(endpoint){_ in }
         }
     }
     
@@ -113,7 +115,6 @@ class ViewController: UIViewController {
         hideKeyboardWhenTappedAround()
         
         initializeGui()
-        initializeActions()
         audioController = AudioController(view: self)
         
         /// picking preset media or custom url
@@ -145,24 +146,6 @@ class ViewController: UIViewController {
         audioController?.interactions.channelPicker.frame = channelPickerFrame.frame
     }
     
-    // MARK: on pressing play/stop/pause
-    
-    func onToggle() {
-
-        guard let endpoint = endpoint else {
-            Logger.shared.error("no endpoint to toggle")
-            return
-        }
-        
-        audioController?.useControl(endpoint) {(control) in
-            guard control.mediaEndpoint == self.endpoint else {
-                Logger.shared.notice("aborting \(control.mediaEndpoint.uri)")
-                return
-            }
-            self.audioController?.toggle()
-        }
-        return
-    }
     
     // MARK: user actions
     
@@ -173,36 +156,34 @@ class ViewController: UIViewController {
     }
 
     @IBAction func maxBitRateSelected(_ sender: Any) {
-         
-        let selectedRate =  bitRatesRange.lowerBound + Int32(maxRateSlider.value * Float(bitRatesRange.upperBound -  bitRatesRange.lowerBound))
- 
-        Logger.shared.debug("selected bit-rate is \(selectedRate)")
-        audioController?.ybrid?.maxBitRate(to: selectedRate)
+//        let selectedRate =  bitRatesRange.lowerBound + Int32(maxRateSlider.value * Float(bitRatesRange.upperBound -  bitRatesRange.lowerBound))
+//
+//        Logger.shared.debug("selected bit-rate is \(selectedRate)")
+//        audioController?.ybrid?.maxBitRate(to: selectedRate)
     }
     
     
     private let playImage = UIImage(named: "play")!
     private let pauseImage = UIImage(named: "pause")!.scale(factor: 0.9)
     private let stopImage = UIImage(named: "stop")!.scale(factor: 0.8)
-    func setStopped() {
-        changeButton(togglePlay, image:playImage)
+    func showPlay() {
+        changeButton(togglePlay, image: playImage)
     }
-    func setPlaying(canPause:Bool) {
-        changeButton(togglePlay, image: (canPause ? pauseImage : stopImage))
+    func showPause() {
+        changeButton(togglePlay, image: pauseImage)
     }
-    func setBuffering() {
-        // \u{25cf} Black Circle
-        changeButton(togglePlay, text:"● ● ●")
+    func showStop() {
+        changeButton(togglePlay, image: stopImage)
     }
-    func setPausing() {
-        changeButton(togglePlay, image:playImage)
+    func showBuffering() {
+        changeButton(togglePlay, text: "● ● ●") // \u{25cf} Black Circle
     }
     
     // MARK: initializations
 
     private func initializeGui() {
         
-        setStopped()
+        showPlay()
         
         DispatchQueue.main.async { [self] in
             
@@ -215,12 +196,12 @@ class ViewController: UIViewController {
             initialize(label: offsetS, monospaced: true)
             initialize(label: currentBitRate, monospaced: true)
 
-            initialize(button: swapItemButton, image: "swapItem", scale: 0.5)
-            initialize(button: itemBackwardButton, image: "itemBackward", scale: 0.5)
-            initialize(button: windBackButton, image: "windBack", scale: 0.4)
-            initialize(button: windToLiveButton, image:  "windToLive", scale: 0.9)
-            initialize(button: windForwardButton, image: "windForward", scale: 0.4)
-            initialize(button: itemForwardButton, image: "itemForward", scale: 0.5)
+            setImage(button: swapItemButton, image: "swapItem", scale: 0.5)
+            setImage(button: itemBackwardButton, image: "itemBackward", scale: 0.5)
+            setImage(button: windBackButton, image: "windBack", scale: 0.4)
+            setImage(button: windToLiveButton, image:  "windToLive", scale: 0.9)
+            setImage(button: windForwardButton, image: "windForward", scale: 0.4)
+            setImage(button: itemForwardButton, image: "itemForward", scale: 0.5)
             
             appVersion.text = "demo-app\n" + getBundleInfo(id: Bundle.main.bundleIdentifier ?? "io.ybrid.example-player-ios")
             
@@ -233,20 +214,7 @@ class ViewController: UIViewController {
                 sdkVerString = "\(sdkVer) (\(sdkBuild))"
             }
             sdkVersion.text = "\(sdkProduct)\n\(sdkVerString)"
-
         }
-    }
-
-    private func initializeActions() {
-
-        togglePlay.action = Action("toggle", .always) { [self] in
-            guard let audio = audioController else { return }
-            if let control = audio.control, !control.running {
-                audio.metering.clearMessage()
-            }
-            onToggle()
-        }
-
     }
     
     // MARK: helpers
@@ -275,9 +243,11 @@ class ViewController: UIViewController {
         
         return "\(version) (\(build))"
     }
-    private func initialize(button: ActionButton, image:String, scale:Float) {
-        let itemImage = UIImage(named: image)!.scale(factor: scale)
-        button.setImage(itemImage, for: .normal)
+    private func setImage(button: UIButton, image:String, scale:Float = 1.0) {
+        DispatchQueue.main.async {
+            let itemImage = UIImage(named: image)!.scale(factor: scale)
+            button.setImage(itemImage, for: .normal)
+        }
     }
 
     private func changeButton(_ button:UIButton, image:UIImage) {
@@ -297,11 +267,6 @@ class ViewController: UIViewController {
             button.setTitle(text, for: .disabled)
         }
     }
-    
-
-    // MARK: helpers acting on ui elements
-
-
 }
 
 fileprivate extension UIViewController {
@@ -344,54 +309,5 @@ extension UIImage {
     func scale(factor: Float) -> UIImage {
         let scaledImage = UIImage( cgImage: self.cgImage!, scale: self.scale/CGFloat(factor), orientation: self.imageOrientation)
         return scaledImage
-    }
-}
-
-extension TimeInterval {
-    var hmsSManually:String {
-        if isLess(than: 60) {
-            return String(format: "%.1f s", self)
-        }
-        if isLess(than: 3600) {
-            let min = Int(self / 60)
-            return String(format: "%dm %02ds", min, Int(self - Double(min * 60)))
-        }
-        let hour = Int(self / 3600)
-        let min = Int(self / 60) - hour * 60
-        return String(format: "%dh %02dm", hour, min)
-    }
-    
-    var hmsS:String {
-        let date = Date(timeIntervalSince1970: self)
-        let formatter = DateFormatter()
-        formatter.timeZone = TimeZone(abbreviation: "UTC+00")
-        if isLess(than: 60) {
-            formatter.dateFormat = "s.S' s'"
-        } else if isLess(than: 3600) {
-            formatter.dateFormat = "m'm 'ss's'"
-        } else {
-            formatter.dateFormat = "h'h 'mm'm'"
-        }
-        return formatter.string(from: date)
-    }
-    
-    var hmmssS:String {
-        let date = Date(timeIntervalSince1970: -self)
-        let formatter = DateFormatter()
-        formatter.timeZone = TimeZone(abbreviation: "UTC+00")
-        formatter.dateFormat = "-H:mm:ss.S"
-        return formatter.string(from: date)
-    }
-    
-    var sSSS:String {
-        return String(format: "%.3f s", self)
-    }
-    
-    var sSS:String {
-        return String(format: "%.2f s", self)
-    }
-    
-    var sS:String {
-        return String(format: "%.1f s", self)
     }
 }
