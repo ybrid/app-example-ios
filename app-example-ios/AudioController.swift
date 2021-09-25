@@ -39,7 +39,7 @@ class AudioController: AudioPlayerListener, YbridControlListener {
         return control?.state ?? .stopped
     }}
     
-    let metadata:MetadataItems
+    let metadatas:MetadataItems
     let interactions:InteractionItems
     let metering:MeteringItems
  
@@ -81,16 +81,15 @@ class AudioController: AudioPlayerListener, YbridControlListener {
     }}
     
     init(view:ViewController) {
-        metadata = MetadataItems(view: view)
+        metadatas = MetadataItems(view: view)
         interactions = InteractionItems(view: view)
         metering = MeteringItems(view: view)
-        metering.listener = self
     }
 
     private func attach(_ control:PlaybackControl?) {
         if let control = control {
             interactions.attach(control)
-            metadata.attach(control)
+            metadatas.attach(control)
             metering.attach(control)
             
             if let ybrid = control as? YbridControl {
@@ -98,7 +97,7 @@ class AudioController: AudioPlayerListener, YbridControlListener {
             }
         } else {
             interactions.detach()
-            metadata.detach()
+            metadatas.detach()
             metering.detach()
         }
     }
@@ -129,7 +128,7 @@ class AudioController: AudioPlayerListener, YbridControlListener {
                 self.interactions.enable(true)
                })
         } catch {
-            Logger.shared.error("no player for \(endpoint.uri)")
+            Logger.shared.error("no audio control for \(endpoint.uri)")
             self.control = nil
             interactions.enable(false)
             return
@@ -167,8 +166,8 @@ class AudioController: AudioPlayerListener, YbridControlListener {
 
         switch state {
         case .stopped:
-            self.interactions.view?.setStopped()
-            metadata.reset()
+            interactions.view?.setStopped()
+            metadatas.reset()
         case .pausing:
             self.interactions.view?.setPausing()
         case .buffering:
@@ -182,99 +181,58 @@ class AudioController: AudioPlayerListener, YbridControlListener {
     }
     
     func metadataChanged(_ metadata:Metadata) {
-        DispatchQueue.main.async {
-            if self.state != .stopped,
-               let title = metadata.displayTitle {
-                self.metadata.view?.playingTitle.text = title
-            } else {
-                self.metadata.view?.playingTitle.text = nil
-            }
-            
-            if let station = metadata.station {
-                self.metadata.view?.broadcaster.text = station.name
-                self.metadata.view?.genre.text = station.genre
-            } else {
-                self.metadata.view?.broadcaster.text = nil
-                self.metadata.view?.genre.text = nil
-            }
+        if self.state == .stopped {
+            metadatas.show(title: nil)
+        } else {
+            metadatas.show(title: metadata.displayTitle)
         }
+        metadatas.show(station: metadata.station)
+        
 
         if let serviceId = metadata.activeService?.identifier {
-            self.interactions.channelSelector?.setSelection(to: serviceId)
+            interactions.channelSelector?.setSelection(to: serviceId)
         }
     }
     
     func error(_ severity: ErrorSeverity, _ exception: AudioPlayerError) {
-        DispatchQueue.main.async { [self] in
-            switch severity {
-            case .fatal: metering.showMessage(.red, exception.message ?? exception.failureReason ?? "unknown error" )
-            case .recoverable: metering.showMessage(.systemOrange, exception.message ?? "waiting")
-                DispatchQueue.global().async {
-                    sleep(5); metering.clearMessage()
-                }
-            case .notice: metering.showMessage(.systemGreen, exception.message ?? "")
-                DispatchQueue.global().async {
-                    sleep(5); metering.clearMessage()
-                }
-            @unknown default:
-                Logger.shared.error("unknown error: severity \(severity), \(exception.localizedDescription)")
+        switch severity {
+        case .fatal:
+            metering.showMessage(.red, exception.message ?? exception.failureReason ?? "unknown error" )
+            
+        case .recoverable:
+            metering.showMessage(.systemOrange, exception.message ?? "waiting")
+            DispatchQueue.global().async { sleep(5)
+                self.metering.clearMessage()
             }
+            
+        case .notice:
+            metering.showMessage(.systemGreen, exception.message ?? "")
+            DispatchQueue.global().async { sleep(5)
+                self.metering.clearMessage()
+            }
+            
+        @unknown default:
+            Logger.shared.error("unknown error: severity \(severity), \(exception.localizedDescription)")
         }
     }
-    
     func playingSince(_ seconds: TimeInterval?) {
-        DispatchQueue.main.async {
-            guard let playedS = seconds else {
-                self.metering.view?.playedSince.text = nil
-                return
-            }
-            self.metering.view?.playedSince.text = playedS.hmsS
-        }
+        metering.show(playingSince: seconds)
     }
-    
     func durationReadyToPlay(_ seconds: TimeInterval?) {
-        DispatchQueue.main.async {
-            if let readyS = seconds {
-                self.metering.view?.ready.text = readyS.sSSS
-            } else {
-                self.metering.view?.ready.text = nil
-            }
-        }
+        metering.show(readyToPlay: seconds)
     }
     func durationConnected(_ seconds: TimeInterval?) {
-        DispatchQueue.main.async {
-            if let connectS = seconds {
-                self.metering.view?.connected.text = connectS.sSSS
-            } else {
-                self.metering.view?.connected.text = nil
-            }
-        }
+        metering.show(connected: seconds)
     }
     func bufferSize(averagedSeconds: TimeInterval?, currentSeconds: TimeInterval?) {
-        DispatchQueue.main.async {
-            if let averaged = averagedSeconds {
-                self.metering.view?.bufferAveraged.text = averaged.sS
-            } else {
-                self.metering.view?.bufferAveraged.text = nil
-            }
-            if let current = currentSeconds {
-                self.metering.view?.bufferCurrent.text = current.sSS
-            } else {
-                self.metering.view?.bufferCurrent.text = nil
-            }
-        }
+        metering.show(bufferAveraged: averagedSeconds)
+        metering.show(bufferCurrent: currentSeconds)
     }
     
     // MARK: YbridControlListener
     
     func offsetToLiveChanged(_ offset:TimeInterval?) {
-        DispatchQueue.main.async {
-            if let seconds = offset {
-                self.metering.view?.offsetS.text =  seconds.hmmssS
-            } else {
-                self.metering.view?.offsetS.text = nil
-            }
-        }
+        metering.show(offsetToLive: offset)
     }
     
     func servicesChanged(_ services: [Service]) {
@@ -283,9 +241,7 @@ class AudioController: AudioPlayerListener, YbridControlListener {
     }
     
     func swapsChanged(_ swapsLeft: Int) {
-        DispatchQueue.main.async {
-            self.interactions.view?.swapItemButton.isEnabled = swapsLeft != 0
-        }
+        metering.show(swapsLeft: swapsLeft)
     }
 
     func bitRateChanged(currentBitsPerSecond: Int32?, maxBitsPerSecond: Int32?) {
@@ -298,14 +254,7 @@ class AudioController: AudioPlayerListener, YbridControlListener {
             maxRateValue = Float(maxBps - bitRatesRange.lowerBound) / Float(bitRatesRange.upperBound - bitRatesRange.lowerBound)
         }
         
-        var currentKbps:Int32? = nil
-        if let currentBps = currentBitsPerSecond, bitRatesRange.contains(currentBps) {
-            let kbps =  Int32(currentBps/1000)
-            Logger.shared.info("current bit-rate is \(kbps) kbps")
-            currentKbps = kbps
-        }
-        
-        DispatchQueue.main.async {
+        DispatchQueue.main.async { [self] in
             if let maxRateSliderValue = maxRateValue {
                 self.interactions.view?.maxRateSlider.setValue(maxRateSliderValue, animated: false)
             }
@@ -314,13 +263,15 @@ class AudioController: AudioPlayerListener, YbridControlListener {
             } else {
                 self.metering.view?.maxRateLabel.text = "max bit-rate"
             }
-            
-            if let curr = currentKbps {
-                self.metering.view?.currentBitRate.text = "\(curr) kbit/s"
-            } else {
-                self.metering.view?.currentBitRate.text = nil
-            }
         }
+        
+        var currentKbps:Int32? = nil
+        if let currentBps = currentBitsPerSecond, bitRatesRange.contains(currentBps) {
+            let kbps =  Int32(currentBps/1000)
+            Logger.shared.info("current bit-rate is \(kbps) kbps")
+            currentKbps = kbps
+        }
+        metering.show(currentRate: currentKbps)
     }
 }
 

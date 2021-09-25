@@ -247,46 +247,6 @@ class ViewController: UIViewController {
             onToggle()
         }
 
-        swapItemButton.action = Action("swap item", .single) { [self] in
-            guard let audio = audioController else { return }
-            audio.metering.clearMessage()
-            audio.ybrid?.swapItem{ _ in swapItemButton.completed() }
-        }
-        itemBackwardButton.action = Action("item backward", .multi ) { [self] in
-            guard let audio = audioController else { return }
-            audio.metering.enableOffset(false)
-            audio.metering.clearMessage()
-            audio.ybrid?.skipBackward() { _ in
-                audioController?.metering.enableOffset(true)
-            }
-        }
-        windBackButton.action = Action( "wind back", .multi) { [self] in
-            guard let audio = audioController else { return }
-            audio.metering.enableOffset(false)
-            audio.metering.clearMessage()
-            audio.ybrid?.wind(by: -15.0) { _ in
-                audioController?.metering.enableOffset(true)
-            }
-        }
-        windToLiveButton.action = Action( "wind to live", .single ) { [self] in
-            guard let audio = audioController else { return }
-            audio.metering.enableOffset(false)
-            audio.metering.clearMessage()
-            audio.ybrid?.windToLive{ _ in windToLiveButton.completed(); audioController?.metering.enableOffset(true) }
-        }
-        windForwardButton.action = Action("wind forward", .multi) { [self] in
-            guard let audio = audioController else { return }
-            audio.metering.enableOffset(false)
-            audio.metering.clearMessage()
-            audio.ybrid?.wind(by: +15.0) { _ in audioController?.metering.enableOffset(true) }
-        }
-        itemForwardButton.action = Action( "item forward", .multi) { [self] in
-            guard let audio = audioController else { return }
-            audio.metering.enableOffset(false)
-            audio.metering.clearMessage()
-            audio.ybrid?.skipForward() { _ in audioController?.metering.enableOffset(true) }
-        }
-
     }
     
     // MARK: helpers
