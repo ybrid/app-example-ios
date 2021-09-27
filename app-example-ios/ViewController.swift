@@ -155,13 +155,6 @@ class ViewController: UIViewController {
         audioController?.interactions.enable(valid)
     }
 
-    @IBAction func maxBitRateSelected(_ sender: Any) {
-//        let selectedRate =  bitRatesRange.lowerBound + Int32(maxRateSlider.value * Float(bitRatesRange.upperBound -  bitRatesRange.lowerBound))
-//
-//        Logger.shared.debug("selected bit-rate is \(selectedRate)")
-//        audioController?.ybrid?.maxBitRate(to: selectedRate)
-    }
-    
     
     private let playImage = UIImage(named: "play")!
     private let pauseImage = UIImage(named: "pause")!.scale(factor: 0.9)
@@ -243,7 +236,7 @@ class ViewController: UIViewController {
         
         return "\(version) (\(build))"
     }
-    private func setImage(button: UIButton, image:String, scale:Float = 1.0) {
+    private func setImage(button: UIButton, image:String, scale:Float) {
         DispatchQueue.main.async {
             let itemImage = UIImage(named: image)!.scale(factor: scale)
             button.setImage(itemImage, for: .normal)

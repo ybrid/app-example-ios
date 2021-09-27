@@ -105,26 +105,18 @@ class AudioController: AudioPlayerListener, YbridControlListener {
         }
     }
     
+    
     func defineActions(view:ViewController) {
 
         view.togglePlay.action = Action("toggle", .always) { [self] in
             if let control = control, !control.running {
                 metering.clearMessage()
             }
-            
             guard let endpoint = view.endpoint else {
                 Logger.shared.error("no endpoint to toggle")
                 return
             }
-            
-            useControl(endpoint) {(control) in
-                guard control.mediaEndpoint == endpoint else {
-                    Logger.shared.notice("aborting \(control.mediaEndpoint.uri)")
-                    return
-                }
-                self.toggle()
-            }
-            return
+            onToggle(endpoint: endpoint)
         }
 
         view.swapItemButton.action = Action("swap item", .single) { [self] in
@@ -223,22 +215,27 @@ class AudioController: AudioPlayerListener, YbridControlListener {
         }
      }
     
-     func toggle() {
-        guard let player = control else {
-            Logger.shared.error("no audio control to toggle")
-            return
+    func onToggle(endpoint:MediaEndpoint) {
+    
+        useControl(endpoint) {(control) in
+            guard control.mediaEndpoint == endpoint else {
+                Logger.shared.notice("aborting \(control.mediaEndpoint.uri)")
+                return
+            }
+            
+            switch control.state  {
+            case .stopped, .pausing:
+                control.play()
+            case .playing:
+                control.canPause ? control.pause() : control.stop()
+            case .buffering:
+                control.stop()
+            @unknown default:
+                fatalError("unknown player state \(control.state )")
+            }
+
         }
-        
-        switch player.state  {
-        case .stopped, .pausing:
-            player.play()
-        case .playing:
-            player.canPause ? player.pause() : player.stop()
-        case .buffering:
-            player.stop()
-        @unknown default:
-            fatalError("unknown player state \(player.state )")
-        }
+        return
     }
     
     
