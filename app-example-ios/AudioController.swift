@@ -34,7 +34,6 @@ extension PlaybackControl {
 }
 
 class AudioController: AudioPlayerListener, YbridControlListener {
-    
 
     let metadatas:MetadataItems
     let interactions:InteractionItems
@@ -105,6 +104,7 @@ class AudioController: AudioPlayerListener, YbridControlListener {
         }
     }
     
+    // MARK: user actions
     
     func defineActions(view:ViewController) {
 
@@ -183,38 +183,6 @@ class AudioController: AudioPlayerListener, YbridControlListener {
         ybrid?.maxBitRate(to: selectedRate)
     }
 
-    func useControl(_ endpoint:MediaEndpoint, callback: @escaping (PlaybackControl) -> ()) {
-        
-        if let existingControl = self.cachedControls[endpoint] {
-            Logger.shared.debug("already created control for \(endpoint.uri)")
-            control = existingControl
-            callback(existingControl)
-            return
-        }
-        
-        interactions.enable(false)
-        do {
-            try AudioPlayer.open(for: endpoint, listener: self,
-                                 playbackControl: { (control:PlaybackControl) in
-                self.cachedControls[endpoint] = control
-                self.control = control
-                callback(control)
-                self.interactions.enable(true)
-               },
-               ybridControl: { (ybridControl:YbridControl) in
-                self.cachedControls[endpoint] = ybridControl
-                self.control = ybridControl
-                callback(ybridControl)
-                self.interactions.enable(true)
-               })
-        } catch {
-            Logger.shared.error("no audio control for \(endpoint.uri)")
-            self.control = nil
-            interactions.enable(false)
-            return
-        }
-     }
-    
     func onToggle(endpoint:MediaEndpoint) {
     
         useControl(endpoint) {(control) in
@@ -237,6 +205,39 @@ class AudioController: AudioPlayerListener, YbridControlListener {
         }
         return
     }
+    
+    func useControl(_ endpoint:MediaEndpoint, callback: @escaping (PlaybackControl) -> ()) {
+        
+        
+        if let existingControl = self.cachedControls[endpoint] {
+            Logger.shared.debug("already created control for \(endpoint.uri)")
+            control = existingControl
+            callback(existingControl)
+            return
+        }
+
+        interactions.enable(false)
+        do {
+            try AudioPlayer.open(for: endpoint, listener: self,
+                                 playbackControl: { (control:PlaybackControl) in
+                self.cachedControls[endpoint] = control
+                self.control = control
+                callback(control)
+                self.interactions.enable(true)
+               },
+               ybridControl: { (ybridControl:YbridControl) in
+                self.cachedControls[endpoint] = ybridControl
+                self.control = ybridControl
+                callback(ybridControl)
+                self.interactions.enable(true)
+               })
+        } catch {
+            Logger.shared.error("no audio control for \(endpoint.uri)")
+            self.control = nil
+            interactions.enable(false)
+            return
+        }
+     }
     
     
     // MARK: AudioPlayerListener
@@ -349,6 +350,103 @@ class AudioController: AudioPlayerListener, YbridControlListener {
         }
         metering.show(currentRate: currentKbps)
     }
+    
+    func metadataYbridChanged(_ metadata: YbridMetadata) {
+        if self.state == .stopped {
+            metadatas.show(title: nil)
+        } else {
+//            metadatas.show(current: metadata.current, next: metadata.next)
+            metadatas.show(title: metadata.current?.displayTitle)
+        }
+        metadatas.show(station: metadata.station)
+        
+        if let serviceId = metadata.activeService?.identifier {
+            interactions.selectChannel(serviceId)
+        }
+    }
 }
 
+// MARK: used in item groups
+
+extension UILabel {
+    func show(_ text:String?) {
+        DispatchQueue.main.async {
+            self.attributedText = nil
+            self.text = text
+        }
+    }
+    func show(colored text:NSAttributedString?) {
+        DispatchQueue.main.async {
+            self.text = nil
+            self.attributedText = text
+        }
+    }
+}
+
+extension UIColor {
+   convenience init(red: Int, green: Int, blue: Int) {
+       assert(red >= 0 && red <= 255, "Invalid red component")
+       assert(green >= 0 && green <= 255, "Invalid green component")
+       assert(blue >= 0 && blue <= 255, "Invalid blue component")
+
+       self.init(red: CGFloat(red) / 255.0, green: CGFloat(green) / 255.0, blue: CGFloat(blue) / 255.0, alpha: 1.0)
+   }
+
+   convenience init(rgb: Int) {
+       self.init(
+           red: (rgb >> 16) & 0xFF,
+           green: (rgb >> 8) & 0xFF,
+           blue: rgb & 0xFF
+       )
+   }
+}
+
+extension TimeInterval {
+    var hmsSManually:String {
+        if isLess(than: 60) {
+            return String(format: "%.1f s", self)
+        }
+        if isLess(than: 3600) {
+            let min = Int(self / 60)
+            return String(format: "%dm %02ds", min, Int(self - Double(min * 60)))
+        }
+        let hour = Int(self / 3600)
+        let min = Int(self / 60) - hour * 60
+        return String(format: "%dh %02dm", hour, min)
+    }
+    
+    var hmsS:String {
+        let date = Date(timeIntervalSince1970: self)
+        let formatter = DateFormatter()
+        formatter.timeZone = TimeZone(abbreviation: "UTC+00")
+        if isLess(than: 60) {
+            formatter.dateFormat = "s.S' s'"
+        } else if isLess(than: 3600) {
+            formatter.dateFormat = "m'm 'ss's'"
+        } else {
+            formatter.dateFormat = "h'h 'mm'm'"
+        }
+        return formatter.string(from: date)
+    }
+    
+    var hmmssS:String {
+        let date = Date(timeIntervalSince1970: -self)
+        let formatter = DateFormatter()
+        formatter.timeZone = TimeZone(abbreviation: "UTC+00")
+        formatter.dateFormat = "-H:mm:ss.S"
+        return formatter.string(from: date)
+    }
+    
+    var sSSS:String {
+        return String(format: "%.3f s", self)
+    }
+    
+    var sSS:String {
+        return String(format: "%.2f s", self)
+    }
+    
+    var sS:String {
+        return String(format: "%.1f s", self)
+    }
+}
 
