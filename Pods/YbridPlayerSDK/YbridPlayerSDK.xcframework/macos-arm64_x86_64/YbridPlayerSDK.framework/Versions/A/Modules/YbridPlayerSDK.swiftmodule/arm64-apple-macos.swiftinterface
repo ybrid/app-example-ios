@@ -61,6 +61,11 @@ extension AudioPlayer {
   public static func open(for endpoint: YbridPlayerSDK.MediaEndpoint, listener: YbridPlayerSDK.AudioPlayerListener?, playbackControl: YbridPlayerSDK.AudioPlayer.PlaybackControlCallback? = nil, ybridControl: YbridPlayerSDK.AudioPlayer.YbridControlCallback? = nil) throws
   public static func open(for endpoint: YbridPlayerSDK.MediaEndpoint, listener: YbridPlayerSDK.AudioPlayerListener?, control: YbridPlayerSDK.AudioPlayer.PlaybackControlCallback? = nil) throws
 }
+extension SimpleControl {
+  public var running: Swift.Bool {
+    get
+  }
+}
 public enum ErrorSeverity {
   case fatal
   case recoverable
@@ -153,9 +158,6 @@ public class MediaEndpoint : Swift.Equatable, Swift.Hashable {
   public var playbackUri: Swift.String {
     get
   }
-  @objc deinit
-}
-@_hasMissingDesignatedInitializers public class Bouquet {
   @objc deinit
 }
 @_hasMissingDesignatedInitializers public class LoadingError : YbridPlayerSDK.AudioPlayerError {

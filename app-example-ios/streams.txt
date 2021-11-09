@@ -16,8 +16,9 @@
 adaptive-demo (ybrid)       | https://democast.ybrid.io/adaptive-demo
 ad-injection-demo (ybrid)   | https://democast.ybrid.io/ad-injection-demo
 swr3 (ybrid)                | https://swr-swr3.cast.ybrid.io/swr/swr3/ybrid | v2
-#swr3 (ybrid stage)          | https://stagecast.ybrid.io/swr3/mp3/mid | v2
-radio24.ch (ybrid)          |https://stagecast.ybrid.io/chmedia/radio24/ybrid | v2
+swr3 (ybrid test)          | https://stagecast.ybrid.io/swr3/mp3/mid | v2
+adaptive-demo (ybrid test) | https://stagecast.ybrid.io/adaptive-demo | v2
+radio24.ch (ybrid test)    | https://stagecast.ybrid.io/chmedia/radio24/ybrid | v2
 
 # icecast streams
 swr3 (icecast)          | http://swr-swr3-live.cast.addradio.de/swr/swr3/live/mp3/128/stream.mp3

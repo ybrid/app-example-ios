@@ -27,21 +27,18 @@ import Foundation
 import UIKit
 import YbridPlayerSDK
 
-extension PlaybackControl {
-    var running:Bool { get {
-        return self.state == .buffering || self.state == .playing
-    }}
-}
 
 class AudioController: AudioPlayerListener, YbridControlListener {
 
+
+    /// Idea is to disable offset to live value during timeshifts.
+    /// Wait unitl points in time for audioComplete from sdk are more reliable.
+    static let visualizeTimeshifts = false
+    
     let metadatas:MetadataItems
     let interactions:InteractionItems
     let metering:MeteringItems
- 
-    
-    //  MARK: the model of this controller
-    
+
     var control:PlaybackControl? {
         didSet {
             guard let control = control else {
@@ -163,13 +160,14 @@ class AudioController: AudioPlayerListener, YbridControlListener {
     
     func onChannelSelected(channel: String?) {
         Logger.shared.notice("service \(channel ?? "(nil)") selected")
-        if let ybrid = ybrid, let service = channel {
-            Logger.shared.debug("swap service to \(service) triggered")
-            interactions.channelSelector?.enable(false)
-            ybrid.swapService(to: service) { (changed) in
-                Logger.shared.debug("swap service \(changed ? "" : "not ")completed")
-                self.interactions.channelSelector?.enable(true)
-            }
+        guard let ybrid = ybrid, let service = channel else {
+            return
+        }
+        Logger.shared.debug("swap service to \(service) triggered")
+        interactions.channelSelector?.enable(false)
+        ybrid.swapService(to: service) { (changed) in
+            Logger.shared.debug("swap service \(changed ? "" : "not ")completed")
+            self.interactions.channelSelector?.enable(true)
         }
     }
     
@@ -208,6 +206,10 @@ class AudioController: AudioPlayerListener, YbridControlListener {
     
     func useControl(_ endpoint:MediaEndpoint, callback: @escaping (PlaybackControl) -> ()) {
         
+        if let currentControl = control, currentControl.mediaEndpoint == endpoint {
+            callback(currentControl)
+            return
+        }
         
         if let existingControl = self.cachedControls[endpoint] {
             Logger.shared.debug("already created control for \(endpoint.uri)")
@@ -258,7 +260,7 @@ class AudioController: AudioPlayerListener, YbridControlListener {
         case .pausing:
             interactions.view?.showPlay()
         case .buffering:
-            self.interactions.view?.showBuffering()
+            interactions.view?.showBuffering()
         case .playing:
             if control?.canPause == true {
                 interactions.view?.showPause()
@@ -351,19 +353,6 @@ class AudioController: AudioPlayerListener, YbridControlListener {
         metering.show(currentRate: currentKbps)
     }
     
-    func metadataYbridChanged(_ metadata: YbridMetadata) {
-        if self.state == .stopped {
-            metadatas.show(title: nil)
-        } else {
-//            metadatas.show(current: metadata.current, next: metadata.next)
-            metadatas.show(title: metadata.current?.displayTitle)
-        }
-        metadatas.show(station: metadata.station)
-        
-        if let serviceId = metadata.activeService?.identifier {
-            interactions.selectChannel(serviceId)
-        }
-    }
 }
 
 // MARK: used in item groups
@@ -402,18 +391,6 @@ extension UIColor {
 }
 
 extension TimeInterval {
-    var hmsSManually:String {
-        if isLess(than: 60) {
-            return String(format: "%.1f s", self)
-        }
-        if isLess(than: 3600) {
-            let min = Int(self / 60)
-            return String(format: "%dm %02ds", min, Int(self - Double(min * 60)))
-        }
-        let hour = Int(self / 3600)
-        let min = Int(self / 60) - hour * 60
-        return String(format: "%dh %02dm", hour, min)
-    }
     
     var hmsS:String {
         let date = Date(timeIntervalSince1970: self)

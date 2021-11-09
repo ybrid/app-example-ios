@@ -85,11 +85,11 @@ class MeteringItems {
     }
     
     func enableOffset(_ enable:Bool) {
-        /// Disabled visualization for timeshifts by doing nothing here.
-        /// unitl points in time for audioComplete are more reliable.
-//        DispatchQueue.main.async {
-//            self.view?.offsetS.alpha = enable ? 1.0 : 0.5
-//        }
+         if AudioController.visualizeTimeshifts {
+            DispatchQueue.main.async {
+                self.view?.offsetS.alpha = enable ? 1.0 : 0.5
+            }
+        }
     }
     
     func resetValues() {
