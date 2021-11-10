@@ -83,7 +83,7 @@ class YbridSwapServiceTests: XCTestCase {
         XCTAssertEqual(listener.services[0].count, 6)
         
         let services:[String] =
-            listener.metadatas.map{ $0.activeService?.identifier ?? "(nil)"}
+            listener.metadatas.map{ $0.service?.identifier ?? "(nil)"}
         print("services were \(services)")
     }
     
@@ -103,7 +103,7 @@ class YbridSwapServiceTests: XCTestCase {
             
             ybridControl.play()
             _ = poller.wait(max: 6) {
-                let serviceSwapped = listener.metadatas.last?.activeService
+                let serviceSwapped = listener.metadatas.last?.service
                 print("service=\(String(describing: serviceSwapped))")
                 return serviceSwapped?.identifier == "swr-raka09"
             }
@@ -119,22 +119,22 @@ class YbridSwapServiceTests: XCTestCase {
         XCTAssertEqual(listener.services[0].count, 6)
         
         let services:[String] =
-            listener.metadatas.map{ $0.activeService?.identifier ?? "(nil)"}
+            listener.metadatas.map{ $0.service?.identifier ?? "(nil)"}
         print("services were \(services)")
         
         XCTAssertGreaterThanOrEqual(listener.metadatas.count, 1)
-        XCTAssertEqual("swr3-live",  listener.metadatas.first?.activeService?.identifier)
-        XCTAssertEqual("swr3-live",  listener.metadatas.last?.activeService?.identifier)
+        XCTAssertEqual("swr3-live",  listener.metadatas.first?.service?.identifier)
+        XCTAssertEqual("swr3-live",  listener.metadatas.last?.service?.identifier)
     }
     
     func test04_OnPlay_ActiveServiceInNextMetadata() throws {
         testSwapServiceControl!.playing{ [self] (ybridControl) in
 
-            let mainService = listener.metadatas.last?.activeService
+            let mainService = listener.metadatas.last?.service
             
             ybridControl.swapService(to:"swr-raka09")
             _ = poller.wait(max: Int(YbridSwapServiceTests.maxAudioComplete)) {
-                let serviceSwapped = listener.metadatas.last?.activeService
+                let serviceSwapped = listener.metadatas.last?.service
                 print("service=\(String(describing: serviceSwapped))")
                 return serviceSwapped?.identifier != mainService?.identifier
             }
@@ -147,7 +147,7 @@ class YbridSwapServiceTests: XCTestCase {
         checkErrors(expectedErrors: 0)
         
         let services:[String] =
-            listener.metadatas.map{ $0.activeService?.identifier ?? "(nil)"}
+            listener.metadatas.map{ $0.service?.identifier ?? "(nil)"}
         print( "services were \(services)")
         
         XCTAssertGreaterThanOrEqual(services.count, 2, "should be 2 different active services, but were \(services.count)")
@@ -171,7 +171,7 @@ class YbridSwapServiceTests: XCTestCase {
             
             ybridControl.play()
             _ = poller.wait(max: 8) {
-                let serviceSwapped = listener.metadatas.last?.activeService
+                let serviceSwapped = listener.metadatas.last?.service
                 print("service=\(String(describing: serviceSwapped))")
                 return serviceSwapped?.identifier == "swr-raka09"
             }
@@ -184,11 +184,11 @@ class YbridSwapServiceTests: XCTestCase {
         
         
         let services:[String] =
-            listener.metadatas.map{ $0.activeService?.identifier ?? "(nil)"}
+            listener.metadatas.map{ $0.service?.identifier ?? "(nil)"}
         print( "services were \(services)")
         
-        XCTAssertEqual("swr3-live",  listener.metadatas.first?.activeService?.identifier)
-        XCTAssertEqual("swr-raka09",  listener.metadatas.last?.activeService?.identifier)
+        XCTAssertEqual("swr3-live",  listener.metadatas.first?.service?.identifier)
+        XCTAssertEqual("swr-raka09",  listener.metadatas.last?.service?.identifier)
     }
     
     // MARK: using audio complete

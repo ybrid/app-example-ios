@@ -278,9 +278,9 @@ class AudioController: AudioPlayerListener, YbridControlListener {
         } else {
             metadatas.show(title: metadata.displayTitle)
         }
-        metadatas.show(station: metadata.station)
+        metadatas.show(service: metadata.service)
         
-        if let serviceId = metadata.activeService?.identifier {
+        if let serviceId = metadata.service?.identifier {
             interactions.selectChannel(serviceId)
         }
     }

@@ -52,7 +52,7 @@ class MetadataItems {
     
     private func initializeValues() {
         show(title: nil)
-        show(station: nil)
+        show(service: nil)
     }
     
     func attach(_ control:SimpleControl) {
@@ -68,11 +68,11 @@ class MetadataItems {
     func show(title: String?) {
         view?.playingTitle.show(title)
     }
-    func show(station: Station?) {
-        view?.broadcaster.show(station?.name)
-        view?.genre.show(station?.genre)
+    func show(service: Service?) {
+        let name = service?.displayName ?? service?.identifier
+        view?.broadcaster.show(name)
+        view?.genre.show(service?.genre)
     }
-    
     func show(current: Item?, next: Item?) {
         let totalText = NSMutableAttributedString()
         if let current = current {

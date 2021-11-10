@@ -231,7 +231,7 @@ class TestYbridPlayerListener : AbstractAudioPlayerListener, YbridControlListene
     }
     
     override func metadataChanged(_ metadata: Metadata) {
-        Logger.testing.notice("-- metadata: display title \(String(describing: metadata.displayTitle)), service \(String(describing: metadata.activeService?.identifier))")
+        Logger.testing.notice("-- metadata: display title \(String(describing: metadata.displayTitle)), service \(String(describing: metadata.service?.identifier))")
         queue.async {
             self.metadatas.append(metadata)
         }
