@@ -280,9 +280,8 @@ class AudioController: AudioPlayerListener, YbridControlListener {
         }
         metadatas.show(service: metadata.service)
         
-        if let serviceId = metadata.service?.identifier {
-            interactions.selectChannel(serviceId)
-        }
+        let serviceId = metadata.service.identifier
+        interactions.selectChannel(serviceId)
     }
     
     func error(_ severity: ErrorSeverity, _ exception: AudioPlayerError) {

@@ -277,7 +277,7 @@ class UseAudioPlayerTests: XCTestCase {
                     self.semaphore?.signal(); return
                 }
                 let metadata = playerListener.metadatas[0]
-                XCTAssertNotNil(metadata.current?.displayTitle)
+                XCTAssertNotNil(metadata.displayTitle)
                 
                 self.semaphore?.signal()
             }

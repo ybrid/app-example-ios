@@ -23,11 +23,7 @@
 // SOFTWARE.
 //
 
-#if os(iOS)
 import UIKit
-#elseif os(macOS)
-import AppKit
-#endif
 import AVFoundation
 import YbridPlayerSDK
 
@@ -109,7 +105,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-//          Logger.verbose = true
+//        Logger.verbose = true
         
         view.layoutIfNeeded()
         hideKeyboardWhenTappedAround()
