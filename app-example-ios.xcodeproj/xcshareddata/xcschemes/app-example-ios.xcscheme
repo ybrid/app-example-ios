@@ -54,6 +54,9 @@
             </BuildableReference>
             <SkippedTests>
                <Test
+                  Identifier = "AudioCodecsTests">
+               </Test>
+               <Test
                   Identifier = "PlayerToggleStressTest">
                </Test>
                <Test

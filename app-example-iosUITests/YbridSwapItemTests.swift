@@ -28,14 +28,20 @@ import YbridPlayerSDK
 
 class YbridSwapItemTests: XCTestCase {
 
-    static let maxAudioComplete:TimeInterval = 4.0
+    let maxAudioChanged:TimeInterval = 1.5
+    let maxBuffer:TimeInterval = 2.0
+    
     var listener = TestYbridPlayerListener()
     var testControl:TestYbridControl?
     let poller = Poller()
     override func setUpWithError() throws {
+        listener.logPlayingSince = false
+        listener.logBufferSize = false
+        
         testControl = TestYbridControl(ybridDemoEndpoint, listener: listener)
     }
     override func tearDownWithError() throws {
+        Logger.testing.debug("metadata was \(listener.metadatas.map{ $0.displayTitle })")
         listener.reset()
     }
     
@@ -49,10 +55,10 @@ class YbridSwapItemTests: XCTestCase {
             usleep(10_000)
         }
         
-        XCTAssertEqual(listener.swapsLeft, 0, "\(String(describing: listener.swapsLeft)) swaps are left.")
+        XCTAssertEqual(test.listener.swapsLeft, 0, "\(String(describing: test.listener.swapsLeft)) swaps are left.")
         
         let titles:[String] =
-            listener.metadatas.map{ $0.displayTitle ?? "(nil)"}
+            test.listener.metadatas.map{ $0.displayTitle }
         Logger.testing.info( "titles were \(titles)")
     }
 
@@ -64,44 +70,43 @@ class YbridSwapItemTests: XCTestCase {
         
         test.playing() { [self] (ybridControl) in
             
-            guard let swaps = listener.swapsLeft, swaps != 0 else {
+            guard let swaps = test.listener.swapsLeft, swaps != 0 else {
                 XCTFail("currently no swaps left. Execute test later"); return
             }
             Logger.testing.info("\(swaps) swaps are left")
             
-            guard let titleMain = listener.metadatas.last?.displayTitle else {
+            guard let titleMain = test.listener.metadatas.last?.displayTitle else {
                 XCTFail("must have recieved metadata"); return
             }
             Logger.testing.info("title main =\(titleMain)")
             
             var titleSwapped:String?
             ybridControl.swapItem()
-            _ = poller.wait(max: 10) {
-                guard let swapped = listener.metadatas.last?.displayTitle else {
+            let maxAudioComplete = Int(maxAudioChanged + maxBuffer)
+            _ = poller.wait(max: maxAudioComplete) {
+                guard let swapped = test.listener.metadatas.last?.displayTitle else {
                     return false
                 }
                 titleSwapped = swapped
                 Logger.testing.info("title swapped =\(titleSwapped!)")
                 return titleMain != titleSwapped!
             }
-            sleep(2)
+            sleep(3)
             
             ybridControl.swapItem()
-            _ = poller.wait(max: 10) {
-                guard let titleSwapped2 = listener.metadatas.last?.displayTitle else {
+            _ = poller.wait(max: maxAudioComplete) {
+                guard let titleSwapped2 = test.listener.metadatas.last?.displayTitle else {
                     return false
                 }
                 Logger.testing.info("title swapped =\(titleSwapped2)")
                 return titleSwapped2 != titleSwapped
             }
-            sleep(2)
         }
         
-        let titles:[String] =
-            listener.metadatas.map{ $0.displayTitle ?? "(nil)"}
+        let titles:[String] = test.listener.metadatas.map{ $0.displayTitle }
         Logger.testing.info( "titles were \(titles)")
         
-        XCTAssertTrue((3...5).contains(listener.metadatas.count), "should be 3 (5 if item changed) metadata changes, but were \(listener.metadatas.count)")
+        XCTAssertTrue((3...5).contains(test.listener.metadatas.count), "should be 3 (5 if item changed) metadata changes, but were \(test.listener.metadatas.count)")
     }
     
     func test03_SwapItem_AudioCompleteCalled() throws {
@@ -110,7 +115,7 @@ class YbridSwapItemTests: XCTestCase {
         }
         
         test.playing() { [self] (ybridControl) in
-            guard let swaps = listener.swapsLeft, swaps != 0 else {
+            guard let swaps = test.listener.swapsLeft, swaps != 0 else {
                 XCTFail("currently no swaps left. Execute test later")
                 return
             }
@@ -120,58 +125,66 @@ class YbridSwapItemTests: XCTestCase {
             ybridControl.swapItem { (success) in
                 carriedOut = success
             }
-            _ = poller.wait(max: 10) {
+            let maxAudioComplete = Int(maxAudioChanged + maxBuffer)
+            _ = poller.wait(max: maxAudioComplete) {
                 carriedOut == true
             }
             XCTAssertTrue(carriedOut, "swap was not carried out")
         }
         
-        let titles:[String] = listener.metadatas.map{ $0.displayTitle ?? "(nil)"}
+        let titles:[String] = test.listener.metadatas.map{ $0.displayTitle }
         Logger.testing.info( "titles were \(titles)")
         
         let differentTitles = Set(titles)
         Logger.testing.info( "different titles were \(differentTitles)")
         XCTAssertEqual(differentTitles.count, 2)
         
-        XCTAssertTrue((2...3).contains(listener.metadatas.count), "should be 2 (3 if item changed) metadata changes, but were \(listener.metadatas.count)")
+        XCTAssertTrue((2...3).contains(test.listener.metadatas.count), "should be 2 (3 if item changed) metadata changes, but were \(listener.metadatas.count)")
     }
 
     // MARK: using audio complete
     
     func test11_SwapItem_complete() throws {
-        
-        let actionTraces = ActionsTrace()
-        testControl!.playing{ [self] (ybrid) in
-            actionTraces.append( testControl!.swapItemSynced(maxWait: 8.0) )
+        var buffer = 0.0
+        let testControl = TestYbridControl(ybridDemoEndpoint, listener: listener)
+        testControl.playing{ (_) in
+            usleep(200_000)
+            buffer += self.listener.bufferDuration ?? 0.0
+            Logger.testing.debug("max wait \((buffer + self.maxAudioChanged).S)")
+            
+            testControl.swapItemSynced(maxWait: buffer + self.maxAudioChanged)
         }
-        checkErrors(expectedErrors: 0)
-        actionTraces.check(confirm: 1, maxDuration: YbridSwapItemTests.maxAudioComplete)
+        testControl.checkErrors(expected: 0)
+        .checkAllActions(confirm: 1, withinS: buffer + maxAudioChanged)
     }
     
     func test12_SwapItem_3Times() throws {
-        
-        let actionTraces = ActionsTrace()
-        testControl!.playing{ [self] (ybrid) in
-            actionTraces.append( testControl!.swapItemSynced(maxWait: 8.0) )
-            actionTraces.append( testControl!.swapItemSynced(maxWait: 8.0) )
-            actionTraces.append( testControl!.swapItemSynced(maxWait: 8.0) )
+        let testControl = TestYbridControl(ybridDemoEndpoint, listener: listener)
+        var maxAudioComplete = maxAudioChanged
+        testControl.playing{ (_) in
+            usleep(200_000)
+            maxAudioComplete += self.listener.bufferDuration ?? 0.0
+            Logger.testing.debug("max wait \(maxAudioComplete.S)")
+            testControl.swapItemSynced(maxWait: maxAudioComplete)
+            testControl.swapItemSynced(maxWait: maxAudioComplete)
+            testControl.swapItemSynced(maxWait: maxAudioComplete)
         }
-        checkErrors(expectedErrors: 0)
-        actionTraces.check(confirm: 3, maxDuration: YbridSwapItemTests.maxAudioComplete)
+        testControl.checkErrors(expected: 0)
+            .checkAllActions(confirm: 3, withinS: maxAudioComplete)
     }
     
-    func test13_SwapItemFromAd_() throws {
-        let test = TestYbridControl(ybridAdDemoEndpoint, listener: listener)
+    func test13_SwapItemFromAd_doesntSwap() throws {
+        let testControl = TestYbridControl(ybridAdDemoEndpoint, listener: listener)
         
-        let actionTraces = ActionsTrace()
-        test.playing{ [self] (ybrid) in
-            actionTraces.append( testControl!.swapItemSynced(maxWait: 8.0) )
+        testControl.playing{ (ybrid) in
+            testControl.swapItemSynced(maxWait: 0.1)
         }
         
-        checkErrors(expectedErrors: 1)
-        actionTraces.check(confirm: 1, maxDuration: 1.0)
+        testControl.checkErrors(expected: 1)
+            .checkAllActions(confirm: 1, withinS: 0.1)
     }
   
+    
     private func checkErrors(expectedErrors:Int)  {
         guard listener.errors.count == expectedErrors else {
             XCTFail("\(expectedErrors) errors expected, but were \(listener.errors.count)")

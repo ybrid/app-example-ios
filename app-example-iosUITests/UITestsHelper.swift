@@ -42,45 +42,55 @@ extension TimeInterval {
     }
 }
 
-
-class AbstractAudioPlayerListener : AudioPlayerListener {
-
-    func stateChanged(_ state: PlaybackState) {
-        Logger.testing.notice("-- player is \(state)")
-    }
-    func error(_ severity:ErrorSeverity, _ exception: AudioPlayerError) {
-        Logger.testing.notice("-- \(severity): \(exception.localizedDescription)")
-    }
-    
-    func metadataChanged(_ metadata: Metadata) {}
-    func playingSince(_ seconds: TimeInterval?) {}
-    func durationReadyToPlay(_ seconds: TimeInterval?) {}
-    func durationConnected(_ seconds: TimeInterval?) {}
-    func bufferSize(averagedSeconds: TimeInterval?, currentSeconds: TimeInterval?) {}
-}
-
-
-
 class TestAudioPlayerListener : AbstractAudioPlayerListener {
 
+    var bufferDuration:TimeInterval?
+    var bufferS:Int { get {
+        guard let duration = bufferDuration else {
+            return 0
+        }
+        return Int(duration) + 1
+    }}
+    
+    
+    var logPlayingSince = true
+    var logBufferSize = true
+    var logMetadata = true
+
     func reset() {
-        metadatas.removeAll()
-        errors.removeAll()
+        queue.async {
+            self.metadatas.removeAll()
+            self.errors.removeAll()
+            self.bufferDuration = 0.0
+        }
     }
+    
+    let queue = DispatchQueue.init(label: "io.ybrid.testing.metatdatas")
     
     var metadatas:[Metadata] = []
     override func metadataChanged(_ metadata: Metadata) {
         super.metadataChanged(metadata)
-        metadatas.append(metadata)
+        if logMetadata {
+            Logger.testing.info("-- metadata changed, display title is '\(metadata.displayTitle)'")
+        }
+        queue.async {
+            self.metadatas.append(metadata)
+        }
     }
     
     var errors:[AudioPlayerError] = []
     override func error(_ severity:ErrorSeverity, _ error: AudioPlayerError) {
         super.error(severity, error)
-        errors.append(error)
+        queue.async {
+            self.errors.append(error)
+        }
     }
-
+    
+    
     override func playingSince(_ seconds: TimeInterval?) {
+        guard logPlayingSince else {
+            return
+        }
         if let duration = seconds {
             Logger.testing.notice("-- playing for \(duration.S) seconds ")
         } else {
@@ -90,9 +100,45 @@ class TestAudioPlayerListener : AbstractAudioPlayerListener {
 
     override func bufferSize(averagedSeconds: TimeInterval?, currentSeconds: TimeInterval?) {
         if let bufferLength = currentSeconds {
+            self.bufferDuration = bufferLength
+            guard logBufferSize else {
+                return
+            }
             Logger.testing.notice("-- currently buffered \(bufferLength.S) seconds of audio")
         }
     }
+}
+
+
+class AbstractAudioPlayerListener : AudioPlayerListener {
+
+    func stateChanged(_ state: PlaybackState) {
+        Logger.testing.notice("-- player is \(state)")
+    }
+    func error(_ severity:ErrorSeverity, _ exception: AudioPlayerError) {
+        Logger.testing.notice("-- error \(severity): \(exception.localizedDescription)")
+    }
+
+    func metadataChanged(_ metadata: Metadata) {}
+    func playingSince(_ seconds: TimeInterval?) {}
+
+    func durationReadyToPlay(_ seconds: TimeInterval?) {
+        if let duration = seconds {
+            Logger.testing.notice("-- begin playing audio after \(duration.S) seconds ")
+        } else {
+            Logger.testing.notice("-- reset buffered until playing duration ")
+        }
+    }
+
+    func durationConnected(_ seconds: TimeInterval?) {
+        if let duration = seconds {
+            Logger.testing.notice("-- recieved first data from url after \(duration.S) seconds ")
+        } else {
+            Logger.testing.notice("-- reset recieved first data duration ")
+        }
+    }
+
+    func bufferSize(averagedSeconds: TimeInterval?, currentSeconds: TimeInterval?) {}
 }
 
 class TimingListener : AudioPlayerListener {
@@ -100,7 +146,6 @@ class TimingListener : AudioPlayerListener {
         buffers.removeAll()
         errors.removeAll()
     }
-    
     
     var buffers:[TimeInterval] = []
     func stateChanged(_ state: PlaybackState) {}
@@ -121,6 +166,14 @@ class TimingListener : AudioPlayerListener {
 }
 
 class Poller {
+    func wait(_ control:PlaybackControl, until:PlaybackState, maxSeconds:Int) {
+        let took = wait(max: maxSeconds) {
+            return control.state == until
+        }
+        XCTAssertLessThanOrEqual(took, maxSeconds, "not \(until) within \(maxSeconds) s")
+    }
+    
+    
     func wait(_ control:YbridControl, until:PlaybackState, maxSeconds:Int) {
         let took = wait(max: maxSeconds) {
             return control.state == until
@@ -139,54 +192,59 @@ class Poller {
     }
 }
 
-class TestYbridPlayerListener : AbstractAudioPlayerListener, YbridControlListener {
-
+class TestYbridPlayerListener : TestAudioPlayerListener, YbridControlListener {
     
-    let queue = DispatchQueue.init(label: "io.ybrid.tests.ui.listener")
+    var logOffset = true
+    var logBitrate = true
+    var logSwapsLeft = true
     
-    func reset() {
+    override func reset() {
         queue.async { [self] in
             offsets.removeAll()
-            errors.removeAll()
-            metadatas.removeAll()
             services.removeAll()
             swaps.removeAll()
             bitrates.removeAll()
         }
     }
     
-    var metadatas:[Metadata] = []
     var offsets:[TimeInterval] = []
-    var errors:[AudioPlayerError] = []
     var services:[[Service]] = []
     var swaps:[Int] = []
-    var bitrates:[Int32?] = []
+    var bitrates:[(current:Int32?,limit:Int32?)] = []
     
+    // getting the latest recieved values for ...
     
-    // the latest recieved value for offset
     var offsetToLive:TimeInterval? { get {
         queue.sync {
             return offsets.last
         }
     }}
-    
-    // the latest value for swapsLeft
     var swapsLeft:Int? { get {
         queue.sync {
             return swaps.last
         }
     }}
-    
-    // the latest value for max bit rate
     var maxBitRate:Int32? { get {
         queue.sync {
-            return bitrates.last ?? nil
+            return bitrates.last?.limit
+        }
+    }}
+    var currentBitRate:Int32? { get {
+        queue.sync {
+            return bitrates.last?.current
+        }
+    }}
+    
+    
+    var maxRateNotifications:Int { get {
+        queue.sync {
+            return bitrates.map{ $0.limit }.filter{ $0 != nil }.count
         }
     }}
     
     func isItem(_ type:ItemType) -> Bool {
         queue.sync {
-            if let currentType = metadatas.last?.current?.type {
+            if let currentType = metadatas.last?.current.type {
                 return type == currentType
             }
             return false
@@ -195,15 +253,19 @@ class TestYbridPlayerListener : AbstractAudioPlayerListener, YbridControlListene
     
     func isItem(of types:[ItemType]) -> Bool {
         queue.sync {
-            if let currentType = metadatas.last?.current?.type {
+            if let currentType = metadatas.last?.current.type {
                 return types.contains(currentType)
             }
             return false
         }
     }
+    
+    
     func offsetToLiveChanged(_ offset:TimeInterval?) {
         guard let offset = offset else { XCTFail(); return }
-        Logger.testing.info("-- offset is \(offset.S)")
+        if logOffset {
+            Logger.testing.info("-- offset is \(offset.S)")
+        }
         queue.async {
             self.offsets.append(offset)
         }
@@ -217,34 +279,29 @@ class TestYbridPlayerListener : AbstractAudioPlayerListener, YbridControlListene
     }
     
     func swapsChanged(_ swapsLeft: Int) {
-        Logger.testing.info("-- swaps left \(swapsLeft)")
+        if logSwapsLeft {
+            Logger.testing.info("-- swaps left \(swapsLeft)")
+        }
         queue.async {
             self.swaps.append(swapsLeft)
         }
     }
     
     func bitRateChanged(currentBitsPerSecond: Int32?, maxBitsPerSecond: Int32?) {
-        Logger.testing.info("-- max bit rate \(maxBitsPerSecond ?? 0)")
+        if logBitrate {
+            Logger.testing.info("-- bit rate current \(currentBitsPerSecond ?? -1), max \(maxBitsPerSecond ?? -1)")
+        }
         queue.async {
-            self.bitrates.append(maxBitsPerSecond)
+            self.bitrates.append((currentBitsPerSecond,maxBitsPerSecond))
         }
     }
     
     override func metadataChanged(_ metadata: Metadata) {
-        Logger.testing.notice("-- metadata: display title \(String(describing: metadata.displayTitle)), service \(String(describing: metadata.service?.identifier))")
-        queue.async {
-            self.metadatas.append(metadata)
-        }
+        Logger.testing.info("-- service \(String(describing: metadata.service.identifier))")
+        super.metadataChanged(metadata)
     }
-
-    override func error(_ severity: ErrorSeverity, _ exception: AudioPlayerError) {
-        super.error(severity, exception)
-        queue.async {
-            self.errors.append(exception)
-        }
-    }
-
 }
+
 
 
 class Trace {
@@ -308,5 +365,5 @@ class ActionsTrace {
             XCTAssertLessThan($0.tookS, maxDuration, "\($0.name) should take less than \(maxDuration.S), took \($0.tookS.S)")
         }
     }
+    
 }
-

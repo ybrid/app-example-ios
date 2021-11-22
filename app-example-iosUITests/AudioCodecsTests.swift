@@ -26,7 +26,7 @@
 import XCTest
 import YbridPlayerSDK
 
-class AudioCodecTests: XCTestCase {
+class AudioCodecsTests: XCTestCase {
 
 //    OK
 //    kAudioFileStreamProperty_FormatList altering source format to audio aac  2 ch 44100 Hz no pcm interleaved
@@ -63,7 +63,7 @@ class AudioCodecTests: XCTestCase {
 //    2021-09-21 17:02:29.378631+0200 app-example-ios[1590:65777] [loading] AudioDecoderFactory.createDecoder-44 mimeType audio/x-m4a resolved to system audio decoder with hint kAudioFileMPEG4Type
 //    2021-09-21 17:02:29.379508+0200 app-example-ios[1590:65783] [decoding] SystemAudioData.parse-89 kAudioFileStreamProperty_FileFormat m4af unused
     // 2021-09-21 16:46:07.586683+0200 app-example-ios[1293:35035] [] AudioPlayer.notify-252 fatal 525 DecoderError.failedPackaging, cause: 412 AudioDataError.parsingFailed, OSStatus=1869640813, It is not possible to produce output packets because the file's packet table or other defining info is either not present or is after the audio data.
-    func testEspressif_m4a() {
+    func testEspressif_m4a__fails() {
         play(MediaEndpoint(mediaUri: "https://dl.espressif.com/dl/audio/ff-16b-2c-44100hz.m4a"))
     }
     
@@ -71,14 +71,15 @@ class AudioCodecTests: XCTestCase {
 //2021-09-21 17:03:49.649441+0200 app-example-ios[1615:67676] [loading] AudioDecoderFactory.createDecoder-44 mimeType video/mp4 resolved to system audio decoder with hint kAudioFileMPEG4Type
 //    2021-09-21 17:03:49.650200+0200 app-example-ios[1615:67685] [decoding] SystemAudioData.parse-89 kAudioFileStreamProperty_FileFormat mp4f unused
     // 2021-09-21 16:47:00.497239+0200 app-example-ios[1312:36539] [] AudioPlayer.notify-252 fatal 525 DecoderError.failedPackaging, cause: 412 AudioDataError.parsingFailed, OSStatus=1869640813, It is not possible to produce output packets because the file's packet table or other defining info is either not present or is after the audio data.
-    func testEspressif_mp4() {
+    func testEspressif_mp4__fails() {
         play(MediaEndpoint(mediaUri: "https://dl.espressif.com/dl/audio/ff-16b-2c-44100hz.mp4"))
     }
     
     
     
-    // no strream for ....
-    func testEspressif_ogg() {
+    // Does not decode, nothing to hear
+    // OggContainer.parse finds "no stream for ...."
+    func testEspressif_ogg__fails() {
         play(MediaEndpoint(mediaUri: "https://dl.espressif.com/dl/audio/ff-16b-2c-44100hz.ogg"))
     }
 
@@ -89,8 +90,9 @@ class AudioCodecTests: XCTestCase {
         play(MediaEndpoint(mediaUri: "https://dl.espressif.com/dl/audio/ff-16b-2c-44100hz.opus"))
     }
     
-    // ok, kAudioFileStreamProperty_DataFormat using source format audio lpcm 2 ch 44100 Hz pcmInt16 interleaved
-    func testEspressif_wav() {
+    // kAudioFileStreamProperty_DataFormat using source format audio lpcm 2 ch 44100 Hz pcmInt16 interleaved
+    // sometimes crashes on real iPhone SE 1st on Stopping. Cause: "Someone is deleting an AudioConverter while it is in use."
+    func testEspressif_wav__sometimesFailesOnCleanup() {
         play(MediaEndpoint(mediaUri: "https://dl.espressif.com/dl/audio/ff-16b-2c-44100hz.wav"))
     }
 
@@ -118,6 +120,8 @@ class AudioCodecTests: XCTestCase {
                     control.play()
                     sleep(12)
                     control.stop()
+                    sleep(1)
+                    control.close()
                 }
                 sleep(14)
         } catch {

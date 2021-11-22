@@ -2,7 +2,7 @@ platform :ios, '9.0'
 target 'app-example-ios' do
   use_frameworks!
   source 'https://github.com/CocoaPods/Specs.git'
-  pod 'YbridPlayerSDK', '0.13.2' #:path => '~/github/player-sdk-swift' #
+  pod 'YbridPlayerSDK', :path => '~/github/player-sdk-swift' #'0.14.0' #
   target 'app-example-iosUITests' do
   end
 end

@@ -28,44 +28,37 @@ import YbridPlayerSDK
 
 class YbridSwapServiceTests: XCTestCase {
 
-    static let maxAudioComplete:TimeInterval = 4.0
-    var listener = TestYbridPlayerListener()
+    let swr3MinServicesCount = 5
+    
+    let maxControlComplete:TimeInterval = 0.21
+    let maxAudioChanged:TimeInterval = 1.008
+    
     let poller = Poller()
-    let epCanSwapService = ybridDemoEndpoint
-
-    var semaphore:DispatchSemaphore?
-    var testSwapServiceControl:TestYbridControl?
-    override func setUpWithError() throws {
-        semaphore = DispatchSemaphore(value: 0)
-        testSwapServiceControl = TestYbridControl(ybridSwr3Endpoint, listener: listener)
-    }
-    override func tearDownWithError() throws {
-        listener.reset()
-    }
     
     func test01_AvailableServices_BeforePlay() throws {
-        XCTAssertEqual(0, listener.services.count)
-        testSwapServiceControl!.stopped{ (ybridControl) in
+        let test = TestYbridControl(ybridSwr3Endpoint)
+        XCTAssertEqual(0, test.listener.services.count)
+        test.stopped{ (ybridControl) in
             sleep(1) // the listener is notified asynchronously
         }
 
-        checkErrors(expectedErrors: 0)
-        XCTAssertEqual(1,listener.services.count)
-        guard listener.services.count > 0 else {
+        _ = test.checkErrors(expected: 0)
+        XCTAssertEqual(1, test.listener.services.count)
+        guard test.listener.services.count > 0 else {
             XCTFail("no changed swaps"); return
         }
-        XCTAssertEqual(6,listener.services[0].count)
+        XCTAssertGreaterThan(test.listener.services[0].count, swr3MinServicesCount)
         
-        XCTAssertEqual(0,listener.metadatas.count)
+        XCTAssertEqual(0,test.listener.metadatas.count)
     }
     
     func test02_BeforePlay_AudioCallbackCalled() throws {
-        Logger.verbose = true
-        XCTAssertEqual(0,listener.services.count)
-        testSwapServiceControl!.stopped { [self] (ybridControl) in
+        let test = TestYbridControl(ybridSwr3Endpoint)
+        XCTAssertEqual(0,test.listener.services.count)
+        test.stopped { [self] (ybridControl) in
             
             var carriedOut = false
-            ybridControl.swapService(to: "swr-raka09") { (audioChanged) in
+            test.ybrid?.swapService(to: "swr-raka09") { (audioChanged) in
                 carriedOut = audioChanged
             }
             _ = poller.wait(max: 1) {
@@ -74,26 +67,27 @@ class YbridSwapServiceTests: XCTestCase {
             XCTAssertTrue(carriedOut, "swap was not carried out")
         }
         
-        checkErrors(expectedErrors: 0)
+        _ = test.checkErrors(expected: 0)
         
-        XCTAssertEqual(listener.services.count, 2)
-        guard listener.services.count > 0 else {
+        XCTAssertEqual(test.listener.services.count, 2) // one initially, one because of swap
+        guard test.listener.services.count > 0 else {
             XCTFail("no changed swaps"); return
         }
-        XCTAssertEqual(listener.services[0].count, 6)
+        XCTAssertGreaterThan(test.listener.services[0].count, swr3MinServicesCount)
+
         
         let services:[String] =
-            listener.metadatas.map{ $0.service?.identifier ?? "(nil)"}
-        print("services were \(services)")
+            test.listener.metadatas.map{ $0.service.identifier }
+        Logger.testing.info("services were \(services)")
     }
     
     func test03_BeforePlay_ChagedButDoesNotTakeEffekt__fails() throws {
-        Logger.verbose = true
-        XCTAssertEqual(listener.services.count, 0)
-        testSwapServiceControl!.stopped { [self] (ybridControl) in
+        let test = TestYbridControl(ybridSwr3Endpoint)
+        XCTAssertEqual(test.listener.services.count, 0)
+        test.stopped { [self] (ybridControl) in
 
             var carriedOut = false
-            ybridControl.swapService(to: "swr-raka09") { (success) in
+            test.ybrid?.swapService(to: "swr-raka09") { (success) in
                 carriedOut = success
             }
             _ = poller.wait(max: 1) {
@@ -102,63 +96,71 @@ class YbridSwapServiceTests: XCTestCase {
             XCTAssertTrue(carriedOut, "swap was not carried out")
             
             ybridControl.play()
-            _ = poller.wait(max: 6) {
-                let serviceSwapped = listener.metadatas.last?.service
-                print("service=\(String(describing: serviceSwapped))")
+            poller.wait(ybridControl, until: PlaybackState.playing, maxSeconds: 5)
+            
+            let buffer = test.listener.bufferDuration ?? 0
+            let maxWait = Int(buffer + maxAudioChanged)+1
+            Logger.testing.debug("buffer \(buffer.S), max wait \(maxWait) s")
+            _ = poller.wait(max: maxWait) {
+                let serviceSwapped = test.listener.metadatas.last?.service
+                Logger.testing.info("service=\(String(describing: serviceSwapped))")
                 return serviceSwapped?.identifier == "swr-raka09"
             }
         }
 
-        checkErrors(expectedErrors: 0)
+        _ = test.checkErrors(expected: 0)
         
-        let servicesCalls = listener.services.count
-        XCTAssertEqual(servicesCalls, 1)
+        let servicesCalls = test.listener.services.count
         guard servicesCalls > 0 else {
-            return
+            XCTFail(); return
         }
-        XCTAssertEqual(listener.services[0].count, 6)
+        XCTAssertGreaterThan(test.listener.services[0].count, swr3MinServicesCount)
         
         let services:[String] =
-            listener.metadatas.map{ $0.service?.identifier ?? "(nil)"}
-        print("services were \(services)")
+            test.listener.metadatas.map{ $0.service.identifier }
+        Logger.testing.info("services were \(services)")
         
-        XCTAssertGreaterThanOrEqual(listener.metadatas.count, 1)
-        XCTAssertEqual("swr3-live",  listener.metadatas.first?.service?.identifier)
-        XCTAssertEqual("swr3-live",  listener.metadatas.last?.service?.identifier)
+        XCTAssertGreaterThanOrEqual(test.listener.metadatas.count, 1)
+        XCTAssertEqual("swr3-live",  test.listener.metadatas.first?.service.identifier)
+        XCTAssertEqual("swr3-live",  test.listener.metadatas.last?.service.identifier)
     }
     
     func test04_OnPlay_ActiveServiceInNextMetadata() throws {
-        testSwapServiceControl!.playing{ [self] (ybridControl) in
-
-            let mainService = listener.metadatas.last?.service
+        let test = TestYbridControl(ybridSwr3Endpoint)
+        test.playing{ [self] (ybridControl) in
+            usleep(200_000)
+            let buffer = test.listener.bufferS
+            let maxWait: Int = buffer + Int(maxAudioChanged)+1
             
+            let mainService = test.listener.metadatas.last?.service
             ybridControl.swapService(to:"swr-raka09")
-            _ = poller.wait(max: Int(YbridSwapServiceTests.maxAudioComplete)) {
-                let serviceSwapped = listener.metadatas.last?.service
-                print("service=\(String(describing: serviceSwapped))")
+            _ = poller.wait(max: maxWait) {
+                let serviceSwapped = test.listener.metadatas.last?.service
+                Logger.testing.info("service=\(String(describing: serviceSwapped))")
                 return serviceSwapped?.identifier != mainService?.identifier
             }
             
             ybridControl.stop()
-            poller.wait(ybridControl, until: PlaybackState.stopped, maxSeconds: 2)
-            
+            poller.wait(ybridControl, until: PlaybackState.stopped, maxSeconds: 1)
         }
 
-        checkErrors(expectedErrors: 0)
+        _ = test.checkErrors(expected: 0)
         
         let services:[String] =
-            listener.metadatas.map{ $0.service?.identifier ?? "(nil)"}
-        print( "services were \(services)")
+            test.listener.metadatas.map{ $0.service.identifier }
+        Logger.testing.info( "services were \(services)")
         
         XCTAssertGreaterThanOrEqual(services.count, 2, "should be 2 different active services, but were \(services.count)")
     }
     
     func test05_AfterStop_TakesEffekt() throws {
-        XCTAssertEqual(listener.services.count, 0)
-        testSwapServiceControl!.playing{ [self] (ybridControl) in
+        let test = TestYbridControl(ybridSwr3Endpoint)
+        XCTAssertEqual(test.listener.services.count, 0)
+        test.playing{ [self] (ybridControl) in
             
             ybridControl.stop()
             poller.wait(ybridControl, until: PlaybackState.stopped, maxSeconds: 2)
+            XCTAssertEqual(test.listener.services.count, 1)
             
             var carriedOut = false
             ybridControl.swapService(to: "swr-raka09") { (success) in
@@ -170,104 +172,97 @@ class YbridSwapServiceTests: XCTestCase {
             XCTAssertTrue(carriedOut, "swap was not carried out")
             
             ybridControl.play()
-            _ = poller.wait(max: 8) {
-                let serviceSwapped = listener.metadatas.last?.service
-                print("service=\(String(describing: serviceSwapped))")
+            usleep(200_000)
+            let buffer = test.listener.bufferS
+            let maxWait: Int = buffer + Int(maxAudioChanged)+1
+            
+            _ = poller.wait(max: maxWait) {
+                let serviceSwapped = test.listener.metadatas.last?.service
+                Logger.testing.info("service=\(String(describing: serviceSwapped))")
                 return serviceSwapped?.identifier == "swr-raka09"
             }
         }
 
-        checkErrors(expectedErrors: 0)
+        _ = test.checkErrors(expected: 0)
         
-        XCTAssertEqual(listener.services.count, 2)
-        listener.services.forEach{ XCTAssertEqual( $0.count, 6) }
+        XCTAssertEqual(test.listener.services.count, 2) // one initially, one because of swap
+        test.listener.services.forEach{
+            XCTAssertGreaterThan($0.count, swr3MinServicesCount)
+        }
         
         
         let services:[String] =
-            listener.metadatas.map{ $0.service?.identifier ?? "(nil)"}
-        print( "services were \(services)")
+            test.listener.metadatas.map{ $0.service.identifier }
+        Logger.testing.info( "services were \(services)")
         
-        XCTAssertEqual("swr3-live",  listener.metadatas.first?.service?.identifier)
-        XCTAssertEqual("swr-raka09",  listener.metadatas.last?.service?.identifier)
+        XCTAssertEqual("swr3-live",  test.listener.metadatas.first?.service.identifier)
+        XCTAssertEqual("swr-raka09",  test.listener.metadatas.last?.service.identifier)
     }
     
     // MARK: using audio complete
     
    
     func test11_Play_SwapComplete_ok() throws {
-        
-        let actionTraces = ActionsTrace()
-        testSwapServiceControl!.playing{ [self] (ybrid) in
-            actionTraces.append( testSwapServiceControl!.swapServiceSynced(to: "swr-raka06") )
+        let test = TestYbridControl(ybridSwr3Endpoint)
+        var buffer = 0.0
+        test.playing{ (ybrid) in
+            usleep(200_000)
+            buffer += test.listener.bufferDuration ?? 0
+            test.swapServiceSynced(to: "swr-raka06")
         }
         
-        checkErrors(expectedErrors: 0)
-        actionTraces.check(confirm: 1, maxDuration: YbridSwapServiceTests.maxAudioComplete)
+        test.checkErrors(expected: 0)
+            .checkAllActions(confirm: 1, withinS: buffer + maxAudioChanged)
     }
     
     func test12_SwapToSelf_NoSwap() throws {
-        
-        let actionTraces = ActionsTrace()
-        testSwapServiceControl!.playing{ [self] (ybrid) in
-            actionTraces.append( testSwapServiceControl!.swapServiceSynced(to: "swr3-live") )
-        }
-
-        checkErrors(expectedErrors: 1)
-        actionTraces.check(confirm: 1, maxDuration: 1.0)
-    }
-    
-    // During some ads or spots swapping service is denied, for example
-    // "Moin, Gerd hier. Ich steh' mit meinem 40-Tonner auf'm Rastplatz..."
-    func test13_SwapFromAd_NoSwap() throws {
-        
-        let actionTraces = ActionsTrace()
-        let test = TestYbridControl(ybridAdDemoEndpoint, listener: listener)
+        let test = TestYbridControl(ybridSwr3Endpoint)
         test.playing{ (ybrid) in
-            actionTraces.append( test.swapServiceSynced(to: "adaptive-demo", maxWait: 6.0) )
-            actionTraces.check(confirm: 1, mustBeCompleted:false, maxDuration: 2.0)
+             test.swapServiceSynced(to: "swr3-live")
         }
 
-        checkErrors(expectedErrors: 0)
-        actionTraces.check(confirm: 1, mustBeCompleted:true, maxDuration: 6.5)
+        test.checkErrors(expected: 1)
+            .checkAllActions(confirm: 1, withinS: maxControlComplete)
     }
     
-  
-       
-    func test14_SwapBackFromSwapped_InTime() throws {
-        
-        let actionTraces = ActionsTrace()
-        testSwapServiceControl!.playing{ [self] (ybrid) in
-            actionTraces.append( testSwapServiceControl!.swapServiceSynced(to: "swr-raka09", maxWait: 15.0) )
-            actionTraces.append( testSwapServiceControl!.swapServiceSynced(to: "swr3-live", maxWait: 15.0) )
+    func test13_SwapToWrongService() throws {
+
+        let test = TestYbridControl(ybridDemoEndpoint)
+        test.playing{ (ybrid) in
+            test.swapServiceSynced(to: "id-not-exists", maxWait: self.maxControlComplete)
         }
 
-        checkErrors(expectedErrors: 0)
-        actionTraces.check(confirm: 2, maxDuration: YbridSwapServiceTests.maxAudioComplete)
+        test.checkErrors(expected: 1)
+            .checkAllActions(confirm: 1, areCompleted:true, withinS: maxControlComplete)
+    }
+    
+    func test14_SwapBackFromSwapped() throws {
+        let test = TestYbridControl(ybridSwr3Endpoint)
+        var maxAudioComplete = maxAudioChanged
+        test.playing{ (ybrid) in
+            usleep(200_000)
+            maxAudioComplete += test.listener.bufferDuration ?? 0
+            test.swapServiceSynced(to: "swr-raka09", maxWait: maxAudioComplete)
+            test.swapServiceSynced(to: "swr3-live", maxWait: maxAudioComplete)
+        }
+
+        test.checkErrors(expected: 0)
+            .checkAllActions(confirm: 2, withinS: maxAudioComplete)
     }
   
     func test15_SwapSwapped__fails() throws {
-        
-        let actionTraces = ActionsTrace()
-        testSwapServiceControl!.playing{ [self] (ybrid) in
-            actionTraces.append( testSwapServiceControl!.swapServiceSynced(to: "swr-raka09", maxWait: 15.0) )
-            actionTraces.append( testSwapServiceControl!.swapServiceSynced(to: "swr-raka05", maxWait: 20.0) )
+        let test = TestYbridControl(ybridSwr3Endpoint)
+        test.listener.logBufferSize = false
+        test.listener.logPlayingSince = false
+        var maxAudioComplete = maxAudioChanged
+        test.playing{ (ybrid) in
+            usleep(200_000)
+            maxAudioComplete += test.listener.bufferDuration ?? 0
+            test.swapServiceSynced(to: "swr-raka09", maxWait: maxAudioComplete)
+            test.swapServiceSynced(to: "swr-raka05", maxWait: maxAudioComplete) // icy trigger is too late --> maxAudioComplete + 10 succeeds
         }
 
-        checkErrors(expectedErrors: 0)
-        actionTraces.check(confirm: 2, maxDuration: YbridSwapServiceTests.maxAudioComplete)
+        test.checkErrors(expected: 0)
+            .checkAllActions(confirm: 2, withinS: maxAudioComplete)  // + 10 succeeds
     }
-    
-    
-    private func checkErrors(expectedErrors:Int)  {
-        guard listener.errors.count == expectedErrors else {
-            XCTFail("\(expectedErrors) errors expected, but were \(listener.errors.count)")
-            listener.errors.forEach { (err) in
-                let errMessage = err.localizedDescription
-                Logger.testing.error("-- error is \(errMessage)")
-            }
-            return
-        }
-    }
-
 }
-
