@@ -55,7 +55,7 @@ class PlayerToggleStressTest: XCTestCase, AudioPlayerListener {
     var restBetweenSteps:TimeInterval = 5
     var stepsDecrease = 10
     var finalRestDuration:TimeInterval = 60
-     
+    
     var testDuration:TimeInterval {
         return TimeInterval((stepDuration.us + restBetweenSteps.us) * stepsDecrease / 1_000_000) - restBetweenSteps
     }
@@ -82,10 +82,11 @@ class PlayerToggleStressTest: XCTestCase, AudioPlayerListener {
         }else{
             Logger.testing.debug("-- executing tear down in other thread")
         }
-        
         Logger.testing.notice("-- triggered play \(self.triggeredPlay), stop \(self.triggeredStop)")
         Logger.testing.notice("-- end of toggling play and stop")
         Logger.testing.notice("------------------")
+        
+        player?.close()
         Logger.testing.notice("-- final rest for \(finalRestDuration.S) ")
         _ = waitingQueue.sync { sleep(UInt32(finalRestDuration)) }
         Logger.testing.notice("------------------")
@@ -107,8 +108,8 @@ class PlayerToggleStressTest: XCTestCase, AudioPlayerListener {
         player = AudioPlayer.openSync(for: opusDlfEndpoint, listener: self)
         
         stepDuration = 10
-        rangeFrom = 1 /// on first step
-        rangeTo = 3 /// on first step
+        rangeFrom = 2 /// on first step
+        rangeTo = 5 /// on first step
         restBetweenSteps = 5
         stepsDecrease = 10
         
@@ -117,7 +118,7 @@ class PlayerToggleStressTest: XCTestCase, AudioPlayerListener {
         
         self.execute()
     }
-    
+
     func test03_OnDemandAACPlayPause() throws {
         player = AudioPlayer.openSync(for: aacHEv2Endpoint, listener: self)
         
@@ -167,6 +168,7 @@ class PlayerToggleStressTest: XCTestCase, AudioPlayerListener {
         
         if self.player?.state != .stopped {
             self.player?.stop()
+            sleep(1)
         }
     }
     
@@ -222,5 +224,3 @@ class PlayerToggleStressTest: XCTestCase, AudioPlayerListener {
     }
     
 }
-
-
