@@ -61,6 +61,18 @@ extension AudioPlayer {
   public static func open(for endpoint: YbridPlayerSDK.MediaEndpoint, listener: YbridPlayerSDK.AudioPlayerListener?, playbackControl: YbridPlayerSDK.AudioPlayer.PlaybackControlCallback? = nil, ybridControl: YbridPlayerSDK.AudioPlayer.YbridControlCallback? = nil) throws
   public static func open(for endpoint: YbridPlayerSDK.MediaEndpoint, listener: YbridPlayerSDK.AudioPlayerListener?, control: YbridPlayerSDK.AudioPlayer.PlaybackControlCallback? = nil) throws
 }
+@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers public class YbridAudioPlayer : YbridPlayerSDK.AudioPlayer, YbridPlayerSDK.YbridControl {
+  public func select()
+  public func maxBitRate(to maxRate: Swift.Int32)
+  public func wind(by: Foundation.TimeInterval, _ audioComplete: YbridPlayerSDK.AudioCompleteCallback?)
+  public func windToLive(_ audioComplete: YbridPlayerSDK.AudioCompleteCallback?)
+  public func wind(to: Foundation.Date, _ audioComplete: YbridPlayerSDK.AudioCompleteCallback?)
+  public func skipForward(_ type: YbridPlayerSDK.ItemType?, _ audioComplete: YbridPlayerSDK.AudioCompleteCallback?)
+  public func skipBackward(_ type: YbridPlayerSDK.ItemType?, _ audioComplete: YbridPlayerSDK.AudioCompleteCallback?)
+  public func swapItem(_ audioComplete: YbridPlayerSDK.AudioCompleteCallback?)
+  public func swapService(to id: Swift.String, _ audioComplete: YbridPlayerSDK.AudioCompleteCallback?)
+  @objc deinit
+}
 extension SimpleControl {
   public var running: Swift.Bool {
     get
@@ -92,22 +104,24 @@ public typealias ErrorCode = Swift.Int32
   @objc deinit
 }
 public protocol Metadata {
-  var displayTitle: Swift.String? { get }
-  var station: YbridPlayerSDK.Station? { get }
-  var current: YbridPlayerSDK.Item? { get }
+  var displayTitle: Swift.String { get }
+  var current: YbridPlayerSDK.Item { get }
   var next: YbridPlayerSDK.Item? { get }
-  var activeService: YbridPlayerSDK.Service? { get }
+  var service: YbridPlayerSDK.Service { get }
 }
 public struct Item {
-  public let type: YbridPlayerSDK.ItemType
   public let displayTitle: Swift.String
   public let identifier: Swift.String?
+  public let type: YbridPlayerSDK.ItemType?
   public let title: Swift.String?
-  public let version: Swift.String?
   public let artist: Swift.String?
   public let album: Swift.String?
+  public let version: Swift.String?
   public let description: Swift.String?
-  public let durationMillis: Swift.Int64?
+  public let playbackLength: Foundation.TimeInterval?
+  public let genre: Swift.String?
+  public let infoUri: Swift.String?
+  public let companions: [Swift.String]?
 }
 public enum ItemType : Swift.String {
   case ADVERTISEMENT
@@ -125,14 +139,13 @@ public enum ItemType : Swift.String {
     get
   }
 }
-public struct Station {
-  public var name: Swift.String?
-  public var genre: Swift.String?
-}
 public struct Service : Swift.Equatable {
   public let identifier: Swift.String
   public var displayName: Swift.String?
   public var iconUri: Swift.String?
+  public var genre: Swift.String?
+  public var description: Swift.String?
+  public var infoUri: Swift.String?
   public static func == (a: YbridPlayerSDK.Service, b: YbridPlayerSDK.Service) -> Swift.Bool
 }
 @_hasMissingDesignatedInitializers public class PlayerContext {
