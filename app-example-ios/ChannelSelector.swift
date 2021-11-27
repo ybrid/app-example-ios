@@ -125,7 +125,7 @@ class ChannelSelector:
         paragraphStyle.lineSpacing = 0.0
         paragraphStyle.lineHeightMultiple = 0.6
         
-        let font = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.footnote).withSize(font.pointSize)
+        let font = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.footnote).withSize(self.font.pointSize)
         
         let color = UIColor.magenta
 //            UIColor(red: 234, green: 51, blue: 274, alpha: 1) // #EA33F7

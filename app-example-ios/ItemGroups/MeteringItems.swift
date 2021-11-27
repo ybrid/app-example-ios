@@ -58,7 +58,7 @@ class MeteringItems {
     
     func attach(_ control:SimpleControl) {
         initializeValues()
-        if let _ = control as? YbridControl? {
+        if control is YbridControl {
             visible(true, true)
             enable(true, true)
         } else {

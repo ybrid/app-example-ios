@@ -52,11 +52,10 @@ class InteractionItems {
 
         initialize()
     }
-
     
     func attach(_ control:SimpleControl) {
         initialize()
-        if let _ = control as? YbridControl? {
+        if control is YbridControl {
             visible(true, true)
             enable(true, true)
         } else {
